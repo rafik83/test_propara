@@ -1,0 +1,6 @@
+{% extends 'BackBundle:Manage:add.html.twig' %}
+
+{% block b %}Modifier un utilisateur{% endblock %}
+{% block form %}
+<form action="{{ path('manage_users_edit', {id: iduser}) }}" method="post" class="form-group" {{ form_enctype(form) }}>
+{% endblock %}

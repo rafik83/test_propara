@@ -1,0 +1,404 @@
+<div class="row">
+    <div class="form-group col-md-12">
+        <div style="">
+            {% if form.activationSended.vars.errors|length %}
+                {# Affichage des erreurs pour ce champ précis. #}
+                <div class="form-group has-error">
+                    <label class="control-label" for="inputError">
+                        {{ form_errors(form.activationSended) }}
+                    </label>
+                    <div class="checkbox-custom  mb5">
+                        {{ form_widget(form.activationSended, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                        {{ form_label(form.activationSended, "envoyer le mail d’activation") }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="checkbox-custom  mb5">
+                    {{ form_widget(form.activationSended, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                    {{ form_label(form.activationSended, "envoyer le mail d’activation") }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-md-12">
+        <div style="margin-bottom:10px;">
+            {% if form.isPaper.vars.errors|length %}
+                {# Affichage des erreurs pour ce champ précis. #}
+                <div class="form-group has-error">
+                    <label class="control-label" for="inputError">
+                        {{ form_errors(form.isPaper) }}
+                    </label>
+                    <div class="checkbox-custom  mb5">
+                        {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                        {{ form_label(form.isPaper, "bulletins au format papier") }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="checkbox-custom  mb5">
+                    {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                    {{ form_label(form.isPaper, "bulletins au format papier") }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="form-group col-md-6">
+        <div style="margin-bottom:10px;">
+            {% if form.isPaper.vars.errors|length %}
+                {# Affichage des erreurs pour ce champ précis. #}
+                <div class="form-group has-error">
+                    <label class="control-label" for="inputError">
+                        {{ form_errors(form.isPaper) }}
+                    </label>
+                    <div class="checkbox-custom  mb5">
+                        {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                        {{ form_label(form.isPaper, "bulletins au format papier") }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="checkbox-custom  mb5">
+                    {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                    {{ form_label(form.isPaper, "bulletins au format papier") }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group col-md-6">
+        <div style="">
+            {% if form.activationSended.vars.errors|length %}
+                {# Affichage des erreurs pour ce champ précis. #}
+                <div class="form-group has-error">
+                    <label class="control-label" for="inputError">
+                        {{ form_errors(form.activationSended) }}
+                    </label>
+                    <div class="checkbox-custom  mb5">
+                        {{ form_widget(form.activationSended, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                        {{ form_label(form.activationSended, "envoyer le mail d’activation") }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="checkbox-custom  mb5">
+                    {{ form_widget(form.activationSended, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                    {{ form_label(form.activationSended, "envoyer le mail d’activation") }}
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="row">
+    <div class="form-group col-md-12">
+        <div style="margin-bottom:10px;">
+            {% if form.isPaper.vars.errors|length %}
+                {# Affichage des erreurs pour ce champ précis. #}
+                <div class="form-group has-error">
+                    <label class="control-label" for="inputError">
+                        {{ form_errors(form.isPaper) }}
+                    </label>
+                    <div class="checkbox-custom  mb5">
+                        {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                        {{ form_label(form.isPaper, "bulletins au format papier") }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="checkbox-custom  mb5">
+                    {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                    {{ form_label(form.isPaper, "bulletins au format papier") }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('jquery/js/jPages.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.holder').jPages({
+                containerID: "bulletins",
+                perPage: 10,
+                keyBrowse: true,
+                scrollBrowse: true,
+                previous: "Précédent",
+                next: "Suivant"
+            });
+            $('#liste_bultin_etat_ul li').each(function () {
+                //var id_bulletin = $("#id_buletin").val();
+                var tt = $(this).attr("id");
+                var label2 = $(this).find('label').html();
+                if (label2 == '(Obsolete)') {
+                    $('#btn_definir_obslt_' + tt).css('display', 'none');
+                    $('#btn_definir_non_obslt_' + tt).css('display', 'block');
+                }
+
+                if (label2 == '') {
+                    $('#btn_definir_obslt_' + tt).css('display', 'block');
+                    $('#btn_definir_non_obslt_' + tt).css('display', 'none');
+                }
+
+            });
+            $('#liste_bultin_etat_ul li').each(function () {
+                var tt = $(this).attr("id");
+                var separator = "_";
+                var doc_changed = $("#doc_changed_bulletin" + separator + tt).val();
+                var label2 = $(this).find('label').html();
+                if (label2 == '(Obsolete)') {
+                    if (doc_changed != undefined) {
+                        //alert('doc changed unddefined');
+                        var split = doc_changed.split('-');
+                        var yers = split[0];
+                        var month = split[1];
+                        var day = split[2];
+                        //var tt = day + 1;
+                        var x = Number(day) + 1;
+                        //var new_date = x + "/" + month + "/" + yers;
+                        var today = new Date();
+                        var dd = today.getDate();
+                        var mm = today.getMonth() + 1; //January is 0!
+
+                        var yyyy = today.getFullYear();
+                        if (dd < 10) {
+                            dd = '0' + dd;
+                        }
+                        if (mm < 10) {
+                            mm = '0' + mm;
+                        }
+                        //var today = dd + '/' + mm + '/' + yyyy;
+                        var datetimeNow = new Date(yyyy + "-" + mm + "-" + dd);
+                        var oldDate = new Date(yers + "-" + month + "-" + x);
+                        //$(this).css('display', 'none');
+
+                        if (datetimeNow >= oldDate) {
+                            $(this).css('display', 'none');
+                        }
+                    }// end  
+
+
+                }
+
+
+            });
+        });
+        function definirBultObselet(idsigneddoc, idsalary) {
+            var idbulltinobselet = idsigneddoc;
+            var salaryid = idsalary;
+            var url = '{{ path("definir_bult_obselet")}}';
+            //var data = {id: idbulltinobselet};
+            $.ajax({
+                //url: Routing.generate('definir_bult_obselet', {id: idbulltinobselet}),
+                url: url,
+                type: "GET",
+                data: "param=" + idbulltinobselet + "&salaryid=" + salaryid,
+                cache: false,
+                beforeSend: function () {
+                    // $("#LoadingImage").show();
+                    //$("form #form_ligne_typepret").addClass("loadingajax");
+                    // $body.addClass("loadingajax");
+
+                },
+                success: function (data) {
+                    //alert(data.typepret.libeller);
+                    console.log(data);
+                    console.log('success !');
+                    //$("#div_show_btn_add_type_pret").css('display', 'none');
+                    //$("#div_show_edit_type_pret").css('display', 'block');
+                    //$("#paie_paiebundle_typepret_libeller").val(data.typepret.libeller); //id_edit_typepret
+                    //$("#id_edit_typepret").val(data.typepret.id);
+                    //$("#LoadingImage").hide();
+                },
+                complete: function (com) {
+                    //$("#loading-ajax_typepret").css('display', 'none');
+                    console.log(com);
+                    console.log('complete !');
+                    var tt = com.responseText;
+                    var obselette = "définir comme obsolete";
+                    if (tt === obselette) {
+                        var separator = "_";
+                        $("#label_eta_bulletin_" + idbulltinobselet + separator + salaryid).html('(Obsolete)');
+                        //alert($("#label_eta_bulletin").html());
+                        //$("#div_definir_bult_obslt").css('display', 'none');
+                        //$("#div_definir_bult_non_obslt").css('display', 'block');
+                    }
+
+                    //console.log($("#container_bulletin").html());
+                    //window.location.reload();
+                },
+                error: function (err) {
+                    console.log('erreur !');
+                    console.log(err);
+                    //alert('erreur');
+                }
+            });
+            //begin BootstrapDialog
+            BootstrapDialog.show({
+                size: BootstrapDialog.SIZE_LARGE,
+                message: 'Si vous le souhaitez, vous pouvez envoyer un e-mail d information au salarié !',
+                buttons: [{
+                        label: 'Envoyer',
+                        cssClass: 'btn btn-success',
+                        action: function () {
+                            var url = '{{ path("send_mail_bult_obselet")}}';
+                            var param = 'yess send for salary';
+                            $.ajax({
+                                url: url,
+                                type: "GET",
+                                data: "param=" + idbulltinobselet + "&salaryid=" + salaryid,
+                                cache: false,
+                                beforeSend: function () {
+
+                                },
+                                success: function (data) {
+                                    console.log(data);
+                                    console.log('success !');
+                                },
+                                complete: function (com) {
+
+                                    console.log(com);
+                                    console.log('complete !');
+                                    //window.location.reload();
+                                },
+                                error: function (err) {
+                                    console.log('erreur !');
+                                    console.log(err);
+                                    //alert('erreur');
+                                }
+
+                            }); // end ajajx
+                            window.location.reload();
+                        }
+                    }, {
+                        label: 'Ne pas Envoyer',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                            window.location.reload();
+                        }
+                    }]
+            });
+            ////end BootstrapDialog
+
+
+
+        }
+
+        function definirBultNonObselet(idsigneddoc, idsalary) {
+            //alert(idsigneddoc);
+            //alert(idsalary);
+            var idbulltinobselet = idsigneddoc;
+            var salaryid = idsalary;
+            var url = '{{ path("definir_bult_non_obselet")}}';
+            //var data = {id: idbulltinobselet};
+            $.ajax({
+                //url: Routing.generate('definir_bult_obselet', {id: idbulltinobselet}),
+                url: url,
+                type: "GET",
+                data: "param=" + idbulltinobselet + "&salaryid=" + salaryid,
+                cache: false,
+                beforeSend: function () {
+                    // $("#LoadingImage").show();
+                    //$("form #form_ligne_typepret").addClass("loadingajax");
+                    // $body.addClass("loadingajax");
+
+                },
+                success: function (data) {
+                    //alert(data.typepret.libeller);
+                    console.log(data);
+                    console.log('success !');
+                    //$("#div_show_btn_add_type_pret").css('display', 'none');
+                    //$("#div_show_edit_type_pret").css('display', 'block');
+                    //$("#paie_paiebundle_typepret_libeller").val(data.typepret.libeller); //id_edit_typepret
+                    //$("#id_edit_typepret").val(data.typepret.id);
+                    //$("#LoadingImage").hide();
+                },
+                complete: function (com) {
+                    //$("#loading-ajax_typepret").css('display', 'none');
+                    console.log(com);
+                    console.log('complete !');
+                    //window.location.reload();
+                    var tt = com.responseText;
+                    var obselette = "définir comme non obsolete";
+                    if (tt === obselette) {
+                        var separator = "_";
+                        $("#label_eta_bulletin_" + idbulltinobselet + separator + salaryid).html('');
+                        //alert($("#label_eta_bulletin").html());
+                        //$("#div_definir_bult_non_obslt").css('display', 'none');
+                        //$("#div_definir_bult_obslt").css('display', 'block');
+
+                    }
+                },
+                error: function (err) {
+                    console.log('erreur !');
+                    console.log(err);
+                    //alert('erreur');
+                }
+            });
+            //begin BootstrapDialog
+            BootstrapDialog.show({
+                size: BootstrapDialog.SIZE_LARGE,
+                message: 'Si vous le souhaitez, vous pouvez envoyer un e-mail d information au salarié !',
+                buttons: [{
+                        label: 'Envoyer',
+                        cssClass: 'btn btn-success',
+                        action: function () {
+                            var url = '{{ path("send_mail_bult_non_obselet")}}';
+                            var param = 'yess send for salary';
+                            $.ajax({
+                                url: url,
+                                type: "GET",
+                                data: "param=" + idbulltinobselet + "&salaryid=" + salaryid,
+                                cache: false,
+                                beforeSend: function () {
+
+                                },
+                                success: function (data) {
+                                    console.log(data);
+                                    console.log('success !');
+                                },
+                                complete: function (com) {
+
+                                    console.log(com);
+                                    console.log('complete !');
+                                    //window.location.reload();
+                                },
+                                error: function (err) {
+                                    console.log('erreur !');
+                                    console.log(err);
+                                    //alert('erreur');
+                                }
+
+                            }); // end ajajx
+                            window.location.reload();
+                        }
+                    }, {
+                        label: 'Ne pas Envoyer',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                            window.location.reload();
+                        }
+                    }]
+            });
+        }
+
+        function activeSalary(idSalary) {
+
+
+        }
+
+        function desactiveSalary(idSalary) {
+
+
+        }
+    </script>
+
+{% endblock %}

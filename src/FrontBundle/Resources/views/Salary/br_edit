@@ -1,0 +1,269 @@
+ $("#salary_edit_form_company").change(function (e) {
+
+                                                    var matricule = $("#salary_edit_form_matricule").val();
+                                                    var companyid = $("#salary_edit_form_company").val();
+                                                    var username = $("#login_add_salary").val();
+
+                                                    $.ajax({
+                                                        url: "{{ path('salary_change_company') }}", //'/intersa/export-dons/exel',
+                                                        type: "GET",
+                                                        data: "param=" + matricule + "&param2=" + companyid + "&param3=" + username ,
+                                                        //cache: false,
+                                                        success: function (data)
+                                                        {
+                                                            console.log(data);
+                                                        },
+                                                        complete: function (com) {
+                                                            //console.log(com.responseText);
+                                                            console.log(com);
+                                                            alert(com.responseText);
+                                                        },
+                                                        error: function (err) {
+                                                            console.log(err);
+                                                            //alert('err');
+                                                        }
+                                                    });
+
+
+
+
+                                                });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% if form.prenom.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.prenom) }}
+                                </label>
+                                {{ form_widget(form.prenom, {'attr': {'class': 'task_field form-control', 'id':'prenom' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.prenom, {'attr': {'class': 'task_field form-control', 'id':'prenom' } }) }}
+                        {% endif %}
+
+
+
+
+
+<label for="user">{{ form_label(form.prenom, "Prénom") }}<span
+                                class="required-input"> * </span></label>
+
+
+<label>{{ 'Prénom' }}<span
+                                class="required-input"> * </span></label>
+
+
+------------------------
+
+<div>
+                        {% if form.company.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label"
+                                       for="inputError">{{ form_errors(form.company) }}</label>
+                                {{ form_widget(form.company, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                            </div>
+                        {% else %}
+                            {# Génération de l'input. #}
+                            {{ form_widget(form.company, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                        {% endif %}
+                    </div>
+
+
+
+
+
+
+
+
+
+ $(document).ready(function () {
+                    $("#frm_edit_salary").validate({
+                        rules: {
+                            salary_edit_form_company: {
+                                required: function (element) {
+                                    if (true) {
+                                        var e = document.getElementById("salary_edit_form[company]");
+                                        return e.options[e.selectedIndex].value == "";
+                                    } else
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    })
+                })
+
+
+
+$("#login_edit_salary").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                        // Allow: Ctrl/cmd+A
+                                (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                // Allow: Ctrl/cmd+C
+                                        (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                        // Allow: Ctrl/cmd+X
+                                                (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                                // Allow: home, end, left, right
+                                                        (e.keyCode >= 35 && e.keyCode <= 39)) {
+                                            // let it happen, don't do anything
+                                            return;
+                                        }
+                                        // Ensure that it is a number and stop the keypress
+                                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                            e.preventDefault();
+                                        }
+                                    });
+
+
+$("#salary_edit_form_numSecu").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                        // Allow: Ctrl/cmd+A
+                                (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                // Allow: Ctrl/cmd+C
+                                        (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                        // Allow: Ctrl/cmd+X
+                                                (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                                // Allow: home, end, left, right
+                                                        (e.keyCode >= 35 && e.keyCode <= 39)) {
+                                            // let it happen, don't do anything
+                                            return;
+                                        }
+                                        // Ensure that it is a number and stop the keypress
+                                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                            e.preventDefault();
+                                        }
+                                    });
+
+
+-------------------------------------------
+
+ if (nb == '-1') {
+
+                            //alert(nb);
+                            $("#btn_add_salary").css('display', 'none');
+                            $('#salary_form_numSecu').validationEngine('showPrompt', 'Aucun Utilisateur attribuer a ce numéro de sécurité social.Attention !!', 'load');
+                            $(".blackPopup .formErrorContent").css('background-color', 'red');
+                            $(".blackPopup .formErrorContent").css('font-size', '13px');
+                            $(".blackPopup .formErrorContent").css('margin-top', '-23px');
+                            //alert($('#frm_edit_salary').validationEngine('validate'));
+                            //alert($('#salary_edit_form_matricule').validationEngine('validate'));
+
+                        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$array_fetch_salary_by = $this->getLigneSalaryByUser($user_id_edit);  //$this->fetchExisteSalaryinEntity($company_id, $user_id_edit);
+                            var_dump(count($array_fetch_salary_by));
+                            die('icici');
+                            if (count($array_fetch_salary_by) > 0) {
+
+                                foreach ($array_fetch_salary_by as $key => $value) {
+                                    if ($value['company_id'] == $company_id) {
+                                        $salary_incompany = true;
+                                    }
+                                }
+                            }
+
+
+
+ if ($salary_incompany == true) {
+                                $this->get('session')->getFlashBag()->add('warning', 'Il existe déja un salarier avec le méme N°Sécurité social et dans la méme entité, Attention !');
+                                return $this->redirect($this->generateUrl('front_salary_add'));
+                            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

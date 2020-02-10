@@ -1,0 +1,253 @@
+ if (count($array_fetch_salary_by) > 0) {
+                            //insertion salary
+//                            die('count(fetch ligne salary by company) > 0');
+                            $array_nbr_user_in_salary = $this->getLigneSalaryBy($company_id, $user_id, $matricule_salary);
+//                            $array_nbr_user_in_salary = $this->getLigneSalaryByCompany($company_id, $user_id);
+                            $nb_occurence = $array_nbr_user_in_salary[0]['user_id'];
+                            $Company = $db->getRepository('FrontBundle:Company')->find($company_id);
+
+//                            var_dump($company_id);
+//                            var_dump($user_id);
+//                            var_dump($matricule_salary);
+//                            var_dump(count($array_nbr_user_in_salary));
+//                            var_dump($array_nbr_user_in_salary);
+//                            var_dump($nb_occurence);
+//                            die('icici');
+
+                            if ($nb_occurence == 0) {
+//                                die('== 0');
+                                $getUser = $db->getRepository('FrontBundle:User')->find($user_id);
+                                if ($getUser) {
+                                    $salary->setUser($getUser);
+                                    // Upload image
+                                    $file = $salary->getPhoto();
+                                    if (isset($file) && !empty($file)) {
+                                        $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+                                        //move the file to the directory where documents are stored
+                                        $docDir = '/docs_sign/' . $this->container->getParameter('client_id') . '/pic';
+                                        $file->move($docDir, $fileName);
+                                        $salary->setPhoto($fileName);
+//                                   $salary->getUser()->setVisibility(false);
+                                    }
+                                    $db->persist($salary);
+                                    $db->flush();
+                                }
+                                $this->get('session')->getFlashBag()->add('info', 'Votre salarié est crée avec succès');
+                                return $this->redirect($this->generateUrl('front_homepage'));
+                            }
+//                            if ($nb_occurence == 1) {
+////                                    die('1');
+//                                $this->get('session')->getFlashBag()->add('info', 'Votre salarié est crée avec succès');
+//                                return $this->redirect($this->generateUrl('front_homepage'));
+//                            }
+                            if ($nb_occurence >= 1) {
+                                if ($Company) {
+//                                    die('>= 1');
+                                    $this->get('session')->getFlashBag()->add('warning', 'Ce salarier existe déja avec la  matricule' . ' ' . $matricule_salary . ' ' . 'dans  entité' . ' ' . $Company->getNom()); //et dans la méme societé
+                                    return $this->redirect($this->generateUrl('front_salary_add'));
+                                }
+                            }
+                        }
+
+
+----------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//submit form
+            $('#frm_add_salary').submit(function (e) {
+                if ($('#frm_add_salary').validationEngine('validate')) {
+                    $('#frm_add_salary').validationEngine('hide');
+
+
+                    //return false;
+                    var user_name = $("#login_add_salary").val();
+                    var user_pwd = $("#pwd_add_salary").val();
+                    $("#salary_form_extra_user_name").val(user_name);
+                    $("#salary_form_extra_user_pwd").val(user_pwd);
+                    //alert($("#salary_form_extra_user_name").val());
+                    //alert($("#salary_form_extra_user_pwd").val());
+                    //e.preventDefault();
+                    var url = "{{ path('front_salary_add') }}";
+                    var formSerialize = $(this).serialize();
+
+                    $.post(url, formSerialize, function (response) {
+                        //your callback here
+
+                        console.log(response);
+                    }, 'JSON');
+
+                    // alert('after add salary1');
+                }
+                //alert('after add salary2');
+            });
+
+
+
+
+<form id="frm_add_salary" action="{{ path('front_salary_add') }}" method="post" class="form-group" {{ form_enctype(form) }}>
+
+
+
+
+--------------
+
+$("#btn_add_salary").click(function (e) {
+                //front_salary_add
+                //alert('enter add salary btn');
+                //if ($('#frm_add_salary').validationEngine('validate')) {
+                    $('#frm_add_salary').validationEngine('hide');
+                    var user_name = $("#login_add_salary").val();
+                    var user_pwd = $("#pwd_add_salary").val();
+                    $("#salary_form_extra_user_name").val(user_name);
+                    $("#salary_form_extra_user_pwd").val(user_pwd);
+                    var url = "{{ path('front_salary_add') }}";
+                    //var formSerialize = $(this).serialize();
+                    var formSerialize = $("#frm_add_salary").serialize();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: formSerialize,
+                        success: function (msg) {
+
+                            console.log(msg);
+                        },
+                        error: function (XmlHttpRequest, textStatus, errorThrown) {
+
+                            console.log(error);
+                        },
+                        complete: function (xhr)
+                        {
+                            console.log(xhr);
+                            //location.href = xhr.getResponseHeader("Location");
+                            //window.location.href = "{#{path('front_homepage')}#}";
+                            if (xhr.status == 302) {
+                                //location.href = xhr.getResponseHeader("Location");
+                            }
+                        }
+                    });
+
+
+                //}
+
+
+            });
+
+
+
+-------------------
+
+  $('#frm_edit_salary').submit(function (e) {
+                var valid = $("#frm_edit_salary").validationEngine('validate');
+
+                if (valid == true) {
+                    var user_name = $("#login_edit_salary").val();
+                    var user_pwd = $("#pwd_edit_salary").val();
+                    //var company_id = $("#company_id_edit").val();//salary_edit_form_company
+                    var company_id = $("#salary_edit_form_company").val();
+                    $("#salary_edit_form_extra_user_name_edit").val(user_name);
+                    $("#salary_edit_form_extra_user_pwd_edit").val(user_pwd);
+                    $("#salary_edit_form_extra_company_salary_edit").val(company_id);
+                    var ids = $("#salary_id_edit").val();
+                    var url = "{{ path('front_salary_edit', {id: ids}) }}";
+                    var formSerialize = $(this).serialize();
+                    $.post(url, formSerialize, function (response) {
+                        //your callback here
+                        //alert(response);
+                        console.log(response);
+                    }, 'JSON');
+
+                } else {
+
+                    $("#frm_edit_salary").validationEngine();
+                }
+
+
+
+
+                // if ($('#frm_edit_salary').validationEngine('validate')) {
+                //e.preventDefault();
+                //alert($('#salary_edit_form_matricule').validationEngine('validate'));
+                //return false;
+                //$('#frm_edit_salary').validationEngine('hide');
+
+                //}
+            });
+
+------------------------------
+
+$('#frm_add_salary').submit(function (e) {
+
+                var valid = $("#frm_add_salary").validationEngine('validate');
+                //var vars = $("#frm_add_salary").serialize();
+                if (valid == true) {
+                    //alert('validate');
+                    var user_name = $("#login_add_salary").val();
+                    var user_pwd = $("#pwd_add_salary").val();
+                    $("#salary_form_extra_user_name").val(user_name);
+                    $("#salary_form_extra_user_pwd").val(user_pwd);
+                    //alert($("#salary_form_extra_user_name").val());
+                    //alert($("#salary_form_extra_user_pwd").val());
+                    //e.preventDefault();
+                    var url = "{{ path('front_salary_add') }}";
+                    var formSerialize = $(this).serialize(); //vars
+
+                    $.post(url, formSerialize, function (response) {
+                        //your callback here
+                        alert('form submited');
+                        e.preventDefault();
+                        console.log(response);
+                        console.log('yesssssssssss');
+                    }, 'JSON');
+                } else {
+                    //alert('no validate');
+                    $("#frm_add_salary").validationEngine();
+                }
+
+
+
+
+
+                //if ($('#frm_add_salary').validationEngine('validate')) {
+                //$('#frm_add_salary').validationEngine('hide');
+
+
+                //return false;
+
+
+                // alert('after add salary1');
+                //}
+                //alert('after add salary2');
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

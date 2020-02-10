@@ -1,0 +1,237 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block title %}
+    Modifier l'entreprise
+{% endblock %}
+{% block stylesheet %}
+    {{ parent() }}
+
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset("vendor/plugins/dropzone/css/dropzone.css") }}">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <!--a href="dashboard.html">{#% block b %} Ajouter une entreprise {% endblock %#}</a-->
+                    <a href="#">{% block b %} Modifier une entreprise {% endblock %}</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('front_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-link">
+                    <a href="{{ path('front_manage_company') }}">Gestion des entreprises </a>
+                </li>
+                <li class="crumb-trail">{{ block('b') }}</li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <br/>
+    <div class="col-md-8 col-md-offset-4 admin-form theme-primary mw1000 center-block panel-body bg-light">
+
+        {% block form %}
+            <form id="frm_edit_company_rhusers"  class="form-group" {{ form_enctype(formEdit) }}>
+            {% endblock %}
+            {{ form_errors(formEdit) }}
+            <span class="required-input"> * </span> :  Champs obligatoires.
+            <br/>
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(formEdit.nom, "Nom") }}<span
+                                class="required-input"> * </span></label>
+                            {% if formEdit.nom.vars.errors|length %}
+                                {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(formEdit.nom) }}
+                                </label>
+                                {{ form_widget(formEdit.nom, {'attr': {'class': 'task_field form-control', 'id':'nom' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(formEdit.nom, {'attr': {'class': 'task_field form-control', 'id':'nom' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {#{ form_rest(form) }#}
+
+
+            <span>Administrateurs de l'entité</span>
+            <br/>
+            <br/> 
+
+            <div class="row">    
+                <div class="form-group col-md-4" id="div_edit_liste_input_rh">
+                    {% for rhuser in rhusers %}
+                        <input type="checkbox"  id="rhusersedit_{{rhuser.id}}" value="{{rhuser.id}}" />&nbsp {{rhuser.nom}}
+                        <br/>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+
+            {#{dump(form.children._token)}#}
+            {#{dump(formEdit.children)}#}
+            {{ form_widget(formEdit.children._token) }}
+            {{ form_widget(formEdit.children.extra_rh_user) }}
+
+
+            <div class="panel-footer text-right">
+                <button id="btn_edit_company"  type="button" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Valider le formulaire</button>
+                <a href="{{ path('front_homepage') }}" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Annuler</a>
+            </div>
+            <!--input type="hidden" id="id_edit_company_rhusers" value="{#{id_company}#}" /-->
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+    src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery-ui-monthpicker.min.js') }}"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery-ui-datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery.spectrum.min.js') }}"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery.stepper.min.js') }}"></script>
+    <script src="{{ asset('jquery/js/jquery.spectrum-fr.js') }}"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+                {% for idsRh in idsRhUsers %}
+                        var id =   {{idsRh.id}} ;
+                        $("#rhusersedit_" + id).attr('checked', true);
+                {% endfor %} 
+
+
+
+
+                $('#btn_edit_company').click(function (e) {
+                    //e.preventDefault();
+                    var array = [];
+                    $('#div_edit_liste_input_rh input').each(function () {
+                        var idchekbox = $(this).attr("id");
+                        var split = idchekbox.split('_');
+                        var id = split[1];
+                        var tt = $("#rhusersedit_" + id).is(':checked');
+                        if ($("#rhusersedit_" + id).is(':checked')) {
+                            array.push(id);
+                        }
+                    });
+                    if (array.length > 0) {
+                        $('#company_edit_type_extra_rh_user').val(array);
+                    } else {
+                        $('#company_edit_type_extra_rh_user').val('');
+                    }
+                    
+                    //alert($('#company_edit_type_extra_rh_user').val());
+                    var url = "{{ path('front_company_edit', {id: company.id}) }}";
+                    //var formSerialize = $(this).serialize();
+                    var formSerialize = $("#frm_edit_company_rhusers").serialize();
+                    //alert($('#company_type_extra_rh_user').val());
+                    //$.post(url, formSerialize, function (response) {
+                    //your callback here;
+                    //}, 'JSON');
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: formSerialize,
+                        cache: false,
+                        success: function (data) {
+                            console.log('success');
+                            console.log(data);
+                        },
+                        complete: function (comp) {
+                            console.log('complete');
+                            console.log(comp);
+                            window.location.href = "{{ path('front_manage_company') }}";
+                        },
+                        error: function (err) {
+                            console.log('error');
+                            console.log(err);
+                        }
+                    });
+
+
+
+
+                });
+
+
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            var cPicker1 = $("#company_type_personnalisation_couleur");
+
+            var cContainer1 = cPicker1.parents('.sfcolor').parent();
+
+            $(cContainer1).addClass('posr');
+
+
+            cPicker1.spectrum({
+                color: bgPrimary,
+                appendTo: cContainer1,
+                containerClassName: 'sp-left',
+                showInput: true,
+                showPalette: true,
+                preferredFormat: "hex",
+                palette: [
+                    [bgPrimary, bgSuccess, bgInfo],
+                    [bgWarning, bgDanger, bgAlert],
+                    [bgSystem, bgDark, bgBlack]
+                ]
+            });
+            cPicker1.show();
+
+            $('#company_type_sdOption').on('click', function () {
+                if ($('#company_type_sdOption').is(':checked')) {
+                    $('#subdomain_fulloffice').addClass('hidden')
+                } else {
+                    $('#subdomain_fulloffice').removeClass('hidden');
+                }
+            });
+
+
+
+
+
+
+
+    </script>
+    <script src="{{ asset('jquery/js/jquery.spectrum-fr.js') }}"></script>
+{% endblock %}

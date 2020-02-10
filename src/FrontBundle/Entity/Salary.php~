@@ -1,0 +1,165 @@
+<?php
+
+/*
+ * This file is part of the fulldon project
+ *
+ * (c) SAMI BOUSSACSOU <boussacsou@intersa.fr>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace FrontBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity(repositoryClass="SalaryRepository")
+ * @ORM\Table(name="salary")
+ * @ORM\HasLifecycleCallbacks
+
+ */
+class Salary {
+
+    /**
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     * 
+     * @ORM\Column(name="nom", type="string", length=255)
+     */
+    private $nom;
+
+    /**
+     * @ORM\Column(name="prenom", type="string", length=255, nullable=true)
+     */
+    private $prenom;
+
+    /**
+     * @ORM\Column(name="poste", type="string", length=255, nullable=true)
+     */
+    private $poste;
+
+    /**
+     * @ORM\Column(name="nature_contrat", type="string", length=255, nullable=true)
+     */
+    private $natureContrat;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Company", cascade={"persist"})
+     * @ORM\JoinColumn(name="company_id", nullable=true)
+     */
+    private $company;
+
+    /**
+     * @ORM\Column(name="email_perso", type="string", length=255, nullable=true)
+     */
+    private $emailPerso;
+
+    /**
+     * @ORM\Column(name="email_pro", type="string", length=255, nullable=true)
+     */
+    private $emailPro;
+
+    /**
+     * @ORM\Column(name="telephone_perso", type="text",  nullable=true)
+     */
+    private $telephonePerso;
+
+    /**
+     * @ORM\Column(name="telephone_pro", type="text",  nullable=true)
+     */
+    private $telephonePro;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist", "remove"})
+     * @ORM\JoinColumn( name="user_id", nullable=false);
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(name="birth_date", type="date",  nullable=true)
+     */
+    private $birthDay;
+
+    /**
+     * @ORM\Column(name="date_begin", type="date",  nullable=true)
+     */
+    private $dateBegin;
+
+    /**
+     * @ORM\Column(name="date_end", type="date",  nullable=true)
+     */
+    private $dateEnd;
+
+    /**
+     * @ORM\Column(name="matricule", type="string")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $matricule;
+
+    /**
+     * @ORM\Column(name="num_secu", type="string", length=255, nullable=true)
+     */
+    private $numSecu;
+
+    /**
+     * @ORM\Column(name="photo", type="string", length=255, nullable=true)
+     * @Assert\File(
+     * mimeTypes={ "image/jpeg", "image/png" }
+     * )
+     */
+    private $photo;
+
+    /**
+     * @ORM\Column(name="is_docs", type="boolean",  nullable=true)
+     */
+    private $isDoc;
+
+    /**
+     * @ORM\Column(name="is_paper", type="boolean",  nullable=true)
+     */
+    private $isPaper;
+
+    /**
+     * @ORM\Column(name="activation_sended", type="boolean",  nullable=true)
+     */
+    private $activationSended;
+
+    /**
+     * @ORM\Column(name="adresse", type="text",  nullable=true)
+     */
+    private $adresse;
+
+    /**
+     * @ORM\Column(name="ville", type="string", length=255,  nullable=true)
+     */
+    private $ville;
+
+    /**
+     * @ORM\Column(name="zipcode", type="string", length=255, nullable=true)
+     */
+    private $zipcode;
+
+//    public function __construct() {
+//        $this->createdAt = new \Datetime();
+//    }
+
+    
+
+
+    
+}

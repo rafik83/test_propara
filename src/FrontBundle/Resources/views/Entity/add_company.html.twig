@@ -1,0 +1,123 @@
+{% extends "FrontBundle::layout.html.twig" %}
+    {% block title %}
+        Nouveau salarié
+    {% endblock %}
+{% block stylesheet %}
+    {{ parent() }}
+
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset("vendor/plugins/dropzone/css/dropzone.css") }}">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <a href="dashboard.html">{% block b %} Ajouter une entreprise {% endblock %}</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('front_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-link">
+                    <a href="{{ path('front_manage_company') }}">Gestion des entreprises </a>
+                </li>
+                <li class="crumb-trail">{{ block('b') }}</li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <br/>
+    <div class="col-md-8 col-md-offset-4 admin-form theme-primary mw1000 center-block panel-body bg-light">
+
+        {% block form %}
+        <form action="{{ path('front_company_add') }}" method="post" class="form-group" {{ form_enctype(form) }}>
+            {% endblock %}
+            {{ form_errors(form) }}
+            <span class="required-input"> * </span> : Champs obligatoires.
+            <br/>
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.nom, "Nom") }}<span
+                                    class="required-input"> * </span></label>
+                        {% if form.nom.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.nom) }}
+                                </label>
+                                {{ form_widget(form.nom, {'attr': {'class': 'task_field form-control', 'id':'nom' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.nom, {'attr': {'class': 'task_field form-control', 'id':'nom' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {{ form_rest(form) }}
+            <br/>
+
+            <div class="panel-footer text-right">
+                <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Valider le formulaire</button>
+                <a href="{{ path('front_homepage') }}" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Annuler</a>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery-ui-monthpicker.min.js') }}"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery-ui-datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery.spectrum.min.js') }}"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery.stepper.min.js') }}"></script>
+    <script src="{{ asset('jquery/js/jquery.spectrum-fr.js') }}"></script>
+    <script>
+
+        var cPicker1 = $("#company_form_personnalisation_couleur");
+
+        var cContainer1 = cPicker1.parents('.sfcolor').parent();
+
+        $(cContainer1).addClass('posr');
+
+
+        cPicker1.spectrum({
+            color: bgPrimary,
+            appendTo: cContainer1,
+            containerClassName: 'sp-left',
+            showInput: true,
+            showPalette: true,
+            preferredFormat: "hex",
+            palette: [
+                [bgPrimary, bgSuccess, bgInfo],
+                [bgWarning, bgDanger, bgAlert],
+                [bgSystem, bgDark, bgBlack]
+            ]
+        });
+        cPicker1.show();
+
+        $('#company_form_sdOption').on('click', function(){
+            if($('#company_form_sdOption').is(':checked')) {
+                $('#subdomain_fulloffice').addClass('hidden')
+            } else {
+                $('#subdomain_fulloffice').removeClass('hidden');
+            }
+        });
+    </script>
+    <script src="{{ asset('jquery/js/jquery.spectrum-fr.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,49 @@
+services:
+#    back.example:
+#        class: BackBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+    auth.service:
+        class: BackBundle\Service\Sha512
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+    sg_datatables.zip:
+            class: BackBundle\Datatables\ZipDatatable
+            tags:
+                - { name: sg.datatable.view }
+                
+#    sg_datatables.herachie:
+#            class: BackBundle\Datatables\ResponsableDatatable
+#            tags:
+#                - { name: sg.datatable.view }
+
+    sg_datatables.rh:
+            class: BackBundle\Datatables\RhUsersDatatable
+            tags:
+                - { name: sg.datatable.view }
+    sg_datatables.bu:
+            class: BackBundle\Datatables\BuDatatable
+            tags:
+                - { name: sg.datatable.view }
+    sg_datatables.mu:
+            class: BackBundle\Datatables\MuDatatable
+            tags:
+                - { name: sg.datatable.view }
+    sg_datatables.import:
+            class: BackBundle\Datatables\ImportDatatable
+            tags:
+                - { name: sg.datatable.view }
+    multisign.twig.theme:
+        class: BackBundle\Twig\ThemeExtension
+        arguments: [ @doctrine.orm.entity_manager,@service_container, %client_id%]
+        tags:
+            - { name: twig.extension }
+    fulloffice.stat:
+        class: BackBundle\Service\Stat
+        arguments: [ @doctrine.orm.entity_manager, %client_id%]
+        calls:
+            - [ setContainer,[ @service_container] ]
+            
+    getentity.manager:
+        class: BackBundle\Form\CompanyUserForm
+        arguments: [ @doctrine.orm.entity_manager]
+        

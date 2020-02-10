@@ -1,0 +1,193 @@
+back_homepage:
+    path:     /managezip
+    defaults: { _controller: BackBundle:Default:index }
+
+zip_results:
+    path:     /zipresults
+    defaults: { _controller: BackBundle:Default:zipResults }
+
+back_upload_zip:
+    path:     /upload
+    defaults: { _controller: BackBundle:Default:upload }
+
+back_upload_mass:
+    path:     /upload/mass
+    defaults: { _controller: BackBundle:Default:uploadMass }
+
+back_upload_files:
+    path:     /upload/files/{uid}/
+    defaults: { _controller: BackBundle:Default:uploadFiles }
+    requirements:
+        uid:  "[a-z0-9-]+"
+    options:
+        expose: true
+rh_users_result:
+    path:     /rhusersresult
+    defaults: { _controller: BackBundle:ManageUsers:rhResults }
+
+bu_list:
+    path:   /bu/list
+    defaults: { _controller: BackBundle:BulletinUnite:list }
+
+bu_add:
+    path:   /bu/add
+    defaults: { _controller: BackBundle:BulletinUnite:add }
+
+bu_result:
+    path:     /buresult
+    defaults: { _controller: BackBundle:BulletinUnite:result }
+
+disable_zip:
+    path:     /disable/zip/{id}
+    defaults: { _controller: BackBundle:Default:disableZip }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+display_logs:
+    path:     /display/logs/{id}
+    defaults: { _controller: BackBundle:Default:displayLogs }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+display_logs_mu:
+    path:     /display/logsmu/{id}
+    defaults: { _controller: BackBundle:Default:displayLogsMu }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+disable_bu:
+    path:     /disable/bu/{id}
+    defaults: { _controller: BackBundle:Default:disableBu }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+        
+        
+        
+#users_company_back:
+#    path:     /responsable/company
+#    defaults: { _controller: BackBundle:Responsable:index }
+
+#users_company_add:
+#    path:     /responsable/company/add
+#    defaults: { _controller: BackBundle:Responsable:add }
+    
+#users_company_result:
+#    path:     /responsable/company/result
+#    defaults: { _controller: BackBundle:Responsable:userCompanyResults }
+    
+    
+#users_company_edit:
+#    path:     /responsable/company/edit/{id}
+#    defaults: { _controller: BackBundle:Responsable:edit }
+#    requirements:
+#        id:  \d+
+#    options:
+#        expose: true
+        
+#users_company_remove:
+#    path:     /responsable/company/remove/{id}
+#    defaults: { _controller: BackBundle:Responsable:remove }
+#    requirements:
+#        id:  \d+
+#    options:
+#        expose: true
+    
+    
+    
+manage_users:
+    path:     /manage
+    defaults: { _controller: BackBundle:ManageUsers:index }
+
+manage_users_add:
+    path:     /manage/add
+    defaults: { _controller: BackBundle:ManageUsers:add }
+
+manage_users_edit:
+    path:     /manage/edit/{id}
+    defaults: { _controller: BackBundle:ManageUsers:edit }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+manage_users_remove:
+    path:     /manage/remove/{id}
+    defaults: { _controller: BackBundle:ManageUsers:remove }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+        
+        
+        
+back_personnalisation:
+    path:     /personnalisation
+    defaults: { _controller: BackBundle:Default:personnalisation }
+
+# authentification
+back_login:
+    pattern:  /login
+    defaults: { _controller: BackBundle:Security:loginAdmin}
+back_login_check:
+    pattern:  /login_check
+    defaults: { _controller: BackBundle:Security:loginAdminCheck}
+logout_back:
+    pattern:  /logout
+    defaults: { _controller: BackBundle:Security:logoutAdmin}
+
+tests:
+    path:     /testo
+    defaults: { _controller: BackBundle:Test:index }
+
+back_get_salary:
+    path:     /get/salary
+    defaults: { _controller: BackBundle:Default:getSalary }
+
+back_get_bulletin:
+    path:     /get/bulletin
+    defaults: { _controller: BackBundle:Default:displayVerif }
+
+assets_pdf_verif:
+    pattern: /assets/pdf/verif/{uid}/{token}
+    defaults: { _controller: BackBundle:Default:getBulletin }
+    requirements:
+        _method: GET
+
+manage_mu:
+    path:     /manage/mu
+    defaults: { _controller: BackBundle:Default:manageMu }
+
+mu_results:
+    path:     /mu/results
+    defaults: { _controller: BackBundle:Default:muResults }
+
+
+import_salaries_list:
+    path:   /import/salaries/list
+    defaults: { _controller: BackBundle:Default:importSalariesList }
+
+import_salaries_add:
+    path:   /import/salaries/add
+    defaults: { _controller: BackBundle:Default:importSalaries }
+
+import_salaries_result:
+    path:     /import/salaries/result
+    defaults: { _controller: BackBundle:Default:importSalariesResult }
+
+print_depot:
+    path:       /print/depots
+    defaults: { _controller: BackBundle:Default:printDepots}
+
+get_print_depot:
+    path:       /get/print/depot/{name}
+    defaults: { _controller: BackBundle:Security:getPrintDepot}
+    requirements:
+        _method: GET

@@ -1,0 +1,55 @@
+parameters:
+    zip_location: /zips
+    client_id: 23
+    client_name: testpropara
+    signature_size: 20243
+#Certsign SERVER
+#    local_cert: /certfile.pem
+    local_cert: /certfile2018.pem
+    login: INTERSA_PROD
+    password: 67cba06ca74087ded0554b6b8f1fc0c9eacffff2
+    location: https://signature.certeurope.fr/services/WSFacade
+    profile_s: PFL-S-PDF-INTERSA_PROD
+    profile_arc: profilearkhineo
+    profile_sto: PFL-STO-GENERIQUE
+    profile_doc: intersa
+    profile_con: CTR-PRV-INTERSA_PROD
+    signer: INTERSA
+#    auth_pass: intersacerteurope2016
+    auth_pass: INTERSAcerteurope2018
+    algo: SHA1
+    url_site : https://testpropara.fulloffice.fr
+#    url_site :  http://3cexternpaie.dev
+#    url_site:   http://testpropara.preprod:8080/
+#    email_admin:  fulloffice@3cexperts.fr
+    email_admin:  turki@intersa.fr
+    email_manager: turki@intersa.fr
+#serveur sftp
+    ftps_file: /
+    ftps_host: ftps.intersa.fr
+    ftps_login: c_consultants
+    ftps_pwd: nD2x3a!2Q
+    ftps_port: 6123
+#certisms
+
+    certeurope_certisms_app_code: 8cea3aa7f7a70fe84560acd895b10fb70f883a6e
+    certeurope_certisms_url: http://certisms.certeurope.fr/CertiSMS.php
+    certeurope_certisms_wsdl: http://certisms.certeurope.fr/CertiSMS.php?wsdl
+    certeurope_oneclick_app_code: 692d7e41849b50e4bd7eed4918f0da028b773707
+    certeurope_oneclick_url: https://cs1.certeurope.fr/SignatureCOC.do
+
+#emailinfo
+
+    mailer_transport: smtp
+    smtp_port: 25
+    mailer_host: email-smtp.eu-west-1.amazonaws.com
+    mailer_user: AKIAITUHAWPRPJVCVALQ
+    mailer_password: AnfZOju9TUp4ir2St9cAw7hHup0wDcltbNFsnP3e5nVq
+    mailer_port: 587
+    mailer_encryption: tls
+    auth_mode: login
+
+#params
+    choice_salary: 0
+    prefix_zip: TSTP
+

@@ -1,0 +1,540 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header  class="alt">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <!--a href="dashboard.html">Gestion des entreprises </a-->
+                    <a href="#">Gestion des entreprises </a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('front_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+
+                <li class="crumb-trail">Gestion des entreprises</li>
+            </ol>
+        </div>
+        <div class="pull-right">
+            <!--a class="btn btn-primary btn-xs" href="{#{ path('front_company_add') }#}">
+                <i class="fa fa-plus-circle"></i> Ajouter une enterprise
+            </a-->
+        </div>
+    </header>
+
+    <hr />
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+            <i class="fa fa-check pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-sm alert-border-left alert-danger ">
+            <i class="fa fa-info pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {#{ datatable_render_html(datatable) }#}
+
+
+
+
+    <div id="company_result_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+        <!--div class="dataTables_length" id="company_result_length">
+            <label>Voir 
+                <select name="company_result_length" aria-controls="company_result" class="form-control input-sm">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select> entrées
+            </label>
+        </div-->
+        <!--div id="company_result_filter" class="dataTables_filter">
+            <label>Rechercher
+                <input type="search" class="form-control input-sm" placeholder="" aria-controls="company_result">
+            </label>
+        </div-->
+        <div id="company_result_processing" class="dataTables_processing" style="display: none;">
+            En cours de traitement...
+        </div>
+        <div class="dataTables_scroll">
+            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 1864px; padding-right: 0px;">
+                    <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered dataTable no-footer" border="0" width="100%" role="grid" style="margin-left: 0px; width: 1864px;">
+                        <thead>
+                            <tr role="row" style="height: 0px;">
+                                <th class="sorting_asc" aria-controls="company_result" rowspan="1" colspan="1" style="width: 192px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Id: activate to sort column descending">
+                                    <div class="dataTables_sizing" style="height:0;overflow:hidden;">Id
+                                    </div>
+                                </th>
+                                <th class="sorting" aria-controls="company_result" rowspan="1" colspan="1" style="width: 1170px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Nom de l'entreprise: activate to sort column ascending">
+                                    <div class="dataTables_sizing" style="height:0;overflow:hidden;">Nom de l'entreprise</div>
+                                </th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 390px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Actions">
+                                    <div class="dataTables_sizing" style="height:0;overflow:hidden;">Actions
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="dataTables_scrollBody" style="overflow: auto; width: 100%;">
+                <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered dataTable no-footer" border="0" id="company_result" width="100%" role="grid" aria-describedby="company_result_info" style="width: 1864px;">
+                    <thead>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% if count_length == 1 %}
+
+                            <tr role="row" class="odd">
+                                <td class="sorting_1">{{rh_company.id}}</td>
+                                <td>{{rh_company.nom}}</td>
+                                <td>
+                                    <div class="wrapper" style="text-align:center">
+                                        <!--a href="{#{path('front_company_edit', { 'id': rsc['id'] }) }#}" rel="tooltip" title="Modifier la catégorie" class="btn btn-xs btn-primary custom-btn" role="button">
+                                            <i class="glyphicon glyphicon-edit"></i> 
+                                        </a-->
+                                        <!--a href="{#{path('front_company_remove', { 'id': rsc['id'] }) }#}" rel="tooltip" title="Supprimer la catégorie" class="btn btn-xs btn-primary custom-btn" role="button" onclick="return confirm('Voulez vous détruire cette donnée?')"><i class="glyphicon glyphicon-remove"></i> 
+                                        </a-->
+                                    </div>
+                                </td>
+                            </tr>
+
+                        {% endif %}
+
+                        {% if count_length > 1 %}
+
+                            {% for rsc in rh_company %}
+
+                                <tr role="row" class="odd">
+                                    <td class="sorting_1">{{rsc['id']}}</td>
+                                    <td>{{rsc['nom']}}</td>
+                                    <td>
+                                        <div class="wrapper" style="text-align:center">
+                                            <!--a href="{#{path('front_company_edit', { 'id': rsc['id'] }) }#}" rel="tooltip" title="Modifier la catégorie" class="btn btn-xs btn-primary custom-btn" role="button">
+                                                <i class="glyphicon glyphicon-edit"></i> 
+                                            </a-->
+                                            <!--a href="{#{path('front_company_remove', { 'id': rsc['id'] }) }#}" rel="tooltip" title="Supprimer la catégorie" class="btn btn-xs btn-primary custom-btn" role="button" onclick="return confirm('Voulez vous détruire cette donnée?')"><i class="glyphicon glyphicon-remove"></i> 
+                                            </a-->
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                        {% endif %}
+
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--div class="dataTables_info" id="company_result_info" role="status" aria-live="polite">Enregistrement(s) 1 à 10 sur 29</div-->
+        <!--div class="dataTables_paginate paging_full_numbers" id="company_result_paginate">
+            <a class="paginate_button first disabled" aria-controls="company_result" data-dt-idx="0" tabindex="0" id="company_result_first">Premier</a>
+            <a class="paginate_button previous disabled" aria-controls="company_result" data-dt-idx="1" tabindex="0" id="company_result_previous">Précédent</a>
+            <span><a class="paginate_button current" aria-controls="company_result" data-dt-idx="2" tabindex="0">1</a>
+                <a class="paginate_button " aria-controls="company_result" data-dt-idx="3" tabindex="0">2</a>
+                <a class="paginate_button " aria-controls="company_result" data-dt-idx="4" tabindex="0">3</a>
+            </span>
+            <a class="paginate_button next" aria-controls="company_result" data-dt-idx="5" tabindex="0" id="company_result_next">Suivant</a>
+            <a class="paginate_button last" aria-controls="company_result" data-dt-idx="6" tabindex="0" id="company_result_last">Dernier</a>
+        </div-->
+    </div>
+    
+
+
+
+
+
+
+
+    <hr />
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    {#{ datatable_render_js(datatable) }#}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var selector = "#company_result";
+
+            var defaults = {
+                "language": {
+                    "processing": "En cours de traitement...",
+                    "lengthMenu": "Voir _MENU_ entrées",
+                    "zeroRecords": "Aucun enregistrement trouvé",
+                    "info": "Enregistrement(s) _START_ à _END_ sur _TOTAL_",
+                    "infoEmpty": "Aucun enregistrement",
+                    "sInfoFiltered": "(filtré sur un total de _MAX_ enregistrements)",
+                    "infoPostFix": "",
+                    "search": "Rechercher",
+                    "url": "",
+                    "paginate": {
+                        "first": "Premier",
+                        "previous": "Précédent",
+                        "next": "Suivant",
+                        "last": "Dernier"
+                    }
+                }
+            };
+
+            var features = {
+                "autoWidth": true,
+                "deferRender": false,
+                "info": true,
+                "jQueryUI": false,
+                "lengthChange": true,
+                "ordering": true,
+                "paging": true,
+                "processing": true,
+                "scrollX": false,
+                "scrollY": "",
+                "searching": true,
+
+                "stateSave": false,
+                "delay": 0,
+
+            };
+
+            var options = {
+                "displayStart": 0,
+
+                "dom": "lfrtip",
+
+                "lengthMenu": [10, 25, 50, 100],
+                "orderClasses": true,
+                "order": [[0, "asc"]],
+                "orderMulti": true,
+
+                "pageLength": 10,
+                "pagingType": "full_numbers",
+
+                "renderer": "",
+
+                "scrollCollapse": false,
+                "searchDelay": 0,
+                "stateDuration": 7200,
+
+            };
+
+            var callbacks = {
+            };
+
+            //var ajax = {
+            //"serverSide": true,
+            //"ajax": {
+            //"url": "/app_dev.php/group/results",
+            //"type": "GET"
+            //},
+            //};
+
+            var ajax = {
+                "serverSide": true,
+                "ajax": {
+                    "url": "/app_dev.php/group/results",
+                    "type": "GET"
+                },
+            };
+
+            var searchCols = {
+                "searchCols": [
+                    null,
+                    null,
+                    null,
+                ]
+            };
+
+            setTimeout(function () {
+                var columns = {
+                    "columns": [
+                        {
+                            "contentPadding": "",
+                            "defaultContent": "",
+                            "name": "",
+                            "orderable": true,
+                            "searchable": true,
+                            "title": "Id",
+                            "visible": true,
+                            "className": "",
+                            "width": "",
+
+                            "data": "id",
+                        },
+                        {
+                            "contentPadding": "",
+                            "defaultContent": "",
+                            "name": "",
+                            "orderable": true,
+                            "searchable": true,
+                            "title": "Nom de l'entreprise",
+                            "visible": true,
+                            "className": "",
+                            "width": "",
+
+                            "data": "nom",
+                        },
+                        {
+                            "contentPadding": "",
+                            "defaultContent": "",
+                            "name": "",
+                            "orderable": false,
+                            "searchable": false,
+                            "title": "Actions",
+                            "visible": true,
+                            "className": "",
+                            "width": "",
+
+                            "data": "",
+                            "render": function (data, type, row, meta) {
+                                var actionsString = "";
+
+                                actionsString += '<div class="wrapper" style="text-align:center">';
+
+                                var routeParameters, attributes, visibleFlag, roleFlag;
+
+                                routeParameters = new Array();
+                                attributes = "";
+                                visibleFlag = true;
+                                roleFlag = true;
+
+
+                                roleFlag = false;
+                                roleFlag = true;
+
+                                if (true == visibleFlag && true == roleFlag) {
+                                    routeParameters["id"] = row.id;
+
+                                    var route = Routing.generate("front_company_edit", routeParameters);
+
+                                    attributes += 'rel="tooltip" ';
+                                    attributes += 'title="Modifier la catégorie" ';
+                                    attributes += 'class="btn btn-xs btn-primary custom-btn" ';
+                                    attributes += 'role="button" ';
+
+                                    var url = "<a ";
+                                    url += 'href="' + route + '" ';
+                                    url += attributes;
+                                    url += ">";
+
+
+                                    url += '<i class="glyphicon glyphicon-edit"></i> ';
+                                    url += "</a>";
+
+                                    actionsString += url;
+                                    //actionsString ="";
+                                    //alert(actionsString);
+                                }
+                                routeParameters = new Array();
+                                attributes = "";
+                                visibleFlag = true;
+                                roleFlag = true;
+
+
+                                roleFlag = false;
+                                roleFlag = true;
+
+                                if (true == visibleFlag && true == roleFlag) {
+                                    routeParameters["id"] = row.id;
+
+                                    var route = Routing.generate("front_company_remove", routeParameters);
+
+                                    attributes += 'rel="tooltip" ';
+                                    attributes += 'title="Supprimer la catégorie" ';
+                                    attributes += 'class="btn btn-xs btn-primary custom-btn" ';
+                                    attributes += 'role="button" ';
+
+                                    var url = "<a ";
+                                    url += 'href="' + route + '" ';
+                                    url += attributes;
+                                    url += 'onclick="';
+                                    url += "return confirm('Voulez vous détruire cette donnée?')" + '" ';
+                                    url += ">";
+
+
+                                    url += '<i class="glyphicon glyphicon-remove"></i> ';
+                                    url += "</a>";
+
+                                    actionsString += url;
+                                }
+
+                                actionsString += '</div>';
+                                actionsString = "";// <div class="wrapper" style="text-align:center">  </div>
+                                actionsString += '<div class="wrapper" style="text-align:center">';
+                                actionsString += '</div>';
+                                //alert(actionsString);
+
+                                return actionsString;
+                            },
+                        },
+                    ]
+                };
+
+                $.extend(defaults, features);
+                $.extend(defaults, options);
+                $.extend(defaults, callbacks);
+                //$.extend(defaults, ajax);
+                $.extend(defaults, columns);
+                $.extend(defaults, searchCols);
+
+                if ($.fn.dataTable.isDataTable(selector)) {
+                } else {
+                    var oTable = $(selector)
+                            .DataTable(defaults).on('draw.dt', function () {
+                    });
+                }
+
+
+
+            }, features.delay);
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        function render_boolean(data, type, row, meta, trueIcon, falseIcon, trueLabel, falseLabel) {
+            if ("" == trueIcon && "" == trueLabel) {
+                trueLabel = "true";
+            }
+
+            if ("" == falseIcon && "" == falseLabel) {
+                falseLabel = "false";
+            }
+
+            if (data == true) {
+                return "<span class='" + trueIcon + "'></span> " + trueLabel;
+            } else {
+                return "<span class='" + falseIcon + "'></span> " + falseLabel;
+            }
+        }
+
+        function render_datetime(data, type, row, meta, dateFormat) {
+            if (data != null && typeof data.timestamp != "undefined") {
+                moment.locale("fr");
+                return moment.unix(data.timestamp).format(dateFormat);
+            } else {
+                return null;
+            }
+        }
+
+        function render_timeago(data, type, row, meta) {
+            if (data != null && typeof data.timestamp != "undefined") {
+                moment.locale("fr");
+                return moment.unix(data.timestamp).fromNow();
+            } else {
+                return null;
+            }
+        }
+
+        function render_progress_bar(data, type, row, meta, barClasses, min, max, label, multi) {
+            if (!data) {
+                return '';
+            }
+
+            var valueNow = 'aria-valuenow="' + data + '"';
+            var valueMin = 'aria-valuemin="' + min + '"';
+            var valueMax = 'aria-valuemax="' + max + '"';
+            var intData = parseInt(data, 10);
+            var size = (intData - min) * 100 / (max - min);
+            var classNames = 'class="progress-bar ';
+
+            if (true == multi) {
+                if (size <= 35) {
+                    classNames += 'progress-bar-success' + '"';
+                }
+                if (size > 35 && size <= 70) {
+                    classNames += 'progress-bar-warning' + '"';
+                }
+                if (size > 70) {
+                    classNames += 'progress-bar-danger' + '"';
+                }
+            } else {
+                classNames += barClasses + '"';
+            }
+
+            var style = 'style="width:' + size + '%; color: black;"';
+            var result = '<div class="progress">';
+            result += '<div ' + classNames;
+            result += 'role="progressbar"' + valueNow + ' ' + valueMin + ' ' + valueMax + ' ' + style + '>';
+            if (true == label) {
+                result += data;
+            }
+            result += '</div></div>';
+
+            return result;
+        }
+
+        function render_editable_text(data, type, row, meta, colData) {
+            if (data != null) {
+                var str = colData.split(".").join("_");
+                var spanClass = "sg-editable-" + str;
+                var result = '<span class="' + spanClass + '"';
+                result += 'data-pk="' + row.id + '"data-type="text"' + '>' + data + '</span>';
+
+                return result;
+            } else {
+                return null;
+            }
+        }
+
+        function render_editable_datetime(data, type, row, meta, colData, dateFormat) {
+            if (data != null && typeof data.timestamp != "undefined") {
+                moment.locale("fr");
+                var spanClass = "sg-editable-" + colData;
+                var result = '<span class="' + spanClass + '"';
+                result += 'data-pk="' + row.id + '"data-type="combodate"' + '>';
+                result += moment.unix(data.timestamp).format(dateFormat);
+                result += '</span>';
+
+                return result;
+            } else {
+                return null;
+            }
+        }
+
+        function render_editable_boolean(data, type, row, meta, colData, trueLabel, falseLabel) {
+            if ("" == trueLabel) {
+                trueLabel = "true";
+            }
+
+            if ("" == falseLabel) {
+                falseLabel = "false";
+            }
+
+            var spanClass = "sg-editable-" + colData;
+            var result = '<span class="' + spanClass + '"';
+            result += 'data-pk="' + row.id + '"data-type="select"' + 'data-value="' + data + '"' + '>';
+
+            if (data == true) {
+                result += trueLabel;
+            } else {
+                result += falseLabel;
+            }
+
+            result += '</span>';
+
+            return result;
+        }
+    </script>
+
+{% endblock %}
+

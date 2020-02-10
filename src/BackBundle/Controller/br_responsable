@@ -1,0 +1,225 @@
+ /**
+     * @Secure(roles="ROLE_RH, ROLE_RH_LIMITE")
+     */
+    public function indexAction() {
+
+        $postDatatable = $this->get("sg_datatables.herachie");
+        $postDatatable->buildDatatable();
+        return $this->render('BackBundle:Responsable:index.html.twig', array('datatable' => $postDatatable));
+    }
+
+
+ public function getAllRoles() {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('FrontBundle:Role')->findAll();
+        $roles = array();
+
+        foreach ($entity as $key => $value) {
+            if (($value->getName() != 'ADMIN') && (($value->getName() != 'SALARY'))) {
+                $roles[$key]['id'] = $value->getId();
+                $roles[$key]['name'] = $value->getName();
+            }
+        }
+        return $roles;
+    }
+
+    public function getAllCompany() {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('FrontBundle:Company')->findAll();
+        $companies = array();
+
+
+        foreach ($entity as $key => $value) {
+            $companies[$key]['id'] = $value->getId();
+            $companies[$key]['nom'] = $value->getNom();
+        }
+        return $companies;
+    }
+
+
+
+/**
+     * @Secure(roles="ROLE_RH, ROLE_RH_LIMITE")
+     */
+    public function addAction(Request $request) {
+
+        $Reponsable = new Responsable();
+//        $entiter = new Company();
+        $em = $this->getDoctrine()->getManager();
+        $repoCompany = $em->getRepository('FrontBundle:Company');
+        $repoRole = $em->getRepository('FrontBundle:Role');
+        $roles = $this->getAllRoles();
+        $companies = $this->getAllCompany();
+
+        $form = $this->createForm(new ResponsableType($em), $Reponsable, array(
+            'cascade_validation' => true
+        ));
+
+        if ($request->getMethod() == 'POST') {
+//            die('POST');
+            $form->handleRequest($request);
+//            die('handleRequest');
+            if ($form->isValid()) {
+//                die('isValid');
+                $extraCompany = $form->get('extra_company')->getData();
+                $extraRole = $form->get('extra_role')->getData();
+                $Role = $repoRole->find($extraRole);
+                $Reponsable->setRole($Role);
+//                $tt = $form->getData();
+                //extra_company,extra_role
+                $extraCompany = $form->get('extra_company')->getData();
+                $explode = explode(",", $extraCompany);
+                foreach ($explode as $key => $value) {
+                    $company = $repoCompany->find($value);
+                    if ($company) {
+                        $Reponsable->addCompany($company);
+                    }
+                }
+//                $hierarchi->setLibeller($libeller);
+                $createdAt = new \DateTime("now");
+                $Reponsable->setCreatedAt($createdAt);
+//                var_dump($Reponsable);
+//                die('extra');
+                $em->persist($Reponsable);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('info', 'Vos Entité sont affectée avec succès');
+                return $this->redirect($this->generateUrl('users_company_back'));
+            } else {
+                $this->get('session')->getFlashBag()->add('erreur', 'erreur survenue lors de l\'affectation de vos entité');
+                return $this->redirect($this->generateUrl('users_company_back'));
+            }
+        }
+        return $this->render('BackBundle:Responsable:add.html.twig', array('form' => $form->createView(),
+                    'roles' => $roles,
+                    'companies' => $companies
+        ));
+    }
+
+
+/**
+     * @Secure(roles="ROLE_RH, ROLE_RH_LIMITE")
+     */
+    public function editAction(Request $request, $id) {
+//        die('editAction1');
+        $em = $this->getDoctrine()->getManager();
+        $Reponsable = $em->getRepository('FrontBundle:Responsable')->find($id);
+//        $entiter = new Company();
+        $repoCompany = $em->getRepository('FrontBundle:Company');
+        $repoRole = $em->getRepository('FrontBundle:Role');
+        $roles = $this->getAllRoles();
+        $companies = $this->getAllCompany();
+
+        $form = $this->createForm(new ResponsableEditType($em), $Reponsable, array(
+            'cascade_validation' => true
+        ));
+
+        if ($request->getMethod() == 'POST') {
+//            die('POST');
+            $form->handleRequest($request);
+//            die('handleRequest');
+            if ($form->isValid()) {
+//                die('isValid');
+                $extraCompany = $form->get('extra_company')->getData();
+                $extraRole = $form->get('extra_role')->getData();
+//                var_dump($extraCompany);
+//                var_dump($extraRole);
+//                die('isValid');
+                $Role = $repoRole->find($extraRole);
+                $Reponsable->setRole($Role);
+                // remove old company
+                $old_res_company = array();
+                $old_res_company = $Reponsable->getCompanies();
+                foreach ($old_res_company as $key => $value) {
+                    if ($value) {
+                        $Reponsable->removeCompany($value);
+                    }
+                }
+                $extraCompany = $form->get('extra_company')->getData();
+                $explode = explode(",", $extraCompany);
+                // affecter new company
+                foreach ($explode as $key => $value) {
+                    $company = $repoCompany->find($value);
+                    if ($company) {
+                        $Reponsable->addCompany($company);
+                    }
+                }
+//                var_dump($Reponsable);
+//                die('$value');
+//                $hierarchi->setLibeller($libeller);
+                $createdAt = new \DateTime("now");
+                $Reponsable->setCreatedAt($createdAt);
+//                $em->persist($Reponsable);
+                $em->flush($Reponsable);
+                $this->get('session')->getFlashBag()->add('info', 'Vos Entité sont affectée avec succès');
+                return $this->redirect($this->generateUrl('users_company_back'));
+            } else {
+                $this->get('session')->getFlashBag()->add('erreur', 'erreur survenue lors de l\'affectation de vos entité');
+                return $this->redirect($this->generateUrl('users_company_back'));
+            }
+        }
+        return $this->render('BackBundle:Responsable:edit.html.twig', array('form' => $form->createView(),
+                    'roles' => $roles,
+                    'companies' => $companies,
+                    'idres' => $Reponsable->getId(),
+        ));
+    }
+
+
+
+
+ /**
+     * @Secure(roles="ROLE_RH, ROLE_RH_LIMITE")
+     */
+    public function removeAction(Request $request, $id) {
+
+
+        $em = $this->getDoctrine()->getManager();
+        $Reponsable = $em->getRepository('FrontBundle:Responsable')->find($id);
+        $em->remove($Reponsable);
+        $em->flush();
+        $this->get('session')->getFlashBag()->add('info', 'Vos Entité sont supprimer avec succès');
+        return $this->redirect($this->generateUrl('users_company_back'));
+    }
+
+public function userCompanyResultsAction() {
+        $datatable = $this->get("sg_datatables.herachie");
+        $datatable->buildDatatable();
+        $query = $this->get('sg_datatables.query')->getQueryFrom($datatable);
+        return $query->getResponse();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

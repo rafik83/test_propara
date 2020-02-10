@@ -1,0 +1,415 @@
+
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href={{ asset('jquery/css/jPages.css') }} rel="stylesheet">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+            <i class="fa fa-check pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-sm alert-border-left alert-danger ">
+            <i class="fa fa-info pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <!-- Begin .page-heading -->
+    <div class="page-heading">
+        <div class="media clearfix">
+            {% if salary.photo is not null %}
+                <div class="media-left pr30">
+                    <a href="#">
+                        <img class="media-object mw150" style="height: 80px;"
+                             src="{{ path("pic_salary", {id:salary.id}) }}" alt="Photo du profil">
+                    </a>
+                </div>
+            {% endif %}
+            <div class="media-body va-m">
+                <h2 class="media-heading">{{ salary.nom }} {{ salary.prenom }}
+                    <small> -                 {% if is_granted('ROLE_RH') %}
+                        <a href="{{ path('front_salary_edit', {id:salary.id} ) }}">Modifier</a> | <a
+                            href="{{ path('front_salary_docs', {id:salary.id} ) }}">Gestion des documents </a>
+                        {% endif %}
+                        </small>
+                    </h2>
+                    <p class="lead">{#{ salary.poste }#}</p>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <span class="panel-icon">
+                            <i class="fa fa-user fa-2x align-icon"></i>
+                        </span>
+                        <span class="panel-title"> Informations du Salarié</span>
+                    </div>
+                    <div class="panel-body pn">
+                        <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                                <!--tr>
+                                    <td>
+                                        <span class="fa fa-folder text-primary"></span>
+                                    </td>
+                                    <td>Matricule</td>
+                                    <td>
+                                        {#{ salary.matricule }#}
+                                    </td>
+                                </tr-->
+                                <tr>
+                                    <td>
+                                        <span class="fa fa-info text-primary"></span>
+                                    </td>
+                                    <td>Nom</td>
+                                    <td>
+                                        {{ salary.nom }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="fa fa-info text-primary"></span>
+                                    </td>
+                                    <td>Prénom</td>
+                                    <td>
+                                        {{ salary.prenom }}
+                                    </td>
+                                </tr>
+                                {% if salary.numSecu is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-user-md text-primary"></span>
+                                        </td>
+                                        <td>Numéro de sécurité sociale</td>
+                                        <td>
+                                            {{ salary.numSecu }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.birthDay is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-birthday-cake text-primary"></span>
+                                        </td>
+                                        <td>Date de naissance</td>
+                                        <td>
+                                            {{ salary.birthDay|date('d/m/Y')  }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.dateBegin is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-calendar text-primary"></span>
+                                        </td>
+                                        <td>Date d'entrée</td>
+                                        <td>
+                                            {{ salary.dateBegin|date('d/m/Y') }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.dateEnd is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-calendar text-primary"></span>
+                                        </td>
+                                        <td>Date de sortie</td>
+                                        <td>
+                                            {{ salary.dateEnd|date('d/m/Y') }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.telephonePro is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-phone text-primary"></span>
+                                        </td>
+                                        <td>Téléphone professionnel</td>
+                                        <td>
+                                            {{ salary.telephonePro }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.telephonePerso is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-mobile-phone text-primary"></span>
+                                        </td>
+                                        <td>Téléphone personnel</td>
+                                        <td>
+                                            {{ salary.telephonePerso }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.emailPro is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-envelope text-primary"></span>
+                                        </td>
+                                        <td>Email</td>
+                                        <td>
+                                            {{ salary.emailPro }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.emailPerso is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-envelope-o text-primary"></span>
+                                        </td>
+                                        <td>Email personnel</td>
+                                        <td>
+                                            {{ salary.emailPerso }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.poste is not null %}
+                                    <!--tr>
+                                        <td>
+                                            <span class="fa fa-briefcase
+                                                  text-primary"></span>
+                                        </td>
+                                        <td>Intitulé de poste</td>
+                                        <td>
+                                            {#{ salary.poste }#}
+                                        </td>
+                                    </tr-->
+                                {% endif %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-md-8">
+                {% set count_docs = 0%}
+                {% set count_bu = 0  %}
+                {% for bulletin in bulletins %}
+                    {% set count_bu = count_bu + bulletin|length %}
+                {% endfor %}
+                {% for t in tree %}
+                    {% set count_docs = count_docs + t[1]|length %}
+                {% endfor %}
+                <div class="tab-block">
+                    <ul class="nav nav-tabs responsive " id="myTabs">
+                        <li class="active">
+                            <a href="#bulletins" data-toggle="tab" class="custom-tab"> <span
+                                    class="badge badge_custom">{{ count_bu}}</span> Bulletins de paie</a>
+                        </li>
+                        <li>
+                            <a href="#docs" data-toggle="tab" class="custom-tab"> <span class="badge badge_custom">{{ count_docs }}</span>
+                                Documents </a>
+                        </li>
+                        <li>
+                            <a href="#codocs" data-toggle="tab" class="custom-tab"> <span class="badge badge_custom">{{ codocs|length }}</span>
+                                Documents communs</a>
+                        </li>
+                        <li>
+                            <a href="#sdocs" id="sdocs_link" data-toggle="tab" class="custom-tab"> <span
+                                    class="badge badge_custom">{{ sdocs|length }}</span> Signatures en attente</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content responsive ">
+
+                        <div id="bulletins" class="tab-pane active responsive ">
+                            <div class="col-xs-3" style="padding-right: 0px;">
+                                <ul class="nav nav-tabs tabs-left vertical-text" role="tablist" style="width: 100%;">
+                                    {% for key,bulletin in bulletins %}
+                                        <li role="presentation" {% if curyear == key %}class="active"{% endif %} style="width: 100%;padding-right: 0px;" ><a href="#page_{{ key }}" aria-controls="{{ key }}" role="tab" data-toggle="tab"> <b>{{ key }}</b> <span class="badge">{{ bulletin|length }} bulletin(s)</span></a></li>
+                                        {% endfor %}
+                                </ul>
+                                {% if bulletins|length == 0 %}
+                                    <i class="fa fa-warning  text-warning"></i> Aucun document trouvé
+                                {% else %}
+
+                                {% endif %}
+
+
+                            </div>
+                            <div class="col-xs-9" style="padding-left: 0px;">
+
+
+
+                                <div class="tab-content"  >
+
+                                   
+                                    {% for key,bus in bulletins %}
+                                        <div role="tabpanel" class="tab-pane {% if curyear == key %}active{% endif %}"  id="page_{{ key }}" >
+                                            <ul  style="list-style: none;">
+                                                {% for bulletin in bus %}
+                                                    <li class="media mt25">
+                                                        <a class="pull-left" href="#"><i class="fa fa-file-pdf-o fa-4x text-system"></i> </a>
+
+                                                        <div class="media-body">
+                                                            <h5 class="media-heading mb20"> {{ bulletin.month }}/{{ bulletin.year }}
+                                                                {% if bulletin.ext is not null %}-- {{ bulletin.ext }} {% endif %}
+                                                                <small> - Certifié electroniquement</small>
+                                                                {% if is_granted('ROLE_RH') %}
+                                                                    {% if bulletin.obsolete %}
+                                                                        <small class="text-danger-dark">(Obsolete)</small>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            </h5>
+                                                            <div class="media-links">
+
+                                                                <span class="text-light fs12 mr10">
+                                                                    <span class="fa fa-floppy-o text-primary mr5"></span><a
+                                                                        href="{{ path('front_download_signed_doc', {id:bulletin.id}) }}"> Télécharger </a></span>
+                                                            </div>
+                                                        </div>
+
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endfor %}
+                                </div> </div>                </div>
+                        <div id="codocs" class="tab-pane responsive ">
+                            <ul style="list-style: none;">
+                                {% if codocs|length > 0 %}
+                                    {% set doc_exist = true %}
+                                {% else %}
+                                    {% set doc_exist = false %}
+                                {% endif %}
+
+                                {% for doc in codocs %}
+
+
+                                    <div class="media mt25">
+                                        <a class="pull-left" href="#"><i
+                                                class="fa fa-file-text fa-4x text-primary"></i> </a>
+
+                                        <div class="media-body">
+                                            <h5 class="media-heading mb20"> {{ doc.name }}</h5>
+                                            {{ doc.createdAt|date('d/m/Y') }}
+                                            <small> - <span
+                                                    class="fa fa-floppy-o text-primary mr5"></span><a
+                                                    href="{{ path('front_codoc_download', {id:doc.id}) }}">
+                                                    Télécharger </a></small>
+
+
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+
+                                {% if doc_exist == false %}
+                                    <i class="fa fa-warning  text-warning"></i> Aucun document trouvé
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div id="docs" class="tab-pane responsive ">
+                            <ul style="list-style: none;">
+
+
+                                {% set doc_exist = false %}
+                                {% for t in tree %}
+                                    {% if  t[1]|length > 0 %}
+                                        <li id="{{ t[0].id }}" class="folder expanded unselectable"><h4><i
+                                                    class="fa fa-folder-open text-dark"></i> {{ t[0].libelle }}</h4>
+
+                                            <ul>
+                                                {% for doc in t[1] %}
+                                                    {% set doc_exist = true %}
+                                                    <div class="media mt25">
+                                                        <a class="pull-left" href="#"><i
+                                                                class="fa fa-file-text fa-4x text-primary"></i> </a>
+
+                                                        <div class="media-body">
+                                                            <h5 class="media-heading mb20"> {{ doc.name }}</h5>
+                                                            {{ doc.createdAt|date('d/m/Y') }}
+                                                            <small> -  {% if doc.specialDoc %}<i
+                                                                    class="fa fa-pencil-square text-primary"></i>{% if doc.specialSigned %}
+                                                                <i class="fa fa-certificate text-system"></i>{% else %} <i
+                                                                    class="fa fa-certificate"></i>{% endif %} {% endif %}
+                                                                <span
+                                                                    class="fa fa-floppy-o text-primary mr5"></span><a
+                                                                    href="{{ path('front_download_doc', {id:doc.id}) }}">
+                                                                    Télécharger </a></small>
+
+
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </ul>
+                                            <hr/>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if doc_exist == false %}
+                                    <i class="fa fa-warning  text-warning"></i> Aucun document trouvé
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div id="sdocs" class="tab-pane responsive ">
+                            <ul style="list-style: none;">
+                                {% if sdocs|length > 0 %}
+                                    {% set doc_exist = true %}
+                                {% else %}
+                                    {% set doc_exist = false %}
+                                {% endif %}
+
+                                {% for doc in sdocs %}
+
+
+                                    <div class="media mt25">
+                                        <a class="pull-left" href="#"><i
+                                                class="fa fa-file-pdf-o  fa-4x text-primary"></i> </a>
+
+                                        <div class="media-body">
+                                            <h5 class="media-heading mb20"> {{ doc.name }} </h5>
+                                            {{ doc.createdAt|date('d/m/Y') }}
+                                            {% if is_granted('ROLE_USER') %}
+                                                <small> - <span
+                                                        class="fa fa-pencil-square text-primary mr5"></span><a
+                                                        href="{{ path("sign_document", {id:doc.id}) }}">
+                                                        Signer ce document </a></small>
+                                                    {% endif %}
+
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                                {% if doc_exist == false %}
+                                    <i class="fa fa-warning  text-warning"></i> Aucun document trouvé
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="desc-tree">
+                        <i class="fa fa-pencil-square"></i> Le document requiert une signature.<br/>
+                        <i class="fa fa-certificate "></i> Le document est en attente de signature. <br/>
+                        <i class="fa fa-certificate text-system"></i> Le document est signé avec succés par le salarié
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% endblock %}
+
+            {% block javascripts %}
+                {{ parent() }}
+                <script type="text/javascript" src="{{ asset('jquery/js/jPages.min.js') }}"></script>
+                <script type="text/javascript">
+
+                    $(document).ready(function () {
+                        $('.holder').jPages({
+                            containerID: "bulletins",
+                            perPage: 10,
+                            keyBrowse: true,
+                            scrollBrowse: true,
+                            previous: "Précédent",
+                            next: "Suivant"
+                        });
+                    });
+                </script>
+            {% endblock %}

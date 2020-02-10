@@ -1,0 +1,3 @@
+ <label for="user">{{ form_label(form.email, "Email") }}</label>
+                {{ form_errors(form.email) }}
+                {{ form_widget(form.email, {'attr': {'class': 'task_field form-control', 'id':'email' } }) }}

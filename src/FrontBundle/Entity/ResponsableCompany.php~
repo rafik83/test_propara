@@ -1,0 +1,46 @@
+<?php
+
+/*
+ * This file is part of the fulldon project
+ *
+ * (c) SAMI BOUSSACSOU <boussacsou@intersa.fr>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace FrontBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+//use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+//use Symfony\Component\Validator\Constraints as Assert;
+//use FrontBundle\Entity\Company;
+//use FrontBundle\Entity\Role;
+
+/**
+ * @ORM\Entity(repositoryClass="ResponsableCompanyRepository")
+ * @ORM\Table(name="responsable_company")
+ * @ORM\HasLifecycleCallbacks
+
+ */
+class ResponsableCompany {
+    
+    /**
+     * @ORM\Column(name="responsable_id", type="integer", length=11)
+     */
+    private $responsableId;
+    
+    /**
+     * @ORM\Column(name="company_id", type="integer", length=11)
+     */
+    private $companyId;
+
+    
+
+    
+
+    
+
+   
+}

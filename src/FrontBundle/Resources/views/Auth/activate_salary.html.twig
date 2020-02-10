@@ -1,0 +1,164 @@
+{% extends 'FrontBundle:Auth:layout_auth.html.twig' %}
+
+{% form_theme form 'FrontBundle:Form:fields.html.twig' %}
+{% block title %}
+    {{ 'Changer votre mot de passe '|upper }}
+{% endblock %}
+{% block body %}
+
+    {% if app.session.flashbag.has('erreur')%}
+        {% set message_user %}
+            <p class="text-center" style="color: red; margin: -24px 0 -24.5px  !important;">
+            <ul>
+                {% for flashMessage in app.session.flashbag.get('erreur',[]) %}
+                    <li style="color: red !important;">{{ flashMessage }}</li>
+                    {% endfor %}
+            </ul>
+        </p>
+    {% endset %}
+{% else %}
+    {% set message_user= null %}
+{% endif %}
+
+
+<!-- Start: Main -->
+<div id="main" class="animated fadeIn">
+    <!-- Start: Content-Wrapper -->
+    <section id="content_wrapper">
+
+        <!-- begin canvas animation bg -->
+        <div id="canvas-wrapper">
+            <canvas id="demo-canvas"></canvas>
+        </div>
+
+        <!-- Begin: Content -->
+        <section id="content">
+
+            <div class="admin-form theme-info " id="login1" style="max-width: 463px; !important;">
+                <div class="row">
+                    <div class=" text-center img-responsive">
+                        {% if logo is not null %}
+                            <img src="{{ asset('uploads/'~logo )| apply_filter('my_thumb') }}"  alt="Logo" />
+                        {% else %}
+                            FULLRH
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-6 text-right va-b pr5">
+                    </div>
+                </div>
+
+                <div class="panel panel-info mt10">
+                    <div class="title_auth heading-border bg-white " style="padding-top: 15px;">
+                        {{ 'Activer votre compte '|upper }}
+                    </div>
+
+                    <!-- end .form-header section -->
+                    {% block from %}
+                        <form id="formData" class="form-signin console-form-auth " method="post"
+                              action="{{ path('activate_salary',{'code':code}) }}">
+                        {% endblock %}
+
+                        <div class="section col-xs-12 col-sm-12 col-md-12 form-fix">
+                            <br />
+                            {% if message_user is not empty %}
+                                <br />
+                                <div class="custom-alert">{{ message_user }}</div>
+                                <br />
+                                <hr  style="margin: 15px;"/>
+                            {% endif %}
+                            <div class="alert alert-success text-justify" role="alert"><i class="fa fa-info fa-lg"></i> Veuillez remplir les champs ci-dessous afin d'activer votre compte.
+                            </div>
+                            <label class="activate_label" > <b>N° de sécu et la clé :</b></label>
+                            <label for="secu_name" class="field prepend-icon">
+                                <input type="text" name="num_secu" id="num_secu " class="form form-control" placeholder="N° de sécu et la clé" required="required" autocomplete="off"/>
+                                <label for="num_sec" class="field-icon">
+                                    <i class="fa fa-user-md"></i>
+                                </label>
+                            </label>
+                            <label class="activate_label" > <b>Date de naissance : </b></label>
+                            <label for="date_naissance" class="field prepend-icon">
+                                <input type="date" name="date_naissance" id="date_naissance " class="form form-control" placeholder="Date de naissance" required="required" autocomplete="off"/>
+                                <label for="date_naissance" class="field-icon">
+                                    <i class="fa fa-calendar"></i>
+                                </label>
+                            </label>
+
+                            <label class="activate_label"><b>Mot de passe  (que vous souhaitez utiliser):</b></label>
+                            <label for="password" class="field prepend-icon">
+                                {{ form_widget(form.password.first, { 'attr': {'class': 'form-control','autofocus':'true','placeholder': 'Nouveau mot de passe'} }) }}
+                                <label for="password" class="field-icon">
+                                    <i class="fa fa-lock"></i>
+                                </label>
+                            </label>
+                            <br/>
+                            <label for="password" class="field prepend-icon">
+                                {{ form_widget(form.password.second, { 'attr': {'class': 'form-control', 'placeholder': 'Saisissez à nouveau votre mot de passe'} }) }}
+                                <br/>
+                                <span class="msg-error alert-danger">{{ form_errors(form.password.first) }}</span>
+                                <label for="password" class="field-icon">
+                                    <i class="fa fa-lock"></i>
+                                </label>
+                            </label>
+
+                        </div>
+                        <!-- end section -->
+
+                        <!-- end .form-body section -->
+                        <div class="panel-footer clearfix p10 ph15">
+                            <button type="submit" class="button btn-success  btn  btn-block  ">Confirmer
+                            </button>
+                        </div>
+                        <!-- end .form-footer section -->
+
+                        {{ form_widget(form._token) }}
+                    </form>
+                </div>
+
+            </div>
+
+
+        </section>
+        <!-- End: Content -->
+
+    </section>
+    <!-- End: Content-Wrapper -->
+
+</div>
+<!-- End: Main -->
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+            var msg = "";
+            var elements = document.getElementsByTagName("input");
+
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].oninvalid = function (e) {
+                    if (!e.target.validity.valid) {
+                        switch (e.target.id) {
+                            case 'user_password_first' :
+                                e.target.setCustomValidity("Veuillez saisir le mot de passe !");
+                                break;
+                            case 'user_password_second' :
+                                e.target.setCustomValidity("Veuillez ressaisir le mot de passe !");
+                                break;
+
+                        }
+                    }
+                };
+                elements[i].oninput = function (e) {
+                    e.target.setCustomValidity(msg);
+                };
+            }
+        });
+
+    </script>
+
+{% endblock %}

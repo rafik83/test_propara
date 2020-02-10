@@ -1,0 +1,123 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("vendor/plugins/dropzone/css/dropzone.css") }}">
+    {% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <a href="dashboard.html">Ajouter un ZIP</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('back_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-trail">Ajouter un ZIP</li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <hr class="small-margin"/>
+    <br/>
+        <!-- Page Heading-->
+        <div class="page-heading">
+
+            {% for flashMessage in app.session.flashbag.get('info') %}
+                <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+                    <i class="fa fa-check pr10"></i>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('erreur') %}
+                <div class="alert alert-sm alert-border-left alert-danger ">
+                    <i class="fa fa-info pr10"></i>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <div class="row">
+
+                <div class="col-sm-4 hidden-xs pr20">
+
+                    <h4> Uploader vos fichiers ZIP</h4>
+                    <ul class="icon-list">
+                        <li>
+                            <i class="fa fa-exclamation-circle text-warning fa-lg pr10"></i>
+                            <b>Taille maximale:</b> 1 GO
+                        </li>
+                        <li>
+                            <i class="fa fa-exclamation-circle text-warning fa-lg pr10"></i>
+                            <b>Structure :</b> {{ prefix }}_MOIS_ANNEE
+                        </li>
+                        <li>
+
+                            <i class="fa fa-exclamation-circle text-warning fa-lg pr10"></i>
+                            <b>Localisation FTPs :</b> Racine.
+                        </li>
+                    </ul>
+
+                    <hr class="alt mt25 mb15">
+
+                    <div class="text-center">
+                        <p>Le traitement du fichier sera planifié directement après son upload</p>
+                    </div>
+
+                </div>
+
+                <div class="col-xs-12 col-md-8  admin-form theme-primary panel-body bg-light">
+
+                <form action="{{ path('back_upload_zip') }}" method="post"
+                          class="form-group" {{ form_enctype(form) }}>
+
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+
+                                <label for="inputEmail3"
+                                       class=" control-label">{{ form_label(form.name, "Nom du fichier") }}</label>
+
+                                <div>
+                                    {% if form.name.vars.errors|length %}
+                                        {# Affichage des erreurs pour ce champ précis. #}
+                                        <div class="form-group has-error">
+                                            <label class="control-label"
+                                                   for="inputError"> {{ form_errors(form.name) }}</label>
+                                            {{ form_widget(form.name, {'attr': { 'class': 'task_field form-control input-sm', 'id':'libelle'} }) }}
+                                        </div>
+                                    {% else %}
+                                        {# Génération de l'input. #}
+                                        {{ form_widget(form.name, {'attr': { 'class': 'task_field form-control input-sm', 'id':'libelle'} }) }}
+                                    {% endif %}
+                                </div>
+                                <br />
+                                <div style="margin-bottom:10px;">
+                                    <label for="user">{{ form_label(form.company, "Entreprise") }}</label><span class="required-input" > * </span>
+                                    {{ form_errors(form.company) }}
+                                    {{ form_widget(form.company, {'attr': {'class': 'task_field form-control' } }) }}
+                                </div>
+
+                            </div>
+                            {{ form_rest(form) }}
+                            <div class=" col-md-12">
+                                <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Valider le formulaire</button>
+                                <button type="reset" class="btn btn-primary btn-xs"><i class="fa fa-refresh"></i> Annuler</button>
+                            </div>
+                            </div>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock %}

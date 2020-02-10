@@ -1,0 +1,47 @@
+ 
+$var = $this->fetchExisteSalaryBy($company_id, $user_id, $matricule_salary);
+ var_dump($var[0]['id']);
+                            var_dump($array_fetch_salary_by[0]['id']);
+                            die('count + fetch = 1');
+
+                            if ($var[0]['id'] != $array_fetch_salary_by[0]['id']) {
+                                $this->get('session')->getFlashBag()->add('warning', 'Ce salarier existe déja avec la méme matricule dans la méme societé');
+                                return $this->redirect($this->generateUrl('front_salary_add'));
+                            } else {
+
+//                                die('icicici');
+                                $this->get('session')->getFlashBag()->add('info', 'Votre salarié est crée avec succès');
+                                return $this->redirect($this->generateUrl('front_homepage'));
+                            }
+
+
+
+------------------------------------------------
+
+ if (count($array_fetch_salary_by) > 0) {
+//                            die('count($array_fetch_existe_salary_by) > 0');
+                            $Company = $db->getRepository('FrontBundle:Company')->find($company_id);
+                            if ($Company) {
+
+                                $array_nbr_user_in_salary = $this->getLigneSalaryBy($company_id, $user_id, $matricule_salary);
+                               
+                                $nb_occurence = $array_nbr_user_in_salary[0]['user_id'];
+                                 var_dump($nb_occurence);
+                                die('icici');
+//                                var_dump($company_id);
+//                                var_dump($user_id);
+//                                var_dump($matricule_salary);
+
+                                if ($nb_occurence == 1) {
+//                                    die('1');
+                                    $this->get('session')->getFlashBag()->add('info', 'Votre salarié est crée avec succès');
+                                    return $this->redirect($this->generateUrl('front_homepage'));
+                                }
+                                if ($nb_occurence > 1) {
+                                    die('> 1');
+                                    $this->get('session')->getFlashBag()->add('warning', 'Ce salarier existe déja avec la méme matricule' . $matricule_salary . 'dans la méme societé' . $Company->getNom()); //et dans la méme societé
+                                    return $this->redirect($this->generateUrl('front_salary_add'));
+                                }
+//                                die('count + fetch = 1');
+                            }
+                        }

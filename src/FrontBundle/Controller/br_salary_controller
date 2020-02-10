@@ -1,0 +1,79 @@
+public function getLigneSalaryByCompany($company_id, $user_id) {
+//        $query = "SELECT * FROM propara_test.salary ";
+        $query = "SELECT count(user_id) as user_id FROM 3cexternpaie_fulloffice_db.salary ";
+        $query .= ' ';
+        $query_where = "where  company_id ='" . $company_id . "'";
+        $query_where .= ' ';
+        $query_and = "and  user_id ='" . $user_id . "'";
+        $query_and .= ' ';
+        $query_and .= "and  matricule ='" . $matricule . "'";
+        $query_and .= ' ';
+        $queryfinale = $query . $query_where . $query_and;
+
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $stmt = $em->getConnection()->prepare($queryfinale);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+
+------------------
+
+
+ public function getLigneSalaryByUser($user_id) {
+//        $query = "SELECT * FROM propara_test.salary ";
+        $query = "SELECT * FROM 3cexternpaie_fulloffice_db.salary ";
+        $query_where = "where  user_id ='" . $user_id . "'";
+        $query_where .= ' ';
+//        $query_and .= "and  matricule ='" . $matricule . "'";
+//        $query_and .= ' ';
+        $queryfinale = $query . $query_where;
+
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $stmt = $em->getConnection()->prepare($queryfinale);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+-------------------------emailperso + twig--------------
+
+<label for="user">{{ form_label(form.emailPerso, "Email personnel") }} <span class="required-input"> * </span></label>
+                        {% if form.emailPerso.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.emailPerso) }}
+                                </label>
+                                {{ form_widget(form.emailPerso, {'attr': {'class': 'task_field form-control', 'id':'email_perso' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.emailPerso, {'attr': {'class': 'task_field form-control', 'id':'email_perso' } }) }}
+                        {% endif %}
+
+---------------------------------------------
+
+var email = $("#salary_form_emailPerso").val();
+                $('#salary_form_emailPerso').validationEngine('attach');
+                //$('#frm_add_salary').validationEngine('attach');
+                //var valid_email = $("#frm_add_salary").validationEngine('validate');
+                var valid_email = $("#salary_form_emailPerso").validationEngine('validate');
+                //alert(valid_email);
+                if (valid_email) {
+                    $('#salary_form_emailPerso').validationEngine('hide');
+                    $('#frm_add_salary').validationEngine('detach');
+                    $('#salary_form_emailPerso').validationEngine('detach');
+                    $("#btn_add_salary").css('display', 'block');
+                    $("#btn_add_salary").css('margin-left', '700px');
+                    $("#btn_annuler_add_salary").css('margin-top', '-42px');
+                } else {
+
+                    $("#btn_add_salary").css('display', 'none');
+                    $('#salary_form_emailPerso').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Vous devez saisir un E-mail valide', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                    $('#frm_add_salary').validationEngine('attach');
+                    $('#salary_form_emailPerso').validationEngine('attach');
+
+                }
+
+

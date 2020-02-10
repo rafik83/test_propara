@@ -1,0 +1,72 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("vendor/upload/css/jquery.fileupload.css") }}">
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <a href="dashboard.html"> Dépôts à imprimer </a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('back_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-trail"> Dépôts à imprimer </li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <hr class="small-margin"/>
+    <br/>
+    <div class="col-md-8 col-md-offset-4 admin-form theme-primary mw1000 center-block panel-body bg-light">
+    <!-- Page Heading-->
+
+
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+            <i class="fa fa-check pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-sm alert-border-left alert-danger ">
+            <i class="fa fa-info pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+
+        <div class="row">
+            <div class="form-group col-md-12">
+    <table class="table">
+    <thead>
+    <th>Date </th>
+    <th>Nom du dépôt</th>
+    <th>Lien de téléchargement</th>
+    </thead>
+    <tbody>
+    {% for depot in depots %}
+    <tr>
+    <td>{{ depot.createdAt|date('d/m/Y') }}</td>
+    <td>{{ depot.filename }}</td>
+    <td><a href="{{ path('get_print_depot', {'name':depot.filename}) }}" >Télécharger</a></td>
+</tr>
+    {% endfor %}
+</tbody>
+    </table>
+
+</div>
+
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    </script>
+{% endblock %}

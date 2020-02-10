@@ -1,0 +1,16 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 172.99.0.33
+    database_port: null
+    database_name: gedrh
+    database_user: root
+    database_password: 33Dx8014
+    mailer_transport: smtp
+    smtp_port: 25
+    mailer_host:  email-smtp.eu-west-1.amazonaws.com
+    mailer_user: AKIAITUHAWPRPJVCVALQ
+    mailer_password: AnfZOju9TUp4ir2St9cAw7hHup0wDcltbNFsnP3e5nVq
+    mailer_port: 587
+    mailer_encryption: tls
+    auth_mode: login
+    secret: a8457606b83df0c1bd45193c4558281079a284dc

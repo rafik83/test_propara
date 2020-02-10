@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% set mycolor =  'color'|get_theme  %}
+        {% set logo =  'logo'|get_theme  %}
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8">
+        <title>{% block title %}Administration{% endblock %}</title>
+        <meta name="author" content="Intersa">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block stylesheet %}
+            <!-- Font CSS (Via CDN) -->
+            <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'>
+            <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+            <!-- Theme CSS -->
+            <link rel="stylesheet" type="text/css" href="{{ asset("assets/skin/default_skin/css/theme.css") }} ">
+            <link href="{{ asset("jquery/css/jquery.dataTables.css ") }}" rel="stylesheet">
+            <!-- Favicon -->
+            <link rel="shortcut icon" href="{{ asset("assets/img/favicon.png") }} ">
+            <link href={{ asset('assets/admin-tools/admin-forms/css/admin-forms.css') }} rel="stylesheet">
+            <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+            <link href="{{ asset('assets/css/bootstrap3-dialog-1.34.9/bootstrap-dialog.min.css') }}" rel="stylesheet" type="text/css" />
+            <link rel="stylesheet" href="{{ asset('pluguin/validationEngine/validationEngine.jquery.css') }}" />
+            <style>
+
+                body.sb-top #sidebar_left .sidebar-menu > li.active > a, body.sb-top #sidebar_left .sidebar-menu > li:hover > a, body.sb-top #sidebar_left .sidebar-menu > li > a.menu-open, body.sb-top #sidebar_left .sidebar-menu > li > a:hover, body.sb-top #sidebar_left .sidebar-menu > li > a:focus {
+                    background-color: {{ mycolor }} !important;
+                }
+                body.sb-top #sidebar_left .sidebar-menu > li > a {
+                    color: #fff;
+                }
+                .clx2{
+
+                    background-color: #7bc142 !important;
+                    color: #FFFFFF;
+                }
+                #sidebar_left {
+                    background-color: {{ mycolor|change_color(-0.7) }};
+                }
+
+                .btn-primary {
+                    background-color: {{ mycolor }} !important;
+                }
+                .btn-primary:active, .btn-primary:hover, .btn-primary:focus {
+                    background-color: {{ mycolor|change_color(-0.7) }} !important;
+                    border-color: {{ mycolor }} !important;
+                }
+                .text-primary {
+                    color: {{ mycolor }};
+                }
+                .label-primary {
+                    background-color: {{ mycolor|change_color(-0.7) }};
+                }
+                .progress-bar-primary {
+                    background-color: {{ mycolor|change_color(-0.7) }};
+                }
+                a {
+                    color: {{ mycolor }};
+                    text-decoration: none;
+                }
+                a:hover {
+                    color: {{ mycolor|change_color(-0.7) }};
+                    text-decoration: none;
+                }
+                .ui-pnotify.custom .ui-pnotify-container {
+                    background-color: {{ mycolor }} !important;
+                    background-image: none !important;
+                    border: none !important;
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    width: 350px;
+                    padding-top: 10px;
+                    padding-bottom: 1px;
+
+
+                }
+                .sidebar-menu > li > ul > li > a {
+                    color: #fff;
+                }
+                .sidebar-menu > li > ul {
+                    background-color: {{ mycolor }};
+                }
+                .badge_custom {
+                    background-color: {{ mycolor }};
+                    font-size: 10px !important;
+                }
+                /* Sub-Menu Active Item - Icon Color */
+                .sidebar-menu > li > ul > li.active > a > span:nth-child(1),
+                .sidebar-menu > li > ul > li > a.menu-open > span:nth-child(1) {
+                    color: {{ mycolor|change_color(-0.7) }} !important;
+                }
+
+                .sidebar-menu > li > ul > li:hover > a:after, .sidebar-menu > li > ul > li:focus > a:after , .sidebar-menu > li > ul > li:active > a:after{
+                    background:  {{ mycolor|change_color(-0.7) }} !important;
+                }
+                .bg-primary.light {
+                    background-color: {{ mycolor|change_color(-0.7) }} !important;
+                }
+                .bg-primary.light:hover {
+                    background-color: {{ mycolor }} !important;
+                }
+            </style>
+        {% endblock %}
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+    </head>
+
+    <body class="sb-top sb-top-sm">
+
+        <!-- Start: Main -->
+        <div id="main">
+
+            <!-- Start: Header -->
+            <header class="navbar navbar-static-top navbar-shadow">
+                <div class="navbar-branding">
+                    <a class="navbar-brand" href="#">
+                        {% if logo is not null %}
+                            <img src="{{ asset('uploads/'~logo )| apply_filter('my_thumb') }}"  alt="Logo" />
+                        {% else %}
+                            FULLRH
+                        {% endif %}
+                    </a>
+                    <span id="toggle_sidemenu_l" class="ad ad-lines"></span>
+                </div>
+
+                <ul class="nav navbar-nav navbar-right">
+                    {% if is_granted('ROLE_RH') or is_granted('ROLE_RH_LIMITE') %}
+                        <li>
+                            <div class="navbar-btn btn-group">
+                                <a href="#" class="topbar-menu-toggle btn btn-sm active" data-toggle="button" aria-pressed="true">
+                                    <span class="fa fa-dashboard"></span>  Tableau de bord de consommation
+                                </a>
+                            </div>
+                        </li>
+                    {% endif %}
+                    <li class="dropdown menu-merge">
+
+                        <a href="{{ path('logout_front') }}"><i class="fa fa-power-off pr5"></i> D&eacute;connexion</a>
+
+                    </li>
+                    <li id="toggle_sidemenu_t">
+                        <span class="fa fa-caret-up"></span>
+                    </li>
+                </ul>
+            </header>
+            <!-- End: Header -->
+
+            <!-- Start: Sidebar -->
+            <aside id="sidebar_left" class="">
+
+                <!-- Start: Sidebar Left Content -->
+                <div class="sidebar-left-content nano-content">
+                    <!-- Start: Sidebar Menu -->
+                    <ul class="nav sidebar-menu">
+                        {% if is_granted('ROLE_RH') or is_granted('ROLE_ADMIN') or is_granted('ROLE_RH_LIMITE') %}
+                            <li class="{% if app.request.get('_route') == 'front_homepage' or
+                app.request.get('_route') == 'front_salary_add' or
+                app.request.get('_route') == 'front_salary_edit' or
+                app.request.get('_route') == 'front_salary_remove' or
+                app.request.get('_route') == 'front_salary_docs' or
+                app.request.get('_route') == 'front_salary_add_doc' or
+                app.request.get('_route') == 'front_salary_remove_doc' or
+                app.request.get('_route') == 'front_salary_visibility_doc' or
+                app.request.get('_route') == 'front_profile_salary'%}active{% endif %}" >
+                                <a href="{{ path('front_homepage') }}">
+                                    <span class="fa fa-users"></span>
+                                    <span class="sidebar-title">Gestion des salaries</span>
+                                </a>
+                            </li>
+                            <li class="{% if app.request.get('_route') == 'front_manage_cats' or
+                app.request.get('_route') == 'front_cats_add' or
+                app.request.get('_route') == 'front_cats_edit' or
+                app.request.get('_route') == 'front_cats_remove' %}active{% endif %}" >
+                                <a href="{{ path('front_manage_cats') }}">
+                                    <span class="fa fa-sitemap"></span>
+                                    <span class="sidebar-title">Gestion des catégories</span>
+                                </a>
+                            </li>
+
+
+                            <li class="{% if app.request.get('_route') == 'front_manage_company' %}active{% endif %}" >
+                                <a class="accordion-toggle" href="#">
+                                    <span class="fa fa-building"></span>
+                                    <span class="sidebar-title">Gestion des entités</span>
+                                    <span class="caret"></span>
+                                </a>
+
+                                <ul class="nav sub-nav">
+                                    {% if is_granted('ROLE_RH') or is_granted('ROLE_ADMIN') or is_granted('ROLE_RH_LIMITE') %}
+                                        <li class="{% if app.request.get('_route') == 'front_manage_company' %}active{% endif %}">
+                                            <a href="{{ path('front_manage_company') }}">
+                                                <span class="fa fa-building-o"></span>
+                                                <span class="sidebar-title">Gestion des entreprises</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+
+                                    {#% if is_granted('ROLE_RH_LIMITE')   %}
+                                        {% if app.user.id|authorize_user %}
+                                            <li class="{% if app.request.get('_route') == 'front_manage_company' %}active{% endif %}">
+                                                <a href="{{ path('front_manage_company') }}">
+                                                    <span class="fa fa-building-o"></span>
+                                                    <span class="sidebar-title">Gestion des entreprises</span>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %#}
+
+                                    <!--li class="{#% if app.request.get('_route') == 'front_manage_company' %}active{% endif %#}">
+                                        <a href="{#{ path('front_manage_company') }#}">
+                                            <span class="fa fa-building-o"></span>
+                                            <span class="sidebar-title">Gestion des entreprises</span>
+                                        </a>
+                                    </li-->
+
+
+
+
+
+                                    {#% if  is_granted('ROLE_ADMIN') %}
+                                        <li class="{% if app.request.get('_route') == 'users_company_back' or app.request.get('_route') == 'users_company_add'%}active{% endif %}">
+                                            <a href="{{ path('users_company_back') }}">
+                                                <span class="fa fa-building-o"></span>
+                                                <span class="sidebar-title">Gestion des droits</span>
+                                            </a>
+                                        </li>
+                                    {% endif %#}
+
+                                </ul>
+
+                                {#% if is_granted('ROLE_ADMIN') or is_granted('ROLE_RH_LIMITE') %#}
+
+                                {#% endif %#}
+                            </li>
+
+
+
+                            <li class="{% if app.request.get('_route') == 'front_docs_commun' or
+                    app.request.get('_route') == 'front_sdoc_waiting' %}active{% endif %}" >
+                                <a class="accordion-toggle" href="#">
+                                    <span class="fa fa-cogs"></span>
+                                    <span class="sidebar-title">Gestion des documents</span>
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="nav sub-nav">
+                                    <li class="{% if app.request.get('_route') == 'front_docs_commun'  %}active{% endif %}" >
+                                        <a href="{{ path('front_docs_commun') }}">
+                                            <span class="fa fa-files-o"></span>
+                                            <span class="sidebar-title">Documents communs</span>
+                                        </a>
+                                    </li>
+                                    <li class="{% if app.request.get('_route') == 'front_sdoc_waiting' %}active{% endif %}">
+                                        <a href="{{ path('front_sdoc_waiting') }}">
+                                            <span class="fa fa-clock-o"></span>
+                                            <span class="sidebar-title">En attente de signature</span>
+
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_RH') or is_granted('ROLE_ADMIN') or is_granted('ROLE_RH_LIMITE') %}
+                            <li class="{% if app.request.get('_route') == 'back_upload_zip' or
+                    app.request.get('_route') == 'back_homepage' or
+                    app.request.get('_route') == 'bu_list' or
+                    app.request.get('_route') == 'manage_users' or
+                    app.request.get('_route') == 'manage_users_add' or
+                    app.request.get('_route') == 'manage_users_edit' or
+                    app.request.get('_route') == 'manage_users_remove' or
+                    app.request.get('_route') == 'back_personnalisation'
+                                %}active{% endif %}" >
+                                <a class="accordion-toggle" href="#">
+                                    <span class="fa fa-cogs"></span>
+                                    <span class="sidebar-title">Administration</span>
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="nav sub-nav">
+                                    <li class="
+                                        {% if
+                            app.request.get('_route') == 'import_salaries_list' %}active{% endif %}
+                                        ">
+                                        <a href="{{ path('import_salaries_list') }}">
+                                            <span class="fa fa-cloud-upload"></span>
+                                            <span class="sidebar-title">Import des salariés</span>
+                                        </a>
+                                    </li>
+                                    <li class="
+                                        {% if
+                            app.request.get('_route') == 'manage_mu' %}active{% endif %}
+                                        ">
+                                        <a href="{{ path('manage_mu') }}">
+                                            <span class="fa fa-upload"></span>
+                                            <span class="sidebar-title">Depôt des bulletins</span>
+                                        </a>
+                                    </li>
+                                    {#<li class="{% if app.request.get('_route') == 'back_homepage' %}active{% endif %}">
+                                        <a href="{{ path('back_homepage') }}">
+                                            <span class="fa fa-certificate"></span>
+                                            <span class="sidebar-title">Liste des Zips</span>
+                                        </a>
+                                    </li>#}
+                                    <li class="{% if app.request.get('_route') == 'bu_list' %}active{% endif %}">
+                                        <a href="{{ path('bu_list') }}">
+                                            <span class="fa fa-folder-open"></span>
+                                            <span class="sidebar-title">Bulletins unitaires</span>
+                                        </a>
+                                    </li>
+
+                                    {% if is_granted('ROLE_ADMIN')  %}
+                                        <li class="{% if app.request.get('_route') == 'manage_users' or
+                            app.request.get('_route') == 'manage_users_add' or
+                            app.request.get('_route') == 'manage_users_edit' or
+                            app.request.get('_route') == 'manage_users_remove' %}active{% endif %}">
+
+                                            <a href="{{ path('manage_users') }}">
+                                                <span class="fa fa-users"></span>
+                                                <span class="sidebar-title">Gestion des utilisateurs</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="
+                                        {% if
+                            app.request.get('_route') == 'print_depot' %}active{% endif %}
+                                        ">
+                                        <a href="{{ path('print_depot') }}">
+                                            <span class="fa fa-print"></span>
+                                            <span class="sidebar-title">Depôt à imprimer</span>
+                                        </a>
+                                    </li>
+
+
+                                    {% if is_granted('ROLE_ADMIN')  %}
+                                        <li class="{% if app.request.get('_route') == 'back_personnalisation' %}active{% endif %}">
+
+                                            <a href="{{ path('back_personnalisation') }}">
+                                                <span class="fa fa-paint-brush"></span>
+                                                <span class="sidebar-title">Personnalisation</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                </ul>
+                            </li>
+
+
+                        {% endif %}
+                        {% if is_granted('ROLE_USER') %}
+
+                            <li class="{% if app.request.get('_route') == 'front_my_profile'  %}active{% endif %}" >
+                                <a href="{{ path('front_my_profile') }}">
+                                    <span class="fa fa-user"></span>
+                                    <span class="sidebar-title">Mon espace</span>
+                                </a>
+                            </li>
+                            <li class="{% if app.request.get('_route') == 'front_my_preferences'  %}active{% endif %}" >
+                                <a href="{{ path('front_my_preferences') }}">
+                                    <span class="fa fa-cog"></span>
+                                    <span class="sidebar-title">Mes préférences</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <!-- End: Sidebar Menu -->
+
+                </div>
+                <!-- End: Sidebar Left Content -->
+
+            </aside>
+
+
+            {#% set authorize = app.user.id|authorize_user %#}
+            {#{dump(authorize)}#}
+            {% set stats = 'all'|get_stats %}
+            {#{dump(stats)}#}
+            <!-- Start: Content-Wrapper -->
+            <section id="content_wrapper">
+                {% if is_granted('ROLE_RH') %}
+                    <div id="topbar-dropmenu" class="alt topbar-menu-open" style="display: none;">
+                        <div class="topbar-menu row">
+                            <div class="col-xs-12 col-sm-3">
+                                <a href="#" class="metro-tile bg-primary light global-bar">
+
+                                    <span class="fa fa-archive fa-lg"></span>
+                                    <br /><br />
+                                    <span  class="bar-desc">Espace de stockage utilisé pour les fiches de paie</span>
+                                    <br />
+                                    <span  class="bar-numbers">Taille : {{ stats.esize }}</span>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <a href="#" class="metro-tile bg-primary light global-bar">
+
+                                    <span class="fa fa-server fa-lg"></span>
+                                    <br /><br />
+                                    <span  class="bar-desc">Espace de stockage utilisé pour les documents</span>
+                                    <br />
+                                    <span  class="bar-numbers">Taille : {{ stats.lsize }}</span>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <a href="#" class="metro-tile bg-primary light global-bar">
+
+                                    <span class="fa fa-briefcase fa-lg"></span>
+                                    <br /><br />
+                                    <span  class="bar-desc">Nombre total de fiches de paie</span>
+                                    <br />
+                                    <span  class="bar-numbers">Nombre : {{ stats.enb }}</span>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <a href="#" class="metro-tile bg-primary light global-bar">
+
+                                    <span class="fa fa-file-text fa-lg"></span>
+                                    <br /><br />
+                                    <span  class="bar-desc">Nombre total de documents</span>
+                                    <br />
+                                    <span  class="bar-numbers">Nombre : {{ stats.lnb }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Begin: Content -->
+                <section id="content" class="animated fadeIn">
+
+                {% block body %}{% endblock %}
+
+            </section>
+            <!-- End: Content -->
+
+        </section>
+
+
+    </div>
+    <!-- End: Main -->
+
+    <!-- BEGIN: PAGE SCRIPTS -->
+    {% block javascripts %}
+        <!-- jQuery -->
+        <script src="{{ asset("vendor/jquery/jquery-1.11.1.min.js") }} "></script>
+        <script src="{{ asset("vendor/jquery/jquery_ui/jquery-ui.min.js") }} "></script>
+        <script src="{{ asset("vendor/plugins/pnotify/pnotify.js") }} "></script>
+        <!-- Theme Javascript -->
+        <script src="{{ asset("assets/js/utility/utility.js") }} "></script>
+        <script src="{{ asset("assets/js/demo/demo.js") }} "></script>
+        <script src="{{ asset("assets/js/main.js") }} "></script>
+        <script src="{{ asset("assets/js/responsive-tabs.js") }} "></script>
+        <script src="{{ asset("assets/js/bootstrap3-dialog-1.34.9/bootstrap-dialog.min.js") }}"></script>
+        <script src="{{asset('pluguin/validationEngine/jquery.validationEngine-fr.js')}}"></script>
+        <script src="{{asset('pluguin/validationEngine/jquery.validationEngine.js')}}"></script>
+        {% javascripts '../app/Resources/Public/js/bootstrap.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script type="text/javascript">
+            function showlabel() {
+                $('#sdocs_link').show();
+                $('#myTabs li:eq(3) a').tab('show')
+            }
+            jQuery(document).ready(function () {
+
+                "use strict";
+
+                // Init Theme Core
+                Core.init();
+
+
+            });
+        </script>
+        {% if app.user.id|is_waiting_sign %}
+            <script type="text/javascript">
+                jQuery(document).ready(function () {
+
+
+                    // A "stack" controls the direction and position
+                    // of a notification. Here we create an array w
+                    // with several custom stacks that we use later
+                    var Stacks = {
+                        stack_top_right: {
+                            "dir1": "down",
+                            "dir2": "left",
+                            "push": "top",
+                            "spacing1": 100,
+                            "spacing2": 100
+                        },
+                        stack_top_left: {
+                            "dir1": "down",
+                            "dir2": "right",
+                            "push": "top",
+                            "spacing1": 10,
+                            "spacing2": 10
+                        },
+                        stack_bottom_left: {
+                            "dir1": "right",
+                            "dir2": "up",
+                            "push": "top",
+                            "spacing1": 10,
+                            "spacing2": 10
+                        },
+                        stack_bottom_right: {
+                            "dir1": "left",
+                            "dir2": "up",
+                            "push": "top",
+                            "spacing1": 10,
+                            "spacing2": 10
+                        },
+                        stack_bar_top: {
+                            "dir1": "down",
+                            "dir2": "right",
+                            "push": "top",
+                            "spacing1": 0,
+                            "spacing2": 0
+                        },
+                        stack_bar_bottom: {
+                            "dir1": "up",
+                            "dir2": "right",
+                            "spacing1": 0,
+                            "spacing2": 0
+                        },
+                        stack_context: {
+                            "dir1": "down",
+                            "dir2": "left",
+                            "context": $("#stack-context")
+                        }
+                    }
+
+
+                    var noteStyle = "primary";
+                    var noteShadow = "true";
+                    var width = "400px";
+
+                    // If notification stack or opacity is not defined set a default
+                    var noteStack = noteStack ? noteStack : "stack_top_right";
+                    var noteOpacity = noteOpacity ? noteOpacity : "1";
+
+                    // We modify the width option if the selected stack is a fullwidth style
+                    function findWidth() {
+                        if (noteStack == "stack_bar_top") {
+                            return "100%";
+                        }
+                        if (noteStack == "stack_bar_bottom") {
+                            return "70%";
+                        } else {
+                            return "400px";
+                        }
+                    }
+                    var stack_center = {"dir1": "down", "dir2": "right", "firstpos1": 2, "firstpos2": ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2) - 60};
+                    $(window).resize(function () {
+                        stack_center.firstpos2 = ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2) - 60;
+
+                    });
+                    // Create new Notification
+                    new PNotify({
+                        title: 'Signatures en attente',
+                        text: 'Cliquez <a href="#" onClick="showlabel();"> Ici </a> afin de signer vos documents',
+                        addclass: 'custom hidden-xs hidden-sm',
+                        icon: 'fa fa-pencil-square',
+                        opacity: .8,
+                        nonblock: {
+                            nonblock: true
+                        },
+                        stack: stack_center,
+                        delay: 1400000
+
+                    });
+
+
+
+
+
+                });
+            </script>
+        {% endif %}
+        <!-- END: PAGE SCRIPTS -->
+    {% endblock %}
+</body>
+
+</html>

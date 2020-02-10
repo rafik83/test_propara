@@ -1,0 +1,8 @@
+{% extends 'FrontBundle:Entity:add_company.html.twig' %}
+
+{% block b %}
+    Modifier l'entreprise
+{% endblock %}
+{% block form %}
+<form action="{{ path('front_company_edit', {id: company.id}) }}" method="post" class="form-group" {{ form_enctype(form) }}>
+{% endblock %}

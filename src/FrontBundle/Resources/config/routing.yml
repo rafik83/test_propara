@@ -1,0 +1,353 @@
+front_homepage:
+    path:     /
+    defaults: { _controller: FrontBundle:Salary:index }
+
+front_salary_result:
+    path:     /salaryresult
+    defaults: { _controller: FrontBundle:Salary:salaryResults }
+# crud salaries
+
+front_salary_add:
+    path:     /salary/add
+    defaults: { _controller: FrontBundle:Salary:add }
+    
+    
+    
+front_active_salary:
+    path:     /salary/activé
+    defaults: { _controller: FrontBundle:Salary:activateSendEmail }
+    
+    
+demande_activation_salary:
+    path:     /salary/demande/activation
+    defaults: { _controller: FrontBundle:Salary:demandeActivationSalary }
+    
+    
+front_desactive_salary:
+    path:     /salary/désactiver
+    defaults: { _controller: FrontBundle:Salary:desactivateSendEmail }
+
+front_salary_edit:
+    path:     /salary/edit/{id}
+    defaults: { _controller: FrontBundle:Salary:edit }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+        
+        
+salary_existe_in_company:
+    path:     /salary-existe-in-company
+    defaults: { _controller: FrontBundle:Salary:ExisteSalaryInCompany }
+    
+    
+    
+salary_add_existe_in_company:
+    path:     /salary-add-existe-in-company
+    defaults: { _controller: FrontBundle:Salary:existeSalaryAddInCompany }
+        
+        
+matricule_existe_in_company:
+    path:     /matricule-existe-in-company
+    defaults: { _controller: FrontBundle:Salary:existeMatriculeInCompany }
+    
+    
+salary_add_existe_matricule:
+    path:     /salary-add-matricule-existe-in-company
+    defaults: { _controller: FrontBundle:Salary:salaryAddExisteMatricule }
+    
+    
+    
+numsecu_existe_in_company:
+    path:     /numero-securité-existe-in-company
+    defaults: { _controller: FrontBundle:Salary:existeNumSecuInCompany }
+    
+    
+    
+salary_add_existe_numsecu:
+    path:     /salary-add-existe-numsecu
+    defaults: { _controller: FrontBundle:Salary:salaryAddExistNumSecu }
+        
+#salary_change_company:
+#    path:     /salary/change/company
+#    defaults: { _controller: FrontBundle:Salary:changeCompany }
+
+front_salary_remove:
+    path:     /salary/remove/{id}
+    defaults: { _controller: FrontBundle:Salary:remove }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+front_salary_enable:
+    path:     /salary/enable/{id}
+    defaults: { _controller: FrontBundle:Salary:enable }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+front_salary_disable:
+    path:     /salary/disable/{id}
+    defaults: { _controller: FrontBundle:Salary:disable }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+front_record_salary:
+    path:     /salary/record/{id}
+    defaults: { _controller: FrontBundle:Salary:record}
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+front_salary_docs:
+    path:     /salary/docs/{id}
+    defaults: { _controller: FrontBundle:Salary:docs}
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+front_salary_add_doc:
+    path:     /salary/add/doc/{id}
+    defaults: { _controller: FrontBundle:Salary:addDoc}
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+front_salary_remove_doc:
+    path:     /salary/remove/doc/{id}
+    defaults: { _controller: FrontBundle:Salary:removeDoc}
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+front_salary_visibility_doc:
+    path:     /salary/visibility/doc/{id}
+    defaults: { _controller: FrontBundle:Salary:visibilityDoc}
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+#cats management
+
+front_manage_cats:
+    path:     /cats
+    defaults: { _controller: FrontBundle:Cats:index }
+
+front_cats_result:
+    path:     /catsresult
+    defaults: { _controller: FrontBundle:Cats:catsResults }
+#crud cats
+front_cats_add:
+    path:     /cats/add
+    defaults: { _controller: FrontBundle:Cats:add }
+
+front_cats_edit:
+    path:     /cats/edit/{id}
+    defaults: { _controller: FrontBundle:Cats:edit }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+front_cats_remove:
+    path:     /cats/remove/{id}
+    defaults: { _controller: FrontBundle:Cats:remove }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+# profile route
+front_profile_salary:
+    path:     /profile/{id}
+    defaults: { _controller: FrontBundle:Salary:profile }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+        
+        
+definir_bult_non_obselet:
+    path:     /bulletin-non-obselete
+    defaults: { _controller: FrontBundle:Salary:bulletinNonObselet }
+    
+    
+definir_bult_obselet:
+    path:     /bulletin-obselete
+    defaults: { _controller: FrontBundle:Salary:bulletinObselet }
+    
+    
+    
+send_mail_bult_obselet:
+    path:     /send-mailbulletin-obselete
+    defaults: { _controller: FrontBundle:Salary:sendMailbulletinObselet }
+    
+send_mail_bult_non_obselet:
+    path:     /send-mailbulletin-non-obselete
+    defaults: { _controller: FrontBundle:Salary:sendMailbulletinNonObselet }
+
+        
+
+front_download_signed_doc:
+    path:     /download/sdoc/{id}
+    defaults: { _controller: FrontBundle:Salary:downloadSignedDoc }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+front_download_doc:
+    path:     /download/doc/{id}
+    defaults: { _controller: FrontBundle:Salary:downloadDoc }
+    requirements:
+        id:  \d+
+front_my_profile:
+    path:     /myprofile
+    defaults: { _controller: FrontBundle:Salary:myProfile }
+    requirements:
+        id:  \d+
+front_my_preferences:
+    path:     /mypreferences
+    defaults: { _controller: FrontBundle:Salary:myPreferences }
+    requirements:
+        id:  \d+
+pic_salary:
+    path:     /pic/salary/{id}
+    defaults: { _controller: FrontBundle:Salary:picSalary }
+    requirements:
+        id:  \d+
+
+# Forgot password
+forgot_password:
+    path:     /account/recovery
+    defaults: { _controller: FrontBundle:Security:passwordRecovery}
+
+forgot_password_url:
+    path:     /account/recovery/{code}
+    defaults: { _controller: FrontBundle:Security:passwordChange}
+
+# authentification
+front_login:
+    pattern:  /login
+    defaults: { _controller: FrontBundle:Security:login}
+
+front_login_check:
+    pattern:  /login_check
+    defaults: { _controller: FrontBundle:Security:loginCheck}
+
+logout_front:
+    pattern:  /logout
+    defaults: { _controller: BackBundle:Security:logout}
+
+
+# documents communs
+front_docs_commun:
+    path:     /docs/commun
+    defaults: { _controller: FrontBundle:Salary:docsCommun }
+
+front_codoc_result:
+    path:     /codoc/results
+    defaults: { _controller: FrontBundle:Salary:codocResult }
+
+front_codoc_add:
+    path:     /codoc/add
+    defaults: { _controller: FrontBundle:Salary:codocAdd }
+
+front_codoc_remove:
+    path:     /codoc/remove/{id}
+    defaults: { _controller: FrontBundle:Salary:coDocRemove}
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+front_sdoc_waiting_result:
+    path:     /sdoc/waiting/result
+    defaults: { _controller: FrontBundle:Salary:sdocWaitingResult }
+
+front_sdoc_waiting:
+    path:     /sdoc/waiting
+    defaults: { _controller: FrontBundle:Salary:sdocWaiting }
+
+front_codoc_download:
+    path:     /codoc/download/{id}
+    defaults: { _controller: FrontBundle:Salary:downloadCoDoc}
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+#manage entities
+
+
+front_company_result:
+    path:     /group/results
+    defaults: { _controller: FrontBundle:Entity:companyResult }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+
+
+front_manage_company:
+    path:     /company
+    defaults: { _controller: FrontBundle:Entity:company }
+
+
+front_company_add:
+    path:     /company/add
+    defaults: { _controller: FrontBundle:Entity:addCompany }
+
+front_company_edit:
+    path:     /company/edit/{id}
+    defaults: { _controller: FrontBundle:Entity:editCompany }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+front_company_remove:
+    path:     /company/remove/{id}
+    defaults: { _controller: FrontBundle:Entity:removeCompany }
+    requirements:
+        id:  \d+
+    options:
+        expose: true
+
+#salary activation
+activate_salary:
+    path:     /activate/salary/{code}
+    defaults: { _controller: FrontBundle:Security:activateSalary}
+
+send_activation:
+    path:     /send/activation
+    defaults: { _controller: FrontBundle:Security:sendActivation}
+
+#Sign document
+sign_document:
+    path:     /sign/doc/{id}
+    defaults: { _controller: FrontBundle:Salary:signDoc}
+    requirements:
+        id:  \d+
+
+asset_doc:
+    path:     /get/doctosign/{token}
+    defaults: { _controller: FrontBundle:Security:getDoc}
+    requirements:
+        id:  \d+
+
+sign_confirm_doc:
+    path:     /sign/confirm
+    defaults: { _controller: FrontBundle:Salary:confirmSign}
+
+# Relance
+send_relance:
+    path:     /send/relance
+    defaults: { _controller: FrontBundle:Security:sendRelance}

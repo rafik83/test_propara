@@ -1,0 +1,153 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block title %}
+    Nouveau utilisateur
+{% endblock %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <!--a href="dashboard.html">{#% block b %#}Ajouter un utilisateur{#% endblock %#}</a-->
+                    <a href="#">{% block b %}Ajouter une entité{% endblock %}</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('back_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-link">
+                    <a href="{#{ path('users_company_back') }#}">Gestion des entités</a>
+                </li>
+                <li class="crumb-trail">{{ block('b') }}</li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <hr class="small-margin"/>
+    <br/>
+
+    <div class="col-md-8 col-md-offset-4 admin-form theme-primary mw1000 center-block panel-body bg-light">
+
+        {% block form %}
+            <form id="frm_edit_rh_company" action="{{ path('users_company_edit',{'id': idres}) }}" method="post" class="form-group" {{ form_enctype(form) }}>
+            {% endblock %}
+            {{ form_errors(form) }}
+            <span class="required-input"> * </span> : Champs obligatoires.
+            <br/>
+            <br/>
+            <br/>
+
+
+            <div class="row">
+                <div class="form-group col-md-8">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.libeller, "Libeller") }}</label>
+                        {{ form_errors(form.libeller) }}
+                        {{ form_widget(form.libeller, {'attr': {'class': 'task_field form-control', 'id':'libeller' } }) }}
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+            <div class="row">    
+                <div class="form-group col-md-4">
+                    <select id="role_multi_select" required="required" class="task_field form-control">
+                        <option value=""></option>
+                        {% for role in roles %}
+                            <option value="{{role.id}}">{{role.name}}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+
+
+                <div class="form-group col-md-4">
+
+                    <select id="company_multi_select" required="required" class="task_field form-control" multiple="multiple">
+                        {% for company in companies %}
+                            <option value="{{company.id}}">{{company.nom}}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+            </div>
+            {{ form_widget(form.children._token) }}
+            {{ form_widget(form.children.extra_company) }}
+            {{ form_widget(form.children.extra_role) }}
+
+
+
+            {#{ form_rest(form) }#}
+
+            <div class="panel-footer text-left">
+                <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Valider le formulaire</button>
+                <button type="reset" class="btn btn-dark btn-xs"><i class="fa fa-refresh"></i> Annuler</button>
+            </div>
+
+            <input type="hidden" id="id_responsable" value="{{idres}}" />
+            <!--input type="hidden" id="extra"  /-->
+            <!--input type="hidden" id="extra_role"  /-->
+
+           
+        </form>
+    </div> 
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="text/javascript">
+
+// Material Select Initialization
+        $(document).ready(function () {
+            //$(this.$el).find('.mdb-select');
+            //$('.mdb-select').material_select();
+            //var tt  = $(this.$el).find('.mdb-select');
+            //alert(tt);
+
+            $('#frm_edit_rh_company').submit(function (e) {
+
+                //e.preventDefault();
+                //alert('enter submit');
+                //var id_responsable = $("#id_responsable").val();
+                var url = "{{ path('front_company_edit',{'id':idres}) }}";
+                var formSerialize = $(this).serialize();
+                var ids_company = $('#company_multi_select').val();
+                var id_role = $('#role_multi_select').val();
+                $('#company_responsable_form_extra_company').val(ids_company);
+                $('#company_responsable_form_extra_role').val(id_role);
+
+
+                //alert($('#company_responsable_form_extra_company').val());
+                //alert($('#company_responsable_form_extra_role').val());
+
+                $.post(url, formSerialize, function (response) {
+                    //your callback here
+                    //alert('response');
+                }, 'JSON');
+            });
+
+
+
+
+
+        });
+
+
+
+    </script>
+
+{% endblock %}

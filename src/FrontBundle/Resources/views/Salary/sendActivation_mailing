@@ -1,0 +1,52 @@
+/**
+     * @Secure(roles="ROLE_RH, ROLE_ADMIN")
+     */
+    public function sendActivationAction(Request $request) {
+
+//        die('sendActivationAction');
+        $isAjax = $request->isXmlHttpRequest();
+
+        if ($isAjax) {
+            $choices = $request->request->get('data');
+            $token = $request->request->get('token');
+
+            if (!$this->isCsrfTokenValid('multiselect', $token)) {
+                throw new AccessDeniedException('The CSRF token is invalid.');
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $repSalary = $em->getRepository('FrontBundle:Salary');
+
+            foreach ($choices as $choice) {
+                $salary = $repSalary->find($choice['value']);
+                $email = $salary->getEmailPerso();
+                if (is_null($email)) {
+                    $email = $salary->getEmailPro();
+                }
+
+                if (isset($email) && !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+                    $unique = uniqid();
+                    $baseUrl = $request->getHttpHost();
+                    $lienActivation = 'https://' . $baseUrl . '' . $this->generateUrl('activate_salary', array('code' => $unique));
+                    $this->get('email_servies')->sendActivation($salary, $lienActivation);
+
+                    $rec = new ActivateSalary();
+                    $rec->setCode($unique);
+                    $rec->setDone(false);
+                    $rec->setUser($salary->getUser());
+                    $em->persist($rec);
+
+                    $salary->setActivationSended(true);
+                    $salary->getUser()->setIsActive(false);
+                    $em->flush();
+                }
+            }
+            $em->flush();
+
+
+            return new Response('Success', 200);
+        }
+
+        return new Response('Bad Request', 400);
+    }

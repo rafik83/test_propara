@@ -1,0 +1,93 @@
+{% extends "FrontBundle::layout.html.twig" %}
+    {% block title %}
+        Nouveau bulletin à signer
+    {% endblock %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <a href="dashboard.html">{% block b %}Ajouter un bulletin à signer{% endblock %}</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('back_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+            </ol>
+        </div>
+
+    </header>
+    <br/>
+
+    <hr class="small-margin"/>
+    <br/>
+    <div class="col-md-8 col-md-offset-4 admin-form theme-primary mw1000 center-block panel-body bg-light">
+
+        {% block form %}
+        <form action="{{ path('bu_add') }}" method="post" class="form-group" {{ form_enctype(form) }}>
+            {% endblock %}
+            {{ form_errors(form) }}
+            <span class="required-input"> * </span> : Champs obligatoires.
+            <br/>
+            <br/>
+            <br/>
+
+            <div style="margin-bottom:10px;">
+                <label for="user">{{ form_label(form.month, "Mois") }}</label>
+                {{ form_errors(form.month) }}
+                {{ form_widget(form.month, {'attr': {'class': 'task_field form-control' } }) }}
+            </div>
+            <div style="margin-bottom:10px;">
+                <label for="user">{{ form_label(form.year, "Année") }}</label>
+                {{ form_errors(form.year) }}
+                {{ form_widget(form.year, {'attr': {'class': 'task_field form-control', 'id':'prenom' } }) }}
+            </div>
+            <div style="margin-bottom:10px;">
+                <label for="user">{{ form_label(form.ext, "Extension") }}</label>
+                {{ form_errors(form.ext) }}
+                {{ form_widget(form.ext, {'attr': {'class': 'task_field form-control', 'id':'prenom' } }) }}
+            </div>
+            <div style="margin-bottom:10px;">
+                <label for="user">{{ form_label(form.salary, "Salarié") }}</label>
+                {{ form_errors(form.salary) }}
+                {{ form_widget(form.salary, {'attr': {'class': 'task_field form-control' } }) }}
+            </div>
+
+            <div>
+                <label class="control-label" > Bulletin de paie :  </label><br /><br />
+                {% if form.bulletin.vars.errors|length %}
+                    {# Affichage des erreurs pour ce champ précis. #}
+                    <div class="form-group has-error">
+                        <label class="control-label"
+                               for="inputError"> {{ form_errors(form.bulletin) }}</label>
+                        {{ form_widget(form.bulletin, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                    </div>
+                {% else %}
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.bulletin, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                {% endif %}
+            </div>
+            {{ form_rest(form) }}
+
+            <div class="panel-footer text-right">
+                <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Valider le formulaire</button>
+                <button type="reset" class="btn btn-dark btn-xs"><i class="fa fa-refresh"></i> Annuler</button>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
+{% endblock %}

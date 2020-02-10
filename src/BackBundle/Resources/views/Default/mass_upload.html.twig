@@ -1,0 +1,321 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("vendor/upload/css/jquery.fileupload.css") }}">
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <a href="dashboard.html">Ajouter un depôt de bulletins</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('back_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-trail">Ajouter un depôt de bulletins</li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <hr class="small-margin"/>
+    <br/>
+    <div class="col-md-8 col-md-offset-4 admin-form theme-primary mw1000 center-block panel-body bg-light">
+        <!-- Page Heading-->
+
+
+        {% for flashMessage in app.session.flashbag.get('info') %}
+            <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+                <i class="fa fa-check pr10"></i>
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('erreur') %}
+            <div class="alert alert-sm alert-border-left alert-danger ">
+                <i class="fa fa-info pr10"></i>
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+
+
+        <div class="row">
+            <div class="form-group col-md-12">
+                <form action="{{ path('back_upload_mass') }}" method="post" class="form-group" {{ form_enctype(form) }}>
+                    {{ form_errors(form) }}
+
+
+                    <span class="required-input"> * </span> : Champs obligatoires.
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.company, "Entreprise") }}</label><span class="required-input" > * </span>
+                            {{ form_errors(form.company) }}
+                            {{ form_widget(form.company, {'attr': {'class': 'task_field form-control' } }) }}
+                    </div>
+
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.month, "Mois") }}</label><span class="required-input" > * </span>
+                            {{ form_errors(form.month) }}
+                            {{ form_widget(form.month, {'attr': {'class': 'task_field form-control' } }) }}
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.year, "Année") }}</label><span class="required-input" > * </span>
+                            {{ form_errors(form.year) }}
+                            {{ form_widget(form.year, {'attr': {'class': 'task_field form-control', 'id':'prenom' } }) }}
+                    </div>
+
+                    <br />
+
+
+
+
+
+                    <span class="btn btn-primary fileinput-button">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>Ajouter vos bulletins ...</span>
+                        <!-- The file input field used as target for the file upload widget -->
+                        <input id="fileupload" type="file" name="files[]" disabled="disabled"  multiple>
+                    </span>
+                    <div class="pull-right" >
+                        <div id="company"  class="label label-default  label-primary pull-right" ><i class="fa fa-building-o"></i> Cible : Toutes les entreprises</div>
+                        <div id="nb_docs" class="label label-default label-primary pull-right label-upload"  ><i class="fa fa-file"></i>  0 bulletins téléchargés</div>
+                        <div id="progress_percent"  class="label label-primary pull-right label-upload"><i class="fa fa-spinner"></i>  0% </div>
+                        <div id="bu_v"  class="label label-default  label-primary pull-right label-upload" ><i class="fa fa-check-circle  "></i>  <b>0</b> bulletins vérifiés </div>
+                        <div id="bu_e"  class="label label-default  label-primary pull-right label-upload" ><i class="fa fa-times-circle "></i>  <b>0</b> bulletins erronés </div>
+                    </div>
+
+                    <br>
+                    <br>
+
+                    <!-- The global progress bar -->
+                    <div id="progress" class="progress progress-bar-xs">
+
+                        <div class="progress-bar progress-bar-primary progress-bar-striped"></div>
+                    </div>
+                    <!-- The container for the uploaded files -->
+                    <div id="files" class="files" style="overflow: auto;border:5px solid {{ mycolor|change_color(-0.7) }};padding:10px;border-radius: 5px;">
+                        Déplacez vos bulletins ici ... <br/>
+
+
+                        <br/>
+                    </div>
+                    <br />
+
+
+
+
+                    <div style="margin-bottom:10px;">
+                        {% if form.verified.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.verified) }}
+                                </label>
+                                <div class="  mb5">
+                                    {{ form_widget(form.verified, {'attr': {'class': 'task_field ', 'id':'checkboxExample10' } }) }}
+                                    {{ form_label(form.verified, "Je certifie d\'avoir vérifier tous les bulletins ajoutés .") }}<span class="required-input" > * </span>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class=" mb5">
+                                {{ form_widget(form.verified, {'attr': {'class': 'task_field ', 'id':'checkboxExample10' } }) }}
+                                {{ form_label(form.verified, "Je certifie d\'avoir vérifier tous les bulletins ajoutés .") }}<span class="required-input" > * </span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <input type="hidden" name="nb_bulletins" id="nb_bulletins" value="0" />
+                    <input type="hidden" name="bu_e" id="bu_errone" value="0" />
+                    <input type="hidden" name="uid"  value="{{ uidupload }}" />
+                    {{ form_rest(form) }}
+
+                    <div class="panel-footer text-right">
+                        <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Valider le
+                            formulaire
+                        </button>
+                        <button type="reset" class="btn btn-dark btn-xs"><i class="fa fa-refresh"></i> Annuler</button>
+                    </div>
+                </form>
+                <!-- The fileinput-button span is used to style the file input field as button -->
+
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="modal fade" id="verifyBulletin" class="" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" width="800" height="700"
+     aria-hidden="true">
+
+</div><!-- /.modal -->
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+    <script src={{ asset("vendor/upload/js/vendor/jquery.ui.widget.js") }}></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src={{ asset("vendor/upload/js/jquery.iframe-transport.js") }}></script>
+    <!-- The File Upload user interface plugin -->
+    <script src={{ asset("vendor/upload/js/jquery.fileupload.js") }}></script>
+
+    <script>
+        $(document).ready(function () {
+            verifyBulletin = (function (matricule, company, uid) {
+                console.log('verification ...');
+                jQuery.noConflict();
+                $.ajax({
+                    method: "GET",
+                    url: "/get/bulletin",
+                    data: {matricule: matricule, company: company, uid: uid}
+                })
+                        .done(function (data) {
+                            $("#verifyBulletin").html(data);
+                            $("#verifyBulletin").modal('show')
+                        });
+            });
+            /*jslint unparam: true */
+            /*global window, $ */
+            var nb_docs = 0;
+            var bu_v = 0;
+            var bu_e = 0;
+            var company = '';
+            function hasWhiteSpace(s) {
+                return /\s/g.test(s);
+            }
+            $(function () {
+                'use strict';
+                // Change this to the location of your server-side upload handler:
+                var url = window.location.hostname === 'blueimp.github.io' ?
+                        '//jquery-file-upload.appspot.com/' : 'files/{{ uidupload }}/';
+                $('#fileupload').fileupload({
+                    url: url,
+                    dataType: 'json',
+                    done: function (e, data) {
+                        $.each(data.result.files, function (index, file) {
+
+                            var arr = file.name.split('.');
+                            var matricule = arr[0];
+                            var fullname = null;
+
+                            var uid = "{{ uidupload }}";
+
+                            nb_docs++;
+                            $('#nb_docs').html('<i class="fa fa-file"></i> ' + nb_docs + ' bulletins');
+                            $('#nb_bulletins').val(nb_docs);
+                            $.ajax({
+                                method: "GET",
+                                url: "/get/salary",
+                                data: {matricule: matricule, company: company}
+                            })
+                                    .done(function (msg) {
+                                        var icon_user = null;
+                                        var matricule_hasWhiteSpace = hasWhiteSpace(matricule);
+                                        if (msg == '1') {
+                                            fullname = 'Salarié introuvable';
+                                            icon_user = ' fa fa-times-circle text-danger';
+                                            bu_e++;
+                                        } else if (msg == '2') {
+                                            fullname = 'Choix d\'entreprise';
+                                            icon_user = ' fa fa-warning text-warning';
+                                            bu_e++;
+                                        } else if (matricule_hasWhiteSpace === true) {
+                                            fullname = 'Structure fichier pdf incorrecte';
+                                            icon_user = ' fa fa-times-circle text-danger';
+                                            bu_e++;
+                                        } else {
+                                            fullname = msg;
+                                            icon_user = 'fa fa-check-circle text-system';
+                                            bu_v++;
+                                        }
+
+                                        $('#bu_v').html('<i class="fa fa-check-circle"></i> ' + bu_v + ' bulletins vérifiés');
+                                        $('#bu_e').html('<i class="fa fa-times-circle"></i> ' + bu_e + ' bulletins erronés');
+                                        $('#bu_errone').val(bu_e);
+                                        var html = '<div style="background:#fff;margin-right:5px;overflow: auto ;border-radius: 5px;padding:5px;border:3px solid {{ mycolor|change_color(-0.7) }};display:inline-block" id="' + matricule + '">' +
+                                                '<div style="float:left;"> <i class="fa fa-file-pdf-o fa-4x " style="color:{{ mycolor }}"></i > </div>' +
+                                                '<div style="float:left;padding-left:10px">' +
+                                                '<div><i class="fa fa-file"  style="color: {{ mycolor|change_color(-0.7) }}" ></i> Fichier :' + file.name + '</div>' +
+                                                '<div><i class="fa fa-user" style="color: {{ mycolor|change_color(-0.7) }}"></i> Salarié :<b> ' + fullname + '</b> <i class="' + icon_user + '" ></i ></div>' +
+                                                '<div><i class="fa fa-search" style="color: {{ mycolor|change_color(-0.7) }}"></i> <a href="javascript:verifyBulletin(\'' + matricule + '\', \'' + company + '\', \'' + uid + '\')">Visualiser le pdf </div>' +
+                                                '</div>' +
+                                                '</div>';
+                                        $('<div style="float:left;" />').html(html).appendTo('#files');
+                                    });
+                        });
+                    },
+                    progressall: function (e, data) {
+                        var progress = parseInt(data.loaded / data.total * 100, 10);
+                        $('#progress_percent').html('<i class="fa fa-spinner"></i>  ' + progress + '%');
+                        $('#progress .progress-bar').css(
+                                'width',
+                                progress + '%'
+
+                                );
+                    }
+                }).prop('disabled', !$.support.fileInput)
+                        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+            });
+            $("#fulloffice_massupload_form_company").change(function () {
+
+                company = $(this).val();
+                var txt_company = $('#fulloffice_massupload_form_company option:selected').text();
+                $('#company').html('<i class="fa fa-building"></i> Cible : ' + txt_company);
+                $("#files").children().each(function () {
+                    var mat = null;
+                    var fullname = null;
+                    var uid = "{{ uidupload }}";
+                    bu_e = 0;
+                    bu_v = 0;
+                    // si c'est bien un titre h*
+                    if ($(this).is("div")) {
+                        $(this).children().each(function () {
+                            mat = $(this).attr('id');
+                            var element = $(this)
+                            $.ajax({
+                                method: "GET",
+                                url: "/get/salary",
+                                data: {matricule: mat, company: company}
+                            })
+                                    .done(function (msg) {
+                                        var icon_user = null;
+                                        if (msg == '1') {
+                                            fullname = 'Salarié introuvable';
+                                            icon_user = ' fa fa-times-circle text-danger';
+                                            bu_e++;
+                                        } else if (msg == '2') {
+                                            fullname = 'Choix d\'entreprise';
+                                            icon_user = ' fa fa-warning text-warning';
+                                            bu_e++;
+                                        } else {
+                                            fullname = msg;
+                                            icon_user = 'fa fa-check-circle text-system';
+                                            bu_v++;
+                                        }
+
+                                        $('#bu_v').html('<i class="fa fa-check-circle"></i> ' + bu_v + ' bulletins vérifiés');
+                                        $('#bu_e').html('<i class="fa fa-times-circle"></i> ' + bu_e + ' bulletins erronés');
+                                        $('#bu_errone').val(bu_e);
+                                        var html =
+                                                '<div style="float:left;"> <i class="fa fa-file-pdf-o fa-4x " style="color:{{ mycolor }}"></i > </div>' +
+                                                '<div style="float:left;padding-left:10px">' +
+                                                '<div><i class="fa fa-file"  style="color: {{ mycolor|change_color(-0.7) }}" ></i> Fichier :' + mat + '.pdf</div>' +
+                                                '<div><i class="fa fa-user" style="color: {{ mycolor|change_color(-0.7) }}"></i> Salarié :<b> ' + fullname + '</b> <i class="' + icon_user + '" ></i ></div>' +
+                                                '<div><i class="fa fa-search" style="color: {{ mycolor|change_color(-0.7) }}"></i> <a href="javascript:verifyBulletin(\'' + mat + '\', \'' + company + '\', \'' + uid + '\')">Visualiser le pdf </div>' +
+                                                '</div>';
+                                        element.html(html);
+                                    });
+
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+{% endblock %}

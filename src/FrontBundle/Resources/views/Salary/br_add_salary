@@ -1,0 +1,110 @@
+//change company
+            $("#salary_form_company").change(function (e) {
+                var matricule = $("#salary_form_matricule").val();
+                var company_id = $("#salary_form_company").val();
+                var user_name = $("#login_add_salary").val();
+                $.ajax({
+                    url: '{{path('salary_add_existe_in_company')}}',
+                    type: 'GET',
+                    data: '&param=' + matricule + '&param1=' + company_id + '&param2=' + user_name,
+                    cache: false,
+                    success: function (data) {
+                        console.log('success');
+                        console.log(data);
+                        console.log(data.nb);
+                        var nb = data.nb;
+                        if (nb == '1') {
+
+                            //alert(nb);
+                            $("#btn_add_salary").css('display', 'none');
+                            $('#salary_form_company').validationEngine('showPrompt', 'Il existe déja un Salarier avec la méme matricule et Numéro sécurité social dans cette entreprise', 'load');
+                            $(".blackPopup .formErrorContent").css('background-color', 'red');
+                            $(".blackPopup .formErrorContent").css('font-size', '13px');
+                            $(".blackPopup .formErrorContent").css('margin-top', '-29px');
+                        }
+
+                        if (nb == '0') {
+                            //alert(nb);
+                            $("#btn_add_salary").css('display', 'block');
+                            $("#btn_add_salary").css('margin-left', '1600px');
+                            $("#btn_annuler_add_salary").css('margin-top', '-41px');
+                            $('#salary_form_company').validationEngine('hide');
+                        }
+
+                        //$('#new_typepret_form_add').validationEngine('hide');
+                    },
+                    complete: function (comp) {
+                        console.log('complete');
+                        console.log(comp);
+                    },
+                    error: function (err) {
+                        console.log('error');
+                        console.log(err);
+                    }
+                });
+
+
+
+            });
+
+--------------------------
+
+//NumSecu mouseout
+            $("#salary_form_numSecu").mouseout(function (e) {
+
+                var matricule = $("#salary_form_matricule").val();
+                var company_id = $("#salary_form_company").val();
+                var user_name = $("#login_add_salary").val();
+                var numsecu = $("#salary_form_numSecu").val();
+
+                $.ajax({
+                    url: '{{path('salary_add_existe_numsecu')}}',
+                    type: 'GET',
+                    data: '&param=' + matricule + '&param1=' + company_id + '&param2=' + user_name + '&param4=' + numsecu,
+                    cache: false,
+                    success: function (data) {
+                        console.log('success');
+                        console.log(data);
+                        console.log(data.nb);
+                        var nb = data.nb;
+                        if (nb == '1') {
+
+                            //alert(nb);
+                            $("#btn_add_salary").css('display', 'none');
+                            $('#salary_form_numSecu').validationEngine('showPrompt', 'Il existe déja un salarier qui posséde ce numéro de sécurité social  dans cette entreprise.Attention !!', 'load');
+                            $(".blackPopup .formErrorContent").css('background-color', 'red');
+                            $(".blackPopup .formErrorContent").css('font-size', '13px');
+                            $(".blackPopup .formErrorContent").css('margin-top', '-23px');
+
+                        }
+
+                        if (nb == '-1') {
+                            $("#btn_add_salary").css('display', 'block');
+                            $("#btn_add_salary").css('margin-left', '1600px');
+                            $("#btn_annuler_add_salary").css('margin-top', '-41px');
+                            $('#salary_form_numSecu').validationEngine('hide');
+
+                        }
+                        if (nb == '0') {
+                            //alert(nb);
+                            $("#btn_add_salary").css('display', 'block');
+                            $("#btn_add_salary").css('margin-left', '1600px');
+                            $("#btn_annuler_add_salary").css('margin-top', '-41px');
+                            $('#salary_form_numSecu').validationEngine('hide');
+
+                        }
+
+                        //$('#new_typepret_form_add').validationEngine('hide');
+                    },
+                    complete: function (comp) {
+                        console.log('complete');
+                        console.log(comp);
+                    },
+                    error: function (err) {
+                        console.log('error');
+                        console.log(err);
+                    }
+                });
+
+
+            });

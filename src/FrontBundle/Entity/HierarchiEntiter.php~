@@ -1,0 +1,153 @@
+<?php
+/*
+ * This file is part of the fulldon project
+ *
+ * (c) SAMI BOUSSACSOU <boussacsou@intersa.fr>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace FrontBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+use FrontBundle\Entity\Company;
+use FrontBundle\Entity\Role;
+
+/**
+ * @ORM\Entity(repositoryClass="HierarchiEntiterRepository")
+ * @ORM\Table(name="hierarchi_entiter")
+ * @ORM\HasLifecycleCallbacks
+
+ */
+class HierarchiEntiter
+{
+
+    /**
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    /**
+     * @ORM\Column(name="libeller", type="string", length=255)
+     */
+    private $libeller;
+    /**
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    private $createdAt;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="FrontBundle\Entity\Company", mappedBy="hierarchis")
+     */
+    private $companies;
+    
+    
+     /**
+     * @ORM\ManyToOne(targetEntity="FrontBundle\Entity\Role", cascade={"persist"})
+     * @ORM\JoinColumn(name="role_id", nullable=false)
+     */
+    private $role;
+    
+    
+    
+    public function __construct()
+    {
+        $this->createdAt = new \Datetime();
+        
+    }
+    
+    
+    
+     public function __toString()
+    {
+        return (string) $this->getNom();
+    }
+
+    
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set libeller
+     *
+     * @param string $libeller
+     * @return HierarchiEntiter
+     */
+    public function setLibeller($libeller)
+    {
+        $this->libeller = $libeller;
+
+        return $this;
+    }
+
+    /**
+     * Get libeller
+     *
+     * @return string 
+     */
+    public function getLibeller()
+    {
+        return $this->libeller;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return HierarchiEntiter
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    
+
+    /**
+     * Set role
+     *
+     * @param \FrontBundle\Entity\Role $role
+     * @return HierarchiEntiter
+     */
+    public function setRole(\FrontBundle\Entity\Role $role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get role
+     *
+     * @return \FrontBundle\Entity\Role 
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+}

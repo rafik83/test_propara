@@ -1,0 +1,30 @@
+<div class="modal-dialog" style="top:-10px;right:0px;width:900px;height:100%;overflow: auto;">
+    <div class="modal-content" >
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h2 class="modal-title" id="confirmDeleteLabel">Vérification du bulletin : {{ filename }}.pdf</h2>
+        </div>
+        <div class="modal-body" style="overflow: auto;">
+            <div style="float:left;">
+                <div class="iframe-responsive-wrapper">
+                    <img class="iframe-ratio" src="data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7"/>
+                    <iframe src="{{ url('assets_pdf_verif', {'token': filename,'uid':uid}) }}" width="550px" height="780px" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                </div>
+            </div>
+            <div style="float:left;padding:10px;" >
+                <h3>salarié associé</h3>
+                <hr style="margin-top:5px;margin-bottom:15px;"/>
+                {% if salary is not null %}
+                        Nom : {{ salary.nom }} <br />
+                        Prénom : {{ salary.prenom }} <br />
+                        Matricule : {{ salary.matricule }} <br />
+                       <a href="{{ path('front_profile_salary',{'id': salary.id}) }}" target="_blank">Visiter la fiche du salarié</a> <br />
+                    {% else %}
+                    Salarié introuvable !
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>

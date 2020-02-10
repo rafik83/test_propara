@@ -1,0 +1,168 @@
+{% extends "FrontBundle::layout.html.twig" %}
+    {% block title %}
+        Nouveau salarié
+    {% endblock %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <a href="dashboard.html">Nouveau Document commun</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('front_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-link">
+                    <a href="{{ path('front_docs_commun') }}">Gestion des documents communs</a>
+                </li>
+                <li class="crumb-trail">Nouveau Document commun</li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <hr class="small-margin"/>
+    <br/>
+    <div class="col-md-8 col-md-offset-4 admin-form theme-primary mw1000 center-block panel-body bg-light">
+        {% block form %}
+        <form action="{{ path('front_codoc_add')}}" method="post" class="form-group" {{ form_enctype(form) }}>
+            {% endblock %}
+            {{ form_errors(form) }}
+            <span class="required-input"> * </span> : Champs obligatoires.
+            <br/>
+            <br/>
+            <br/>
+
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.name, "Nom") }}<span
+                                    class="required-input"> * </span></label>
+                        {% if form.name.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.name) }}
+                                </label>
+                                {{ form_widget(form.name, {'attr': {'class': 'task_field form-control', 'id':'name' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.name, {'attr': {'class': 'task_field form-control', 'id':'name' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="form-group col-md-12">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.doc, "Document") }}</label>
+                        {% if form.doc.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.doc) }}
+                                </label>
+                                {{ form_widget(form.doc, {'attr': {'class': 'task_field form-control' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.doc, {'attr': {'class': 'task_field form-control' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label for="user">{{ form_label(form.companies, "Entités") }}</label>
+                    {{ form_errors(form.companies) }}
+                    {{ form_widget(form.companies, {'attr': {'class': 'task_field form-control', 'id':'entités' } }) }}
+                </div>
+
+                <div class="form-group col-md-6">
+
+                    <div style="margin-bottom:10px;margin-top:10px;">
+                        {% if form.visibility.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.visibility) }}
+                                </label>
+                                <div class="checkbox-custom  mb5">
+                                    {{ form_widget(form.visibility, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                                    {{ form_label(form.visibility, "Visible pour  les salariés") }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="checkbox-custom  mb5">
+                                {{ form_widget(form.visibility, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                                {{ form_label(form.visibility, "Visible pour  les salariés") }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+
+                    <div style="margin-bottom:10px;margin-top:10px;">
+                        {% if form.toSign.vars.errors|length %}
+                            {#{dump('if')}#}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.toSign) }}
+                                </label>
+                                <div class="checkbox-custom  mb5">
+                                    {{ form_widget(form.toSign, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                                    {{ form_label(form.toSign, "à signer") }}
+                                </div>
+                            </div>
+                        {% else %}
+                            {#{dump('else')}#}
+                            <div class="checkbox-custom  mb5" id="sign_doc_ck">
+                                {{ form_widget(form.toSign, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                                {{ form_label(form.toSign, "à signer") }}
+                                
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {{ form_rest(form) }}
+            <br/>
+            
+
+            <div class="panel-footer text-right">
+                <button type="submit" class="btn btn-primary btn-xs"> <i class="fa fa-check"></i> Valider le formulaire</button>
+                <a href="{{ path('front_docs_commun') }}" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Annuler</a>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+          //$("#codoc_form_toSign").css('display','none'); //sign_doc_ck
+          $("#sign_doc_ck").css('display','none');
+          
+            
+        });
+    </script>
+
+{% endblock %}

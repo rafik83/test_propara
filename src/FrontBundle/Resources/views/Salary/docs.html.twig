@@ -1,0 +1,167 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/fancytree/skin-win8/ui.fancytree.min.css') }} rel="stylesheet">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <a href="dashboard.html">Gestion des documents du salarié #{{ salary.id }}</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('front_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-link">
+                    <a href="{{ path('front_homepage') }}">Gestion des salariés</a>
+                </li>
+                <li class="crumb-link">
+                    <a href="{{ path('front_profile_salary', {'id': salary.id }) }}">Fiche du salarié #{{ salary.id }}</a>
+                </li>
+                <li class="crumb-link"> Documents du salarié #{{ salary.id }}
+                </li>
+            </ol>
+        </div>
+        <div class="pull-right"><a class="btn btn-primary btn-xs" href="{{ path('front_salary_add_doc',{id:salary.id}) }}"><i class="fa fa-plus-circle"></i> Ajouter un document</a></div>
+    </header>
+    <hr />
+
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+            <i class="fa fa-check pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-sm alert-border-left alert-danger ">
+            <i class="fa fa-info pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <div class="panel ">
+        <div class="panel-heading">
+            <span class="panel-icon">
+              <i class="fa fa-user"></i>
+            </span>
+            <span class="panel-title">Salarié :</span>
+        </div>
+        <div class="panel-body">
+            <p>
+            <b>Matricule :</b> #{{ salary.matricule }} <br />
+            <b>Nom :</b> {{ salary.nom }} <br />
+            <b>Prénom :</b> {{ salary.prenom }}
+            </p>
+        </div>
+    </div>
+
+
+
+
+    <div class="panel mt30">
+        <div class="panel-heading">
+            <form id="form_actions">
+            <a class="btn btn-xs btn-primary " href="#" id="remove_doc"><i class="fa fa-remove"></i> Supprimer la selection</a>
+            <a class="btn btn-xs btn-primary " href="#" id="change_doc"><i class="fa fa-eye"></i> Changer la visibilité</a>
+                <input type="hidden" name="selected_values" value="" id="selected_values" />
+            </form>
+        </div>
+        <div class="panel-body">
+            <div id="tree2">
+
+                <ul id="treeData" style="display: none;">
+                    {% for t in tree %}
+                    <li id="{{ t[0].id }}" class="folder expanded unselectable">{{ t[0].libelle }}
+                        <ul>
+                            {% for doc in t[1] %}
+                            <li id="{{ doc.id }}">{{ doc.name }} - {{ doc.createdAt|date('d/m/Y') }}  {% if doc.visibility %}<i class="fa fa-eye"></i>{% else %} <i class="fa fa-eye-slash"></i> {% endif %}  {% if doc.specialDoc %}<i class="fa fa-pencil-square text-primary"></i>{% if doc.specialSigned %} <i class="fa fa-certificate text-system"></i>{% else  %} <i class="fa fa-certificate"></i>{% endif %}  {% endif %}</li>
+                            {% endfor %}
+
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <div class="desc-tree">
+                <i class="fa fa-eye"></i> Le document est visible pour le salarié <br />
+                <i class="fa fa-eye-slash"></i> Le document n'est visible pour le salarié <br />
+                <i class="fa fa-pencil-square"></i> Le document requiert  une signature<br />
+                <i class="fa fa-certificate "></i> Le document est en attente de signature. <br />
+                <i class="fa fa-certificate text-system"></i> Le document est signé avec succés par le salarié
+
+            </div>
+        </div>
+
+
+    </div>
+<div id="echoSelection2"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/fancytree/jquery.fancytree-all.min.js') }}"></script>
+
+    <script type="text/javascript">
+    jQuery(document).ready(function() {
+
+    "use strict";
+
+    // Init Theme Core
+    Core.init();
+    // Init FancyTree - With Icons
+    $("#tree2").fancytree({
+    clickFolderMode: 2, // 1:activate, 2:expand, 3:activate and expand, 4:activate (dblclick expands)
+    checkbox: true, // Show checkboxes Class added to tree html to convert to radios ".fancytree-radio"
+        select: function(event, data) {
+            var selNodes = data.tree.getSelectedNodes();
+            // convert to title/key array
+            var selKeys = $.map(selNodes, function(node){
+                return node.key;
+            });
+            $("#selected_values").val(selKeys.join(", "));
+        }
+    });
+
+
+
+    });
+    $('#form_actions').on('click','#remove_doc',function(e){
+
+
+        e.stopPropagation();
+        e.preventDefault();
+        var url = '/salary/remove/doc/'+'{{ salary.id }}';
+        var test = confirm('Êtes-vous sûr de vouloir supprimer les documents sélectionnés ? ');
+        console.log(test);
+        if(test == true) {
+
+        $.post( url ,  { selected_values: $("#selected_values").val() })
+                .done(function( data ) {
+                    location.reload();
+                });
+        }
+    });
+
+    $('#form_actions').on('click','#change_doc',function(e){
+        e.stopPropagation();
+        e.preventDefault();
+        var url = '/salary/visibility/doc/'+'{{ salary.id }}';
+        var test = confirm('Êtes-vous sûr de vouloir changer la visibilité des documents sélectionnés ? ');
+        if(test == true) {
+
+            $.post( url ,  { selected_values: $("#selected_values").val() })
+                    .done(function( data ) {
+                        location.reload();
+                    });
+        }
+    });
+        </script>
+{% endblock %}

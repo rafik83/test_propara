@@ -1,0 +1,113 @@
+{% extends 'FrontBundle:Salary:add.html.twig' %}
+{#% extends "FrontBundle::layout.html.twig" %#}
+
+{% block b %}
+    Modifier la fiche du salarié
+{% endblock %}
+{% block form %}
+    <form id="frm_edit_salary" action="{{ path('front_salary_edit', {id: ids}) }}" method="post" class="form-group" {{ form_enctype(form) }}>
+
+        <input type="hidden" id="user_id_edit" value="{{user['id']}}">
+        <input type="hidden" id="salary_id_edit" value="{{ids}}">
+        <input type="hidden" id="user_username_edit" value="{{user['username']}}">
+        <input type="hidden" id="user_password_edit" value="{{user['password']}}">
+        <input type="hidden" id="user_salt_edit" value="{{user['salt']}}">
+        <input type="hidden" id="user_is_active_edit" value="{{user['is_active']}}">
+        {#{dump(user)}#}
+        {#{dump(ids)}#}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script type="text/javascript"
+        src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+        <script type="text/javascript"
+        src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+
+
+                $("#login_add_salary").val($("#user_username_edit").val());
+                $("#pwd_add_salary").val($("#user_password_edit").val());
+                $('#login_add_salary"').prop('readonly', true);
+                $('#salary_edit_form_numSecu').prop('readonly', true);
+                $('#salary_edit_form_company').prop('readonly', true);
+
+
+
+
+
+
+
+                $("#salary_edit_form_user_username").keydown(function (e) {
+                    // Allow: backspace, delete, tab, escape, enter and .
+                    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                            // Allow: Ctrl/cmd+A
+                                    (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                    // Allow: Ctrl/cmd+C
+                                            (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                            // Allow: Ctrl/cmd+X
+                                                    (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                                    // Allow: home, end, left, right
+                                                            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                                                // let it happen, don't do anything
+                                                return;
+                                            }
+                                            // Ensure that it is a number and stop the keypress
+                                            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                                e.preventDefault();
+                                            }
+                                        });
+
+                                $("#salary_edit_form_numSecu").keydown(function (e) {
+                                    // Allow: backspace, delete, tab, escape, enter and .
+                                    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                                            // Allow: Ctrl/cmd+A
+                                                    (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                                    // Allow: Ctrl/cmd+C
+                                                            (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                                            // Allow: Ctrl/cmd+X
+                                                                    (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                                                    // Allow: home, end, left, right
+                                                                            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                                                                // let it happen, don't do anything
+                                                                return;
+                                                            }
+                                                            // Ensure that it is a number and stop the keypress
+                                                            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                                                e.preventDefault();
+                                                            }
+                                                        });
+
+
+
+
+                                                $('#frm_edit_salary').submit(function (e) {
+                                                    //alert('submit form');
+                                                    var user_name = $("#login_add_salary").val();
+                                                    var user_pwd = $("#pwd_add_salary").val();
+                                                    $("#salary_edit_form_extra_user_name_edit").val(user_name);
+                                                    $("#salary_edit_form_extra_user_pwd_edit").val(user_pwd);
+                                                    var ids = $("#salary_id_edit").val();
+                                                    var url = "{{ path('front_salary_edit', {id: ids}) }}";
+                                                    var formSerialize = $(this).serialize();
+
+                                                    $.post(url, formSerialize, function (response) {
+                                                        //your callback here
+                                                        //alert(response);
+                                                        console.log(response);
+                                                    }, 'JSON');
+                                                });
+
+
+
+
+
+                                            });
+
+
+        </script>
+
+    {% endblock %}

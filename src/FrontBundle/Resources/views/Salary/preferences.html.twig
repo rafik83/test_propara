@@ -1,0 +1,419 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href="{{ asset('jquery/css/jPages.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/admin-tools/admin-forms/css/admin-forms.css') }}">
+    <style>
+        {% set mycolor =  'color'|get_theme  %}
+        .admin-form .switch-primary > input:checked + label {
+            background: {{ mycolor }} !important;
+            border-color:{{ mycolor|change_color(-0.7) }} !important;
+        }
+
+        .admin-form .switch > label {
+            background: #00ac33 !important;
+            border-color: #006f26 !important;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+            <i class="fa fa-check pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-sm alert-border-left alert-danger ">
+            <i class="fa fa-info pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <!-- Begin .page-heading -->
+    <div class="page-heading">
+        <div class="media clearfix">
+            {% if salary.photo is not null %}
+                <div class="media-left pr30">
+                    <a href="#">
+                        <img class="media-object mw150" style="height: 80px;"
+                             src="{{ path("pic_salary", {id:salary.id}) }}" alt="Photo du profile">
+                    </a>
+                </div>
+            {% endif %}
+            <div class="media-body va-m">
+                <h2 class="media-heading">{{ salary.nom }} {{ salary.prenom }}
+                    <small> -                 {% if is_granted('ROLE_RH') %}
+                            <a href="{{ path('front_salary_edit', {id:salary.id} ) }}">Modifier</a> | <a
+                                    href="{{ path('front_salary_docs', {id:salary.id} ) }}">Gestion des documents </a>
+                        {% endif %}
+                    </small>
+                </h2>
+                <p class="lead">{{ salary.poste }}</p>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+    <div class="col-md-4">
+        <div class="panel">
+            <div class="panel-heading">
+                  <span class="panel-icon">
+                    <i class="fa fa-user fa-2x align-icon"></i>
+                  </span>
+                <span class="panel-title"> Informations du Salarié</span>
+            </div>
+            <div class="panel-body pn">
+                <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
+                    <thead>
+
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <span class="fa fa-folder text-primary"></span>
+                        </td>
+                        <td>Matricule</td>
+                        <td>
+                            {{ salary.matricule }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="fa fa-info text-primary"></span>
+                        </td>
+                        <td>Nom</td>
+                        <td>
+                            {{ salary.nom }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="fa fa-info text-primary"></span>
+                        </td>
+                        <td>Prénom</td>
+                        <td>
+                            {{ salary.prenom }}
+                        </td>
+                    </tr>
+                    {% if salary.numSecu is not null %}
+                        <tr>
+                            <td>
+                                <span class="fa fa-user-md text-primary"></span>
+                            </td>
+                            <td>Numéro de sécurité sociale</td>
+                            <td>
+                                {{ salary.numSecu }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if salary.birthDay is not null %}
+                        <tr>
+                            <td>
+                                <span class="fa fa-birthday-cake text-primary"></span>
+                            </td>
+                            <td>Date de naissance</td>
+                            <td>
+                                {{ salary.birthDay|date('d/m/Y') }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if salary.dateBegin is not null %}
+                        <tr>
+                            <td>
+                                <span class="fa fa-calendar text-primary"></span>
+                            </td>
+                            <td>Date d'entrée</td>
+                            <td>
+                                {{ salary.dateBegin|date('d/m/Y') }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if salary.dateEnd is not null %}
+                        <tr>
+                            <td>
+                                <span class="fa fa-calendar text-primary"></span>
+                            </td>
+                            <td>Date de sortie</td>
+                            <td>
+                                {{ salary.dateEnd|date('d/m/Y') }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if salary.telephonePro is not null %}
+                        <tr>
+                            <td>
+                                <span class="fa fa-phone text-primary"></span>
+                            </td>
+                            <td>Téléphone professionnel</td>
+                            <td>
+                                {{ salary.telephonePro }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if salary.telephonePerso is not null %}
+                        <tr>
+                            <td>
+                                <span class="fa fa-mobile-phone text-primary"></span>
+                            </td>
+                            <td>Téléphone personnel</td>
+                            <td>
+                                {{ salary.telephonePerso }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if salary.emailPro is not null %}
+                        <tr>
+                            <td>
+                                <span class="fa fa-envelope text-primary"></span>
+                            </td>
+                            <td>Email</td>
+                            <td>
+                                {{ salary.emailPro }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if salary.emailPerso is not null %}
+                        <tr>
+                            <td>
+                                <span class="fa fa-envelope-o text-primary"></span>
+                            </td>
+                            <td>Email personnel</td>
+                            <td>
+                                {{ salary.emailPerso }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if salary.poste is not null %}
+                        <tr>
+                            <td>
+                                <span class="fa fa-briefcase
+                                 text-primary"></span>
+                            </td>
+                            <td>Intitulé de poste</td>
+                            <td>
+                                {{ salary.poste }}
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-md-8">
+        <div class="panel">
+            <div class="panel-heading">
+                  <span class="panel-icon">
+                    <i class="fa fa-cog fa-2x align-icon"></i>
+                  </span>
+                <span class="panel-title"> Mes préférences</span>
+            </div>
+            <div class="panel-body pn" style="padding:10px !important;">
+                <form action="{{ path('front_my_preferences') }}" method="post" class="admin-form"
+                      class="form-group" {{ form_enctype(form) }}>
+                    {% if salary is not null and salary.photo is not empty %}
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <img class="media-object mw150" style="height: 40px;"
+                                     src="{{ path("pic_salary", {id:salary.id}) }}" alt="Photo du profile">
+                                <input type="checkbox" class="checkbox-inline" name="remove_img" value="1"/> Supprimer
+                                La
+                                photo
+                                <br/><br/>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div style="margin-bottom:10px;">
+                                <label for="user">{{ form_label(form.emailPerso, "Email personnel") }} <span
+                                            class="required-input"> * </span></label>
+                                {% if form.emailPerso.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label" for="inputError">
+                                            {{ form_errors(form.emailPerso) }}
+                                        </label>
+                                        {{ form_widget(form.emailPerso, {'attr': {'class': 'task_field form-control', 'id':'email_perso' } }) }}
+                                    </div>
+                                {% else %}
+                                    {{ form_widget(form.emailPerso, {'attr': {'class': 'task_field form-control', 'id':'email_perso' } }) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div style="margin-bottom:10px;">
+                                <label for="user">{{ form_label(form.telephonePerso, "Téléphone Mobile") }} - en 10
+                                    chiffres </label>
+                                {% if form.telephonePerso.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label" for="inputError">
+                                            {{ form_errors(form.telephonePerso) }}
+                                        </label>
+                                        {{ form_widget(form.telephonePerso, {'attr': {'class': 'task_field form-control', 'placeholder':' ex : 0675849990' } }) }}
+                                    </div>
+                                {% else %}
+                                    {{ form_widget(form.telephonePerso, {'attr': {'class': 'task_field form-control', 'placeholder': 'ex : 0675849990' } }) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail3"
+                                   class=" control-label">{{ form_label(form.user.username, "Login"|trans({},'messages') ) }}
+                                <span class="required-input"> * </span></label>
+
+                            <div>
+                                {% if form.user.username.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError">{{ form_errors(form.user.username) }}</label>
+                                        {{ form_widget(form.user.username, {'attr': {'class': 'task_field form-control', 'id':'inputError', 'id':'nom', 'placeholder':'Login' , 'readonly':'readonly' } }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.user.username, {'attr': {'class': 'task_field form-control', 'id':'nom', 'placeholder':'', 'readonly':'readonly'  } }) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail3"
+                                   class=" control-label">{{ form_label(form.user,  "Mot de passe"|trans({},'messages')) }}
+                            </label>
+
+                            <div>
+                                {% if  app.session.flashbag.has('error_user_pass') %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label" for="inputError">
+                                            {% for flashMessage in app.session.flashbag.get('error_user_pass') %}
+                                                <li>{{ flashMessage }}</li>
+                                            {% endfor %}
+                                        </label>
+                                        <td>{{ form_widget(form.user.password, {'attr': {'class': 'task_field form-control', 'id':'nom', 'placeholder':"Mot de passe"|trans({},'messages') } }) }}</td>
+                                    </div>
+                                {% else %}
+                                    <td>{{ form_widget(form.user.password, {'attr': {'class': 'task_field form-control', 'id':'nom', 'placeholder':'Mot de passe' } }) }}</td>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if choice_salary %}
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <div style="margin-bottom:10px;">
+                                {% if form.isPaper.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <label class="block mt15 switch switch-primary">
+                                        <label class="control-label" for="inputError">
+                                            {{ form_errors(form.isPaper) }}
+                                        </label>
+                                        <span>{{ form_label(form.isPaper, "Recevoir mon bulletin au format") }}
+                                            &nbsp;</span>
+                                        {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'my_preferences_form_isPaper' } }) }}
+                                        <label for="my_preferences_form_isPaper" data-on="YES" data-off="NO"></label>
+
+
+                                    </label>
+                                {% else %}
+                                    <label class="block mt15 switch switch-primary">
+                                        <span>{{ form_label(form.isPaper, "Recevoir mon bulletin au format") }}
+                                            &nbsp;</span>
+                                        {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'my_preferences_form_isPaper' } }) }}
+                                        <label for="my_preferences_form_isPaper" data-on="Papier"
+                                               data-off="électronique"></label>
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="inputEmail3"
+                                   class=" control-label">{{ form_label(form.photo, "Photo"|trans({},'messages') ) }}
+                            </label>
+
+                            <div>
+                                {% if form.photo.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError">{{ form_errors(form.photo) }}</label>
+                                        {{ form_widget(form.photo, {'attr': {'class': 'task_field form-control', 'id':'inputError', 'id':'nom'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.photo, {'attr': {'class': 'task_field form-control', 'id':'nom', 'placeholder':'' } }) }}
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer text-right">
+                        <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Valider le
+                            formulaire
+                        </button>
+                        <a href="{{ path('front_my_profile') }}" class="btn btn-primary btn-xs"><i
+                                    class="fa fa-arrow-left"></i> Annuler</a>
+                    </div>
+                    {{ form_rest(form) }}
+                </form>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            "use strict";
+
+            // Init Theme Core
+            Core.init();
+            var switches = $(this).find('.switch');
+            // Form Skin Switcher
+            $('#skin-switcher a').on('click', function () {
+                var btnData = $(this).data('form-skin');
+
+                $('#skin-switcher a').removeClass('item-active');
+                $(this).addClass('item-active')
+
+                $(options).each(function (i, e) {
+                    if ($(e).hasClass('block')) {
+                        $(e).removeClass().addClass('block mt15 option option-' + btnData);
+                    } else {
+                        $(e).removeClass().addClass('option option-' + btnData);
+                    }
+                });
+                $(switches).each(function (i, ele) {
+                    if ($(ele).hasClass('switch-round')) {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-round switch-' + btnData);
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-round switch-' + btnData);
+                        }
+                    } else {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-' + btnData);
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-' + btnData);
+                        }
+                    }
+
+                });
+                buttons.removeClass().addClass('button btn-' + btnData);
+            });
+        });
+    </script>
+{% endblock %}

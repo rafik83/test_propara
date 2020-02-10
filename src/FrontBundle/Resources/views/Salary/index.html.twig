@@ -1,0 +1,78 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header  class="alt">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                     <!--a href="dashboard.html">Gestion des salariés</a-->
+                    <a href="#">Gestion des salariés</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('front_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+
+                <li class="crumb-trail">Gestion des salariés</li>
+            </ol>
+        </div>
+        <div class="pull-right"><a class="btn btn-primary btn-xs" href="{{ path('front_salary_add') }}"><i class="fa fa-plus-circle"></i> Ajouter un salarié</a></div>
+    </header>
+
+    <hr />
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+            <i class="fa fa-check pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-sm alert-border-left alert-danger ">
+            <i class="fa fa-info pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {{ datatable_render_html(datatable) }}
+    {#{dump(datatable)}#}
+    <hr />
+    <a href="#" class="text-primary"><i class="glyphicon glyphicon-edit"></i> </a> : Modifier les informations du salarié <br />
+    <a href="#" class="text-primary"><i class="fa fa-user-times"></i> </a> : Désactiver le salarié <br />
+    <a href="#" class="text-primary"><i class="fa fa-user-plus"></i> </a> : Activer le salarié <br />
+    <a href="#" class="text-primary "><i class="fa fa-user"></i> </a> : Consulter le compte du salarié <br />
+    <a href="#" class="text-primary"><i class="fa fa-files-o"></i> </a> : Gérer les documents du salarié <br />
+    <a href="#" class="text-primary"><i class="fa fa-exclamation-circle text-danger"></i> </a> : Email d'activation n'est pas encore envoyé <br />
+    <a href="#" class="text-primary"><i class="fa fa-envelope text-system"></i> </a> : Email d'activation déjà envoyé <br />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    {{ datatable_render_js(datatable) }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //alert('hounniii');
+            //$('.dataTables_scrollHead').css('display','none');individual_filtering
+            $('.individual_filtering').css('display','none');
+            
+            
+            
+            
+            
+           
+        });
+
+
+    </script>
+{% endblock %}
+

@@ -1,0 +1,403 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("vendor/plugins/dropzone/css/dropzone.css") }}">
+
+
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <a href="#">Personnalisation</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('back_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-trail">Personnalisation</li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <hr class="small-margin"/>
+    <br/>
+    <!-- Page Heading-->
+    <div class="page-heading">
+
+        {% for flashMessage in app.session.flashbag.get('info') %}
+            <div class="alert alert-success">
+                <span class="glyphicon glyphicon-ok-sign"></span>{{ flashMessage }}
+            </div>
+        {% endfor %}
+        <div class="row">
+            <div class="col-xs-12 col-md-12  admin-form theme-primary panel-body bg-light">
+
+                <form action="{{ path('back_personnalisation') }}" method="post"
+                      class="form-group" {{ form_enctype(form) }}>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+
+                            <div class="section">
+                                <label class="field sfcolor">
+
+                                {% if form.couleur.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.couleur) }}</label>
+                                        {{ form_widget(form.couleur, {'attr': {  'class': 'gui-input'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.couleur, {'attr': { 'class': 'gui-input'} }) }}
+                                {% endif %}
+                                    </label>
+                            </div>
+                            <br/>
+
+                            <div>
+                                <label class="control-label" > Logo :  </label><br /><br />
+                                {% if form.logo.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.logo) }}</label>
+                                        {{ form_widget(form.logo, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.logo, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div>
+                            <br/>
+                            <div>
+                                <label class="control-label" > Emails du rapport d’intégration pour l’édition des bulletins de paie (séparés par des virgules):  </label><br /><br />
+                                {% if form.emailsNotification.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.emailsNotification) }}</label>
+                                        {{ form_widget(form.emailsNotification, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.emailsNotification, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div><br/>
+                            <div>
+                                <label class="control-label" >[Objet email] : Activation du compte :  </label><br /><br />
+                                {% if form.objMailActivation.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.objMailActivation) }}</label>
+                                        {{ form_widget(form.objMailActivation, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.objMailActivation, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div>
+                            <br/>
+                            <div class="section">
+                                <label class="field">
+                                    <label>[Contenu email] : Activation du compte : </label><br /><br />
+                                    {% if form.emailActivation.vars.errors|length %}
+                                        {# Affichage des erreurs pour ce champ précis. #}
+                                        <div class="form-group has-error">
+                                            <label class="control-label"
+                                                   for="inputError"> {{ form_errors(form.emailActivation) }}</label>
+                                            {{ form_widget(form.couleur, {'attr': {  'class': 'gui-input'} }) }}
+                                        </div>
+                                    {% else %}
+                                        {# Génération de l'input. #}
+                                        {{ form_widget(form.emailActivation, {'attr': { 'class': 'gui-input'} }) }}
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <div>
+                                <label class="control-label" >[Objet email] : Message d'activation du compte :  </label><br /><br />
+                                {% if form.objMailAfterActivation.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.objMailAfterActivation) }}</label>
+                                        {{ form_widget(form.objMailAfterActivation, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.objMailAfterActivation, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div>
+                            <br/>
+                            <div class="section">
+                                <label class="field">
+                                    <label>[Contenu email] :  Message d'activation du compte : </label><br /><br />
+                                    {% if form.emailAfterActivation.vars.errors|length %}
+                                        {# Affichage des erreurs pour ce champ précis. #}
+                                        <div class="form-group has-error">
+                                            <label class="control-label"
+                                                   for="inputError"> {{ form_errors(form.emailAfterActivation) }}</label>
+                                            {{ form_widget(form.couleur, {'attr': {  'class': 'gui-input'} }) }}
+                                        </div>
+                                    {% else %}
+                                        {# Génération de l'input. #}
+                                        {{ form_widget(form.emailAfterActivation, {'attr': { 'class': 'gui-input'} }) }}
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <div>
+                                <label class="control-label" >[Objet email] : Récupération du mot de passe :  </label><br /><br />
+                                {% if form.objMailPwd.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.objMailPwd) }}</label>
+                                        {{ form_widget(form.objMailPwd, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.objMailPwd, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div>
+                            <br/>
+                            <div class="section">
+                                <label class="field">
+                                    <label>[Contenu email] : Récupération du mot de passe : </label><br /><br />
+                                    {% if form.emailForgotPassword.vars.errors|length %}
+                                        {# Affichage des erreurs pour ce champ précis. #}
+                                        <div class="form-group has-error">
+                                            <label class="control-label"
+                                                   for="inputError"> {{ form_errors(form.emailForgotPassword) }}</label>
+                                            {{ form_widget(form.emailForgotPassword, {'attr': {  'class': 'gui-input'} }) }}
+                                        </div>
+                                    {% else %}
+                                        {# Génération de l'input. #}
+                                        {{ form_widget(form.emailForgotPassword, {'attr': { 'class': 'gui-input'} }) }}
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <br/>
+                            <div>
+                                <label class="control-label" > [Objet email] : Un nouveau bulletin de paie  </label><br /><br />
+                                {% if form.objMailBulletin.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.objMailBulletin) }}</label>
+                                        {{ form_widget(form.objMailBulletin, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.objMailBulletin, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div><br/>
+                            <div class="section">
+                                <label class="field">
+                                    <label>[Contenu email] : Un nouveau bulletin de paie : </label><br /><br />
+                                    {% if form.emailBulletin.vars.errors|length %}
+                                        {# Affichage des erreurs pour ce champ précis. #}
+                                        <div class="form-group has-error">
+                                            <label class="control-label"
+                                                   for="inputError"> {{ form_errors(form.emailBulletin) }}</label>
+                                            {{ form_widget(form.emailBulletin, {'attr': {  'class': 'gui-input'} }) }}
+                                        </div>
+                                    {% else %}
+                                        {# Génération de l'input. #}
+                                        {{ form_widget(form.emailBulletin, {'attr': { 'class': 'gui-input'} }) }}
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <br/>
+                            <div>
+                                <label class="control-label" > [Objet email] : Document à signer en attente :  </label><br /><br />
+                                {% if form.objMailDocSign.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.objMailDocSign) }}</label>
+                                        {{ form_widget(form.objMailDocSign, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.objMailDocSign, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div><br/>
+                            <div class="section">
+                                <label class="field">
+                                    <label>[Contenu email] : Document à signer en attente : </label><br /><br />
+                                    {% if form.emailDocSign.vars.errors|length %}
+                                        {# Affichage des erreurs pour ce champ précis. #}
+                                        <div class="form-group has-error">
+                                            <label class="control-label"
+                                                   for="inputError"> {{ form_errors(form.emailDocSign) }}</label>
+                                            {{ form_widget(form.emailDocSign, {'attr': {  'class': 'gui-input'} }) }}
+                                        </div>
+                                    {% else %}
+                                        {# Génération de l'input. #}
+                                        {{ form_widget(form.emailDocSign, {'attr': { 'class': 'gui-input'} }) }}
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <br/>
+
+                            <div>
+                                <label class="control-label" > [Objet email] : Un nouveau document :  </label><br /><br />
+                                {% if form.objMailDoc.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.objMailDoc) }}</label>
+                                        {{ form_widget(form.objMailDoc, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.objMailDoc, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div><br/>
+                            <div class="section">
+                                <label class="field">
+                                    <label>[Contenu email] : Un nouveau document </label><br /><br />
+                                    {% if form.emailDoc.vars.errors|length %}
+                                        {# Affichage des erreurs pour ce champ précis. #}
+                                        <div class="form-group has-error">
+                                            <label class="control-label"
+                                                   for="inputError"> {{ form_errors(form.emailDoc) }}</label>
+                                            {{ form_widget(form.emailDoc, {'attr': {  'class': 'gui-input'} }) }}
+                                        </div>
+                                    {% else %}
+                                        {# Génération de l'input. #}
+                                        {{ form_widget(form.emailDoc, {'attr': { 'class': 'gui-input'} }) }}
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <br/>
+                            
+                            
+                            
+                            <div>
+                                <label class="control-label" > [Objet email] : Modification document  </label><br /><br />
+                                {% if form.objMaiLObseletDoc.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.objMaiLObseletDoc) }}</label>
+                                        {{ form_widget(form.objMaiLObseletDoc, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.objMaiLObseletDoc, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div><br/>
+                             <div class="section">
+                                <label class="field">
+                                    <label>[Contenu email] : Modification document </label><br /><br />
+                                    {% if form.emailObseletDoc.vars.errors|length %}
+                                        {# Affichage des erreurs pour ce champ précis. #}
+                                        <div class="form-group has-error">
+                                            <label class="control-label"
+                                                   for="inputError"> {{ form_errors(form.emailObseletDoc) }}</label>
+                                            {{ form_widget(form.emailObseletDoc, {'attr': {  'class': 'gui-input'} }) }}
+                                        </div>
+                                    {% else %}
+                                        {# Génération de l'input. #}
+                                        {{ form_widget(form.emailObseletDoc, {'attr': { 'class': 'gui-input'} }) }}
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <br/>
+                            
+                         
+
+                            <div>
+                                <label class="control-label" > [Objet email] : Relance  </label><br /><br />
+                                {% if form.objMailRelance.vars.errors|length %}
+                                    {# Affichage des erreurs pour ce champ précis. #}
+                                    <div class="form-group has-error">
+                                        <label class="control-label"
+                                               for="inputError"> {{ form_errors(form.objMailRelance) }}</label>
+                                        {{ form_widget(form.objMailRelance, {'attr': { 'class': 'task_field form-control input-sm'} }) }}
+                                    </div>
+                                {% else %}
+                                    {# Génération de l'input. #}
+                                    {{ form_widget(form.objMailRelance, {'attr': { 'class': 'task_field form-control input-sm' } }) }}
+                                {% endif %}
+                            </div><br/>
+                            <div class="section">
+                                <label class="field">
+                                    <label>[Contenu email] : Relance </label><br /><br />
+                                    {% if form.emailRelance.vars.errors|length %}
+                                        {# Affichage des erreurs pour ce champ précis. #}
+                                        <div class="form-group has-error">
+                                            <label class="control-label"
+                                                   for="inputError"> {{ form_errors(form.emailRelance) }}</label>
+                                            {{ form_widget(form.emailRelance, {'attr': {  'class': 'gui-input'} }) }}
+                                        </div>
+                                    {% else %}
+                                        {# Génération de l'input. #}
+                                        {{ form_widget(form.emailRelance, {'attr': { 'class': 'gui-input'} }) }}
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <br/>
+                            {{ form_rest(form) }}
+                        </div>
+                        <div class=" col-md-12">
+                            <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Valider le
+                                formulaire
+                            </button>
+                            <button type="reset" class="btn btn-primary btn-xs"><i class="fa fa-refresh"></i> Annuler
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="inline-cp center-block"></div>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery-ui-monthpicker.min.js') }}"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery-ui-datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery.spectrum.min.js') }}"></script>
+    <script src="{{ asset('assets/admin-tools/admin-forms/js/jquery.stepper.min.js') }}"></script>
+    <script src="{{ asset('jquery/js/jquery.spectrum-fr.js') }}"></script>
+    <script>
+
+        var cPicker1 = $("#multisign_personnalisation_couleur");
+
+        var cContainer1 = cPicker1.parents('.sfcolor').parent();
+
+        $(cContainer1).addClass('posr');
+
+
+        cPicker1.spectrum({
+            color: {% if perso.couleur != null %}"{{ perso.couleur }}" {% else %}bgPrimary{% endif %},
+            appendTo: cContainer1,
+            containerClassName: 'sp-left',
+            showInput: true,
+            showPalette: true,
+            preferredFormat: "hex",
+            palette: [
+                [bgPrimary, bgSuccess, bgInfo],
+                [bgWarning, bgDanger, bgAlert],
+                [bgSystem, bgDark, bgBlack]
+            ]
+        });
+        cPicker1.show();
+    </script>
+    <script src="{{ asset('jquery/js/jquery.spectrum-fr.js') }}"></script>
+
+{% endblock %}

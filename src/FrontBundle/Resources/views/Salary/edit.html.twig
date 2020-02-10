@@ -1,0 +1,1028 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block title %}
+    Modifier salarié
+{% endblock %}
+{% block stylesheet %}
+    {{ parent() }}
+
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+
+    <style>
+        .formError{
+            margin-top: -36px!important;
+        } 
+
+    </style>
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                       <!--a href="dashboard.html">{#% block b %#}Modifier salarié{#% endblock %#}</a-->
+                    <a href="#">{% block b %}Modifier salarié{% endblock %}</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('front_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-link">
+                    <a href="{{ path('front_homepage') }}">Gestion des salariés</a>
+                </li>
+                <li class="crumb-trail">{{ block('b') }}</li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <br/>
+    <div class="col-md-8 col-md-offset-4 admin-form theme-primary mw1000 center-block panel-body bg-light">
+
+
+        {% block form %}
+            <!--form id="frm_edit_salary"  class="form-group" {#{ form_enctype(form) }#}-->
+
+            <form action="{{ path('front_salary_edit', {id: ids}) }}" id="frm_edit_salary" method="post" class="form-group" {{ form_enctype(form) }}>
+            {% endblock %}
+            {#{ form_errors(form) }#}
+            <span class="required-input"> * </span> : Champs obligatoires.
+            <br/>
+            <br/>
+            <br/>
+            {% if salary is not null and salary.photo is not empty  %}
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <img class="media-object mw150" style="height: 40px;"
+                             src="{{ path("pic_salary", {id:salary.id}) }}" alt="Photo du profile">
+                        <input type="checkbox" class="checkbox-inline" name="remove_img" value="1" /> Supprimer La photo
+                        <br /><br />
+                    </div>
+
+
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.nom, "Nom") }}<span
+                                class="required-input"> * </span></label>
+                            {% if form.nom.vars.errors|length %}
+                                {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.nom) }}
+                                </label>
+                                {{ form_widget(form.nom, {'attr': {'class': 'task_field form-control', 'id':'nom' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.nom, {'attr': {'class': 'task_field form-control', 'id':'nom' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div style="margin-bottom:10px;">
+                        <label>{{ 'Prénom' }}<span
+                                class="required-input"> * </span></label>
+
+                        {{ form_widget(form.prenom) }}
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.emailPerso, "Email personnel") }} <span class="required-input"> * </span></label>
+                        {% if form.emailPerso.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.emailPerso) }}
+                                </label>
+                                {{ form_widget(form.emailPerso, {'attr': {'class': 'task_field form-control', 'id':'email_perso' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.emailPerso, {'attr': {'class': 'task_field form-control', 'id':'email_perso' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.emailPro, "Email professionnel") }}  </label>
+                        {% if form.emailPro.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.emailPro) }}
+                                </label>
+                                {{ form_widget(form.emailPro, {'attr': {'class': 'task_field form-control', 'id':'email_pro' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.emailPro, {'attr': {'class': 'task_field form-control', 'id':'email_pro' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.telephonePerso, "Téléphone Mobile") }} - en 10 chiffres </label>
+                        {% if form.telephonePerso.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.telephonePerso) }}
+                                </label>
+                                {{ form_widget(form.telephonePerso, {'attr': {'class': 'task_field form-control', 'placeholder':' ex : 0675849990' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.telephonePerso, {'attr': {'class': 'task_field form-control', 'placeholder': 'ex : 0675849990'  } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div style="margin-bottom:10px;">
+                        <label for="user">{{ form_label(form.telephonePro, "Téléphone professionnel") }}</label>
+                        {% if form.telephonePro.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.telephonePro) }}
+                                </label>
+                                {{ form_widget(form.telephonePro, {'attr': {'class': 'task_field form-control' } }) }}
+                            </div>
+                        {% else %}
+                            {{ form_widget(form.telephonePro, {'attr': {'class': 'task_field form-control' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+
+                    <label for="user">{{ form_label(form.matricule, "Matricule") }} <span class="required-input"> * </span></label>
+                    {% if form.matricule.vars.errors|length %}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        <div class="form-group has-error">
+                            <label class="control-label" for="inputError">
+                                {{ form_errors(form.matricule) }}
+                            </label>
+                            {{ form_widget(form.matricule, {'attr': {'class': 'task_field form-control' } }) }}
+                        </div>
+                    {% else %}
+                        {{ form_widget(form.matricule, {'attr': {'class': 'task_field form-control' } }) }}
+                    {% endif %}
+
+                </div>
+                <div class="form-group col-md-6">
+
+                    <label for="user">{{ form_label(form.poste, "Intitulé du poste") }} </label>
+                    {% if form.poste.vars.errors|length %}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        <div class="form-group has-error">
+                            <label class="control-label" for="inputError">
+                                {{ form_errors(form.poste) }}
+                            </label>
+                            {{ form_widget(form.poste, {'attr': {'class': 'task_field form-control' } }) }}
+                        </div>
+                    {% else %}
+                        {{ form_widget(form.poste, {'attr': {'class': 'task_field form-control' } }) }}
+                    {% endif %}
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+
+                    <label for="user">{{ form_label(form.dateBegin, "Date d\'entrée") }} <span class="required-input"> * </span></label>
+                    {% if form.dateBegin.vars.errors|length %}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        <div class="form-group has-error">
+                            <label class="control-label" for="inputError">
+                                {{ form_errors(form.dateBegin) }}
+                            </label>
+                            {{ form_widget(form.dateBegin, {'attr': {'class': 'task_field form-control' } }) }}
+                        </div>
+                    {% else %}
+                        {{ form_widget(form.dateBegin, {'attr': {'class': 'task_field form-control' } }) }}
+                    {% endif %}
+
+                </div>
+                <div class="form-group col-md-6">
+
+                    <label for="user">{{ form_label(form.dateEnd, "Date de sortie") }} </label>
+                    {% if form.dateEnd.vars.errors|length %}
+                        {# Affichage des erreurs pour ce champ précis. #}
+                        <div class="form-group has-error">
+                            <label class="control-label" for="inputError">
+                                {{ form_errors(form.dateEnd) }}
+                            </label>
+                            {{ form_widget(form.dateEnd, {'attr': {'class': 'task_field form-control' } }) }}
+                        </div>
+                    {% else %}
+                        {{ form_widget(form.dateEnd, {'attr': {'class': 'task_field form-control' } }) }}
+                    {% endif %}
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class=" control-label">Login
+                        <span class="required-input"> * </span>
+                    </label>
+                    <input type="text" id="login_edit_salary" required="required" class="task_field form-control" placeholder="Login">
+
+                </div>
+                <div class="form-group col-md-6">
+                    <label class=" control-label"> Mot de passe
+                        <span class="required-input"> * </span>
+                    </label>
+                    <input type="password" id="pwd_edit_salary" required="required" class="task_field form-control" placeholder="Mot de passe">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail3"
+                           class=" control-label">{{ form_label(form.numSecu, "Numéro de sécurité sociale et la clé"|trans({},'messages') ) }} <span class="required-input"> * </span>
+                    </label>
+
+                    <div>
+                        {% if form.numSecu.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label"
+                                       for="inputError">{{ form_errors(form.numSecu) }}</label>
+                                {{ form_widget(form.numSecu, {'attr': {'class': 'task_field form-control', 'id':'inputError', 'id':'nom', 'placeholder':'Login' } }) }}
+                            </div>
+                        {% else %}
+                            {# Génération de l'input. #}
+                            {{ form_widget(form.numSecu, {'attr': {'class': 'task_field form-control', 'id':'nom', 'placeholder':'' } }) }}
+                        {% endif %}
+                    </div>
+
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail3"
+                           class=" control-label">{{ form_label(form.birthDay, "Date de naissance"|trans({},'messages') ) }} <span class="required-input"> * </span>
+                    </label>
+
+                    <div>
+                        {% if form.birthDay.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label"
+                                       for="inputError">{{ form_errors(form.birthDay) }}</label>
+                                {{ form_widget(form.birthDay, {'attr': {'class': 'task_field form-control', 'id':'inputError', 'id':'nom', 'placeholder':'Login' } }) }}
+                            </div>
+                        {% else %}
+                            {# Génération de l'input. #}
+                            {{ form_widget(form.birthDay, {'attr': {'class': 'task_field form-control', 'id':'nom', 'placeholder':'' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail3"
+                           class=" control-label">{{ form_label(form.natureContrat, "Nature du contrat"|trans({},'messages') ) }}
+                    </label>
+
+                    <div>
+                        {% if form.natureContrat.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label"
+                                       for="inputError">{{ form_errors(form.natureContrat) }}</label>
+                                {{ form_widget(form.natureContrat, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                            </div>
+                        {% else %}
+                            {# Génération de l'input. #}
+                            {{ form_widget(form.natureContrat, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail3"
+                           class=" control-label">{{ form_label(form.company, "Entreprise"|trans({},'messages') ) }}
+                    </label>
+
+                    <div>
+                        {{ form_widget(form.company) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail3"
+                           class=" control-label">{{ form_label(form.adresse, "Adresse"|trans({},'messages') ) }}
+                    </label>
+
+                    <div>
+                        {% if form.adresse.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label"
+                                       for="inputError">{{ form_errors(form.adresse) }}</label>
+                                {{ form_widget(form.adresse, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                            </div>
+                        {% else %}
+                            {# Génération de l'input. #}
+                            {{ form_widget(form.adresse, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail3"
+                           class=" control-label">{{ form_label(form.ville, "Ville"|trans({},'messages') ) }}
+                    </label>
+
+                    <div>
+                        {% if form.ville.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label"
+                                       for="inputError">{{ form_errors(form.ville) }}</label>
+                                {{ form_widget(form.ville, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                            </div>
+                        {% else %}
+                            {# Génération de l'input. #}
+                            {{ form_widget(form.ville, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail3"
+                           class=" control-label">{{ form_label(form.zipcode, "Code postal"|trans({},'messages') ) }}
+                    </label>
+
+                    <div>
+                        {% if form.zipcode.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label"
+                                       for="inputError">{{ form_errors(form.zipcode) }}</label>
+                                {{ form_widget(form.zipcode, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                            </div>
+                        {% else %}
+                            {# Génération de l'input. #}
+                            {{ form_widget(form.zipcode, {'attr': {'class': 'task_field form-control', 'placeholder':'' } }) }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail3"
+                           class=" control-label">{{ form_label(form.photo, "Photo"|trans({},'messages') ) }}
+                    </label>
+
+                    <div>
+                        {% if form.photo.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label"
+                                       for="inputError">{{ form_errors(form.photo) }}</label>
+                                {{ form_widget(form.photo, {'attr': {'class': 'task_field form-control', 'id':'inputError', 'id':'nom'} }) }}
+                            </div>
+                        {% else %}
+                            {# Génération de l'input. #}
+                            {{ form_widget(form.photo, {'attr': {'class': 'task_field form-control', 'id':'nom', 'placeholder':'' } }) }}
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </div>
+            
+             <div class="row">
+                <div class="form-group col-md-6">
+                    <div style="margin-bottom:10px;">
+                        {% if form.isPaper.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.isPaper) }}
+                                </label>
+                                <div class="checkbox-custom  mb5">
+                                    {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                                    {{ form_label(form.isPaper, "bulletins au format papier") }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="checkbox-custom  mb5">
+                                {{ form_widget(form.isPaper, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                                {{ form_label(form.isPaper, "bulletins au format papier") }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div style="">
+                        {% if form.children.activationSended.vars.errors|length %}
+                            {# Affichage des erreurs pour ce champ précis. #}
+                            <div class="form-group has-error">
+                                <label class="control-label" for="inputError">
+                                    {{ form_errors(form.activationSended) }}
+                                </label>
+                                <div class="checkbox-custom  mb5">
+                                    {{ form_widget(form.activationSended, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                                    {{ form_label(form.activationSended, "envoyer le mail d’activation") }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="checkbox-custom  mb5">
+                                {{ form_widget(form.activationSended, {'attr': {'class': 'task_field form-control', 'id':'checkboxExample10' } }) }}
+                                {{ form_label(form.activationSended, "envoyer le mail d’activation") }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+            </div>           
+                        
+    </div>
+
+    {{ form_rest(form) }}
+    <br/>
+
+    <div class="panel-footer text-right">
+        <button type="submit" id="btn_edit_salary" class="btn btn-primary btn-xs" ><i class="fa fa-check"></i> Valider le formulaire</button>
+        <a href="{{ path('front_homepage') }}" id="btn_annuler_edit_salary" class="btn btn-primary btn-xs" ><i class="fa fa-arrow-left"></i> Annuler</a>
+    </div>
+
+
+
+    <input type="hidden" id="user_id_edit" value="{{user['id']}}">
+    <input type="hidden" id="salary_id_edit" value="{{ids}}">
+    <input type="hidden" id="user_username_edit" value="{{user['username']}}">
+    <input type="hidden" id="user_password_edit" value="{{user['password']}}">
+    <input type="hidden" id="user_salt_edit" value="{{user['salt']}}">
+    <input type="hidden" id="user_is_active_edit" value="{{user['is_active']}}">
+    <input type="hidden" id="company_id_edit" value="{{company_id}}">
+
+
+</form>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+    src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript"
+    src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $("#frm_edit_salary").validationEngine('attach', {
+                scroll: false,
+                promptPosition: "topRight",
+                validationEventTrigger: "submit"
+                        //validateNonVisibleFields: true,
+                        //updatePromptsPosition: false
+                        // binded: true
+                        //ajaxFormValidation: "true"
+                        //'autoHidePrompt'
+            });
+            //salary_edit_form_matricule
+
+            //
+            //$("#salary_edit_form_dateBegin").removeAttr('required');
+            //$("#salary_edit_form_dateBegin").attr('class','validate[required,custom[date]] form-control');
+            $("#salary_edit_form_emailPerso").removeAttr('required');
+            $("#salary_edit_form_nom").removeAttr('required');
+            $("#salary_edit_form_prenom").removeAttr('required');
+            //$("#login_edit_salary").removeAttr('required');
+            $("#pwd_edit_salary").removeAttr('required');
+            $("#salary_edit_form_numSecu").removeAttr('required');
+            $("#salary_edit_form_matricule").removeAttr('required');
+            $("#login_edit_salary").val($("#user_username_edit").val());
+            //$("#pwd_edit_salary").val($("#user_password_edit").val());
+            $("#pwd_edit_salary").val('');
+            $('#login_edit_salary').attr('class', 'validate[required,custom[onlyNumberSp]] form-control');
+            $('#salary_edit_form_numSecu').attr('class', 'validate[required,custom[onlyNumberSp]] form-control');
+            $('#salary_edit_form_matricule').attr('class', 'validate[required,custom[onlyNumberSp]] form-control');
+            $("#salary_edit_form_nom").attr('class', 'validate[required], minSize[2]] form-control');
+            $("#salary_edit_form_emailPerso").attr('class', 'validate[required,custom[custom_email2]] form-control');
+            //$("#pwd_edit_salary").attr('class', 'validate[required], minSize[2]] form-control');
+
+            //$('#login_edit_salary').prop('readonly', true);
+            //$('#salary_edit_form_numSecu').prop('readonly', true);
+            //$('#salary_edit_form_company').attr("disabled", true);
+            //
+
+            //nom
+            $("#salary_edit_form_nom").blur(function (e) {
+
+                var nom = $("#salary_edit_form_nom").val();
+                $('#frm_edit_salary').validationEngine('attach');
+                if (nom.length < 2) {
+                    $("#btn_edit_salary").css('display', 'none');
+                    $('#salary_edit_form_nom').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Minimum 2 caractéres requis', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                    $('#frm_edit_salary').validationEngine('attach');
+                }
+
+
+                if (nom.length >= 2) {
+                    $('#salary_edit_form_nom').validationEngine('hide');
+                    //var valid = $("#frm_add_salary").validationEngine('validate');
+                    $('#frm_edit_salary').validationEngine('detach');
+                    $("#btn_edit_salary").css('display', 'block');
+                    $("#btn_edit_salary").css('margin-left', '1600px');
+                    $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+
+                }
+
+
+            });
+
+
+            //prenom
+            $("#salary_edit_form_prenom").blur(function (e) {
+                var prenom = $("#salary_edit_form_prenom").val();
+                $('#frm_edit_salary').validationEngine('attach');
+                if (prenom.length < 2) {
+                    $("#btn_edit_salary").css('display', 'none');
+                    $('#salary_edit_form_prenom').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Minimum 2 caractéres requis', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                    $('#frm_edit_salary').validationEngine('attach');
+                }
+
+                if (prenom.length >= 2) {
+                    $('#salary_edit_form_prenom').validationEngine('hide');
+                    //var valid = $("#frm_add_salary").validationEngine('validate');
+                    $('#frm_edit_salary').validationEngine('detach');
+                    $("#btn_edit_salary").css('display', 'block');
+                    $("#btn_edit_salary").css('margin-left', '1600px');
+                    $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+
+                }
+
+            });
+
+            // test email
+            function validateEmail(email) {
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+            }
+
+            //e-mail perso
+            $("#salary_edit_form_emailPerso").blur(function (e) {
+
+                var email = $("#salary_edit_form_emailPerso").val();
+                $('#salary_edit_form_emailPerso').validationEngine('attach');
+                var valid_email = validateEmail(email);
+
+                //$('#frm_edit_salary').validationEngine('attach');
+                //var valid_email = $("#frm_add_salary").validationEngine('validate');
+                //var valid_email = $("#salary_edit_form_emailPerso").validationEngine('validate');
+                //alert(valid_email);
+                if (valid_email) {
+                    $('#salary_edit_form_emailPerso').validationEngine('hide');
+                    $('#frm_edit_salary').validationEngine('detach');
+                    $('#salary_edit_form_emailPerso').validationEngine('detach');
+                    $("#btn_edit_salary").css('display', 'block');
+                    $("#btn_edit_salary").css('margin-left', '1600px');
+                    $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+
+                } else {
+
+                    $("#btn_add_salary").css('display', 'none');
+                    $('#salary_edit_form_emailPerso').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Vous devez saisir un E-mail valide', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                    $('#frm_edit_salary').validationEngine('attach');
+                    $('#salary_edit_form_emailPerso').validationEngine('attach');
+                }
+
+            });
+
+
+
+            // pwd keyup
+            $("#pwd_edit_salary").keyup(function (e) {
+
+                var pwd = $("#pwd_edit_salary").val();
+                if (pwd.length > 0) {
+                    $('#pwd_edit_salary').attr('class', 'validate[required,minSize[6]] form-control');
+                }
+
+                $('#frm_edit_salary').validationEngine('attach');
+                //$('#pwd_edit_salary').validationEngine('attach');
+
+
+
+                if (pwd.length < 6) {
+
+                    $('#pwd_edit_salary').validationEngine('hide');
+                    $('#frm_edit_salary').validationEngine('detach');
+                    $("#btn_edit_salary").css('display', 'block');
+                    $("#btn_edit_salary").css('margin-left', '1600px');
+                    $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+                }
+
+
+                if (pwd.length >= 6) {
+                    $('#pwd_edit_salary').validationEngine('hide');
+                    $('#frm_edit_salary').validationEngine('detach');
+                    $("#btn_edit_salary").css('display', 'block');
+                    $("#btn_edit_salary").css('margin-left', '1600px');
+                    $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+                }
+
+
+            });
+
+
+            //verif login and num secu
+            $("#login_edit_salary").blur(function (e) {
+
+                $('#frm_edit_salary').validationEngine('attach');
+                var login = $("#login_edit_salary").val();
+                if (login.length > 0) {
+
+
+                    $('#login_edit_salary').validationEngine('hide');
+                    $('#frm_edit_salary').validationEngine('detach');
+                    //$("#btn_edit_salary").css('display', 'block');
+                    //$("#btn_edit_salary").css('margin-left', '1600px');
+                    //$("#btn_annuler_edit_salary").css('margin-top', '-41px');
+                } else {
+
+                    $("#btn_edit_salary").css('display', 'none');
+                    $('#login_edit_salary').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Vous devez saisir le login', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                    $('#frm_edit_salary').validationEngine('attach');
+                }
+                $("#salary_edit_form_extra_user_name_edit").val($('#login_edit_salary').val());
+
+            });
+
+            //NumSecu keyup
+            $("#salary_edit_form_numSecu").blur(function (e) {
+
+                //$('#salary_edit_form_numSecu').validationEngine('attach');
+                $('#frm_edit_salary').validationEngine('attach');
+                $('#salary_edit_form_numSecu').validationEngine('attach');
+                var matricule = $("#salary_edit_form_matricule").val();
+                var company_id = $("#salary_edit_form_company").val();
+                var username = $("#login_edit_salary").val();
+                var salary_edit_id = $("#salary_id_edit").val();
+                var numsecu = $("#salary_edit_form_numSecu").val();
+                var first13 = numsecu.substring(0, 13);
+
+
+                if (numsecu.length == 0) {
+
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                    $('#salary_edit_form_numSecu').validationEngine('showPrompt', 'Vous-devez saisir le numéro de sécurité social.Attention !!', 'load');
+                    $("#btn_edit_salary").css('display', 'none');
+                    $('#frm_edit_salary').validationEngine('attach');
+                    $('#salary_edit_form_numSecu').validationEngine('attach');
+                    return false;
+                }
+                //$(".salary_edit_form_numSecuformError parentFormfrm_edit_salary formError blackPopup").removeAttr('style');
+                //$('#salary_edit_form_numSecu').validationEngine('hide');
+
+                $.ajax({
+                    url: '{{path('numsecu_existe_in_company')}}',
+                    type: 'GET',
+                    data: '&param=' + matricule + '&param1=' + company_id + '&param2=' + username + '&param3=' + salary_edit_id + '&param4=' + numsecu,
+                    cache: false,
+                    success: function (data) {
+                        console.log('success');
+                        console.log(data);
+                        console.log(data.nb);
+                        var nb = data.nb;
+                        if (nb == '-1') {
+
+                            if (numsecu.length < 15) {
+
+                                $("#btn_edit_salary").css('display', 'none');
+                                $('#salary_edit_form_numSecu').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Numéro de sécurité sociale invalide, il doit être le login et la clé', 'load');
+                                $(".blackPopup .formErrorContent").css('background-color', 'red');
+                                $(".blackPopup .formErrorContent").css('font-size', '13px');
+                                $('#frm_edit_salary').validationEngine('attach');
+                                $('#salary_edit_form_numSecu').validationEngine('attach');
+                            }
+                            if (numsecu.length > 15) {
+
+                                $("#btn_edit_salary").css('display', 'none');
+                                $('#salary_edit_form_numSecu').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Numéro de sécurité sociale invalide, il doit être le login et la clé', 'load');
+                                $(".blackPopup .formErrorContent").css('background-color', 'red');
+                                $(".blackPopup .formErrorContent").css('font-size', '13px');
+                                $('#frm_edit_salary').validationEngine('attach');
+                                $('#salary_edit_form_numSecu').validationEngine('attach');
+                            }
+
+                            if (numsecu.length == 15 && username === first13) {
+                                $('#salary_edit_form_numSecu').validationEngine('hide');
+                                $('#frm_edit_salary').validationEngine('detach');
+                                $('#salary_edit_form_numSecu').validationEngine('detach');
+                                $("#btn_edit_salary").css('display', 'block');
+                                $("#btn_edit_salary").css('margin-left', '1600px');
+                                $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+                                //$('#login_edit_salary').validationEngine('detach');
+                                //$('#salary_edit_form_numSecu').validationEngine('detach');
+
+                            }
+
+
+                            if ((numsecu.length == 15) && (username != first13)) {
+                                $('#salary_edit_form_numSecu').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Numéro de sécurité sociale invalide, il doit être le login et la clé', 'load');
+                                $("#btn_edit_salary").css('display', 'none');
+                                $(".blackPopup .formErrorContent").css('background-color', 'red');
+                                $(".blackPopup .formErrorContent").css('font-size', '13px');
+                                $('#frm_edit_salary').validationEngine('attach');
+                                $('#salary_edit_form_numSecu').validationEngine('attach');
+                            }
+
+
+
+                        }
+                        if (nb == '1') {
+
+                            //alert(nb);
+                            $("#btn_edit_salary").css('display', 'none');
+                            $('#salary_edit_form_numSecu').validationEngine('showPrompt', 'Il existe déja un salarié qui posséde ce numéro de sécurité social  dans cette entreprise. !!', 'load');
+                            $(".blackPopup .formErrorContent").css('background-color', 'red');
+                            $(".blackPopup .formErrorContent").css('font-size', '13px');
+                            $('#frm_edit_salary').validationEngine('attach');
+                            $('#salary_edit_form_numSecu').validationEngine('attach');
+                            //$(".blackPopup .formErrorContent").css('margin-top', '-23px');
+                            //alert($('#frm_edit_salary').validationEngine('validate'));
+                            //alert($('#salary_edit_form_matricule').validationEngine('validate'));
+
+                        }
+
+                        if (nb == '0') {
+
+                            if (numsecu.length < 15) {
+
+                                $("#btn_edit_salary").css('display', 'none');
+                                $('#salary_edit_form_numSecu').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Numéro de sécurité sociale invalide, il doit être le login et la clé', 'load');
+                                $(".blackPopup .formErrorContent").css('background-color', 'red');
+                                $(".blackPopup .formErrorContent").css('font-size', '13px');
+                                $('#frm_edit_salary').validationEngine('attach');
+                                $('#salary_edit_form_numSecu').validationEngine('attach');
+                            }
+                            if (numsecu.length > 15) {
+
+                                $("#btn_edit_salary").css('display', 'none');
+                                $('#salary_edit_form_numSecu').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Numéro de sécurité sociale invalide, il doit être le login et la clé', 'load');
+                                $(".blackPopup .formErrorContent").css('background-color', 'red');
+                                $(".blackPopup .formErrorContent").css('font-size', '13px');
+                                $('#frm_edit_salary').validationEngine('attach');
+                                $('#salary_edit_form_numSecu').validationEngine('attach');
+                            }
+
+                            if (numsecu.length == 15 && username === first13) {
+                                $('#salary_edit_form_numSecu').validationEngine('hide');
+                                //$('#login_edit_salary').validationEngine('hide');
+                                $('#frm_edit_salary').validationEngine('detach');
+                                $('#salary_edit_form_numSecu').validationEngine('detach');
+                                $("#btn_edit_salary").css('display', 'block');
+                                $("#btn_edit_salary").css('margin-left', '1600px');
+                                $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+
+
+                            }
+
+
+                            if ((numsecu.length == 15) && (username != first13)) {
+                                $('#salary_edit_form_numSecu').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Numéro de sécurité sociale invalide, il doit être le login et la clé', 'load');
+                                $("#btn_edit_salary").css('display', 'none');
+                                $(".blackPopup .formErrorContent").css('background-color', 'red');
+                                $(".blackPopup .formErrorContent").css('font-size', '13px');
+                                $('#frm_edit_salary').validationEngine('attach');
+                                $('#salary_edit_form_numSecu').validationEngine('attach');
+                            }
+
+
+                        }
+
+
+
+                        //$('#new_typepret_form_add').validationEngine('hide');
+                    },
+                    complete: function (comp) {
+                        console.log('complete');
+                        console.log(comp);
+                    },
+                    error: function (err) {
+                        console.log('error');
+                        console.log(err);
+                    }
+                });
+                //$("#login_edit_salary").trigger("keyup");
+
+
+            });
+            //Matricule keyup
+            $("#salary_edit_form_matricule").blur(function (e) {
+
+
+                $('#frm_edit_salary').validationEngine('attach');
+                var matricule = $("#salary_edit_form_matricule").val();
+                var company_id = $("#salary_edit_form_company").val();
+                var user_name = $("#login_edit_salary").val();
+                var salary_edit_id = $("#salary_id_edit").val();
+
+                $('#salary_edit_form_matricule').validationEngine('attach');
+                if (matricule.length == 0) {
+
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                    $('#salary_edit_form_matricule').validationEngine('showPrompt', 'Vous-devez saisir le matricule.Attention !!', 'load');
+                    $("#btn_add_salary").css('display', 'none');
+                    $('#frm_edit_salary').validationEngine('attach');
+                    $('#salary_edit_form_matricule').validationEngine('attach');
+                    return false;
+                }
+
+
+
+                //$('#salary_edit_form_company').validationEngine('hide');
+                $.ajax({
+                    url: '{{path('matricule_existe_in_company')}}',
+                    type: 'GET',
+                    data: '&param=' + matricule + '&param1=' + company_id + '&param2=' + user_name + '&param3=' + salary_edit_id,
+                    cache: false,
+                    success: function (data) {
+                        console.log('success');
+                        console.log(data);
+                        console.log(data.nb);
+                        var nb = data.nb;
+                        //alert(nb);
+                        if (nb == '1') {
+
+                            //alert(nb);
+                            $("#btn_edit_salary").css('display', 'none');
+                            $('#salary_edit_form_matricule').validationEngine('showPrompt', 'Matricule existe déja dans cette entreprise.Attention !!', 'load');
+                            $(".blackPopup .formErrorContent").css('background-color', 'red');
+                            $(".blackPopup .formErrorContent").css('font-size', '13px');
+                            $('#frm_edit_salary').validationEngine('attach');
+                            $('#salary_edit_form_matricule').validationEngine('attach');
+
+                        }
+
+                        if (nb == '0' && matricule.length > 0) {
+                            //alert(nb);
+
+                            $('#salary_edit_form_matricule').validationEngine('hide');
+                            $('#salary_edit_form_company').validationEngine('hide');
+                            $('#frm_edit_salary').validationEngine('detach');
+                            $('#salary_edit_form_matricule').validationEngine('detach');
+                            $("#btn_edit_salary").css('display', 'block');
+                            $("#btn_edit_salary").css('margin-left', '1600px');
+                            $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+                        }
+
+
+                        if (nb == '0' && matricule.length == 0) {
+                            //alert(nb);
+                            $("#btn_edit_salary").css('display', 'none');
+                            $('#salary_edit_form_matricule').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Vous devez saisir le matricule', 'load');
+                            $(".blackPopup .formErrorContent").css('background-color', 'red');
+                            $(".blackPopup .formErrorContent").css('font-size', '13px');
+                            $('#frm_edit_salary').validationEngine('attach');
+                            $('#salary_edit_form_matricule').validationEngine('attach');
+                        }
+
+                        //$('#new_typepret_form_add').validationEngine('hide');
+                    },
+                    complete: function (comp) {
+                        console.log('complete');
+                        console.log(comp);
+                    },
+                    error: function (err) {
+                        console.log('error');
+                        console.log(err);
+                    }
+                });
+                //$("#salary_edit_form_numSecu").trigger("keyup");
+            });
+
+
+
+            //change company
+            $("#salary_edit_form_company").change(function (e) {
+                var matricule = $("#salary_edit_form_matricule").val();
+                var company_id = $("#salary_edit_form_company").val();
+                //var user_name = $("#login_edit_salary").val();
+                var numsecu = $("#salary_edit_form_numSecu").val();
+                var salary_edit_id = $("#salary_id_edit").val();
+                $('#frm_edit_salary').validationEngine('attach');
+                $.ajax({
+                    url: '{{path('salary_existe_in_company')}}',
+                    type: 'GET',
+                    data: '&param=' + matricule + '&param1=' + company_id + '&param2=' + numsecu + '&param3=' + salary_edit_id,
+                    cache: false,
+                    success: function (data) {
+                        console.log('success');
+                        console.log(data);
+                        console.log(data.nb);
+                        var nb = data.nb;
+                        if (nb == '1') {
+
+                            //alert(nb);
+                            $("#btn_edit_salary").css('display', 'none');
+                            $('#salary_edit_form_company').validationEngine('showPrompt', 'Il existe déja un Salarié avec le méme matricule et Numéro sécurité social dans cette entreprise', 'load');
+                            $(".blackPopup .formErrorContent").css('background-color', 'red');
+                            $(".blackPopup .formErrorContent").css('font-size', '13px');
+                            $('#frm_edit_salary').validationEngine('attach');
+                            //$(".blackPopup .formErrorContent").css('margin-top', '-29px');
+                        }
+                        if (nb == '-1') {
+
+                            //alert(nb);
+                            //$("#btn_edit_salary").css('display', 'none');
+                            //$('#salary_edit_form_company').validationEngine('showPrompt', 'Il n\'existe aucun utilisateur attribuer a ce numéro de sécurité social. Attention !!', 'load');
+                            //$(".blackPopup .formErrorContent").css('background-color', 'red');
+                            //$(".blackPopup .formErrorContent").css('font-size', '13px');
+                            //$(".blackPopup .formErrorContent").css('margin-top', '-29px');
+
+                            $("#btn_edit_salary").css('display', 'block');
+                            $("#btn_edit_salary").css('margin-left', '1600px');
+                            $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+                            $('#salary_edit_form_company').validationEngine('hide');
+                            $('#frm_edit_salary').validationEngine('detach');
+
+                        }
+
+                        if (nb == '0') {
+                            //alert(nb);
+                            $("#btn_edit_salary").css('display', 'block');
+                            $("#btn_edit_salary").css('margin-left', '1600px');
+                            $("#btn_annuler_edit_salary").css('margin-top', '-41px');
+                            $('#salary_edit_form_company').validationEngine('hide');
+                            $('#frm_edit_salary').validationEngine('detach');
+                        }
+
+                        //$('#new_typepret_form_add').validationEngine('hide');
+                    },
+                    complete: function (comp) {
+                        console.log('complete');
+                        console.log(comp);
+                    },
+                    error: function (err) {
+                        console.log('error');
+                        console.log(err);
+                    }
+                });
+
+                $("#salary_edit_form_matricule").trigger("keyup");
+                ///$("#salary_edit_form_numSecu").trigger("keyup");
+
+            });
+            //submit form
+
+
+            $('#frm_edit_salary').submit(function (e) {
+                var valid = $("#frm_edit_salary").validationEngine('validate');
+                if (valid) {
+
+                    $('#frm_edit_salary').validationEngine('hideAll');
+                    $("#frm_edit_salary").validationEngine('detach');
+                    var user_name = $("#login_edit_salary").val();
+                    var user_pwd = $("#pwd_edit_salary").val();
+                    //var company_id = $("#company_id_edit").val();//salary_edit_form_company
+                    var company_id = $("#salary_edit_form_company").val();
+                    $("#salary_edit_form_extra_user_name_edit").val(user_name);
+                    $("#salary_edit_form_extra_user_pwd_edit").val(user_pwd);
+                    $("#salary_edit_form_extra_company_salary_edit").val(company_id);
+                    var ids = $("#salary_id_edit").val();
+                    var url = "{{ path('front_salary_edit', {id: ids}) }}";
+                    var formSerialize = $(this).serialize();
+                    $.post(url, formSerialize, function (response) {
+                        //your callback here
+                        //alert(response);
+                    }, 'JSON');
+                } else {
+                    e.preventDefault();
+                }
+
+            });
+
+        });
+
+
+    </script>
+
+{% endblock %}

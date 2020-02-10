@@ -1,0 +1,300 @@
+$("#login_add_salary").keyup(function (e) {
+                var username = $("#login_add_salary").val();
+                var numsecu = $("#salary_form_numSecu").val();
+                var first13 = numsecu.substring(0, 13);
+                if (username.length < 13) {
+                    $("#btn_add_salary").css('display', 'none');
+                    $('#login_add_salary').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Minimum 13 caractéres requis', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                }
+
+                if ((username.length == 13) && (username == first13)) {
+                    $("#btn_add_salary").css('display', 'block');
+                    $("#btn_add_salary").css('margin-left', '700px');
+                    $("#btn_annuler_add_salary").css('margin-top', '-42px');
+                    $('#login_add_salary').validationEngine('hide');
+                    $('#salary_form_numSecu').validationEngine('hide');
+
+                    var valid = $("#frm_add_salary").validationEngine('validate');
+                    if (valid == false) {
+                        $("#btn_add_salary").css('display', 'none');
+                        $("#login_add_salary").focus();
+                    } else {
+                        $("#btn_add_salary").css('display', 'block');
+                        $("#btn_add_salary").css('margin-left', '700px');
+                        $("#btn_annuler_add_salary").css('margin-top', '-42px');
+                    }
+                }
+
+                if ((username.length == 13) && (username != first13)) {
+                    $("#btn_add_salary").css('display', 'none');
+                    $('#login_add_salary').validationEngine('showPrompt', 'Login doit être les 13 chiffres du numéro de sécurité social. !!', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                }
+
+                if (username.length > 13) {
+                    $("#btn_add_salary").css('display', 'none');
+                    $('#login_add_salary').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Minimum 13 caractéres requis', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                }
+            });
+
+
+----------------------------------
+
+<form action="{{ path('front_salary_add') }}" id="frm_add_salary" method="post" class="form-group" {{ form_enctype(form) }}>
+       <form id="frm_add_salary"  class="form-group" {{ form_enctype(form) }}>
+
+$('#frm_add_salary').on('submit', function (e) {
+                var valid = $("#frm_add_salary").validationEngine('validate');
+                if (valid == true) {
+                    //alert('valide form');
+                    var user_name = $("#login_add_salary").val();
+                    var user_pwd = $("#pwd_add_salary").val();
+                    $("#salary_form_extra_user_name").val(user_name);
+                    $("#salary_form_extra_user_pwd").val(user_pwd);
+                    //alert($("#salary_form_extra_user_name").val());
+                    //alert($("#salary_form_extra_user_pwd").val());
+                    //e.preventDefault();
+                    var url = "{{ path('front_salary_add') }}";
+                    var formSerialize = $(this).serialize(); //vars
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: formSerialize,
+                        success: function (data) {
+                            //alert(data);
+                            //var message = 'Enregistrement avec succée';
+                            //$("#time_oute_add_salarie").html(message);
+                            //$("#time_oute_add_salarie").css('display', 'block');
+                            //setTimeout(function () {
+                            //$('#time_oute_add_salarie').hide("slow");
+                            //}, 1000);
+                            //window.location.href = "{#{ path('front_homepage') }#}"
+
+                            console.log(data);
+                        },
+                        complete: function (cmp) {
+
+                            //window.location.reload();
+                            //window.location.href = "{#{ path('front_homepage') }#}"
+                            //alert(cmp);
+                            console.log(cmp);
+                        },
+                        error: function (xhr) {
+
+                            console.log(xhr);
+                        }
+
+                    });
+                    e.preventDefault();
+                    //window.location.reload();
+                    //window.location.href = "{#{ path('front_homepage') }#}"
+                }
+                //else {
+                //alert('no validate');
+                //$("#frm_add_salary").validationEngine();
+                // }
+
+
+            });
+
+ $('#frm_add_salary').submit(function (e) {
+
+                //e.preventDefault();
+                var url = "{{ path('front_salary_add') }}";
+                var formSerialize = $(this).serialize();
+
+                var user_name = $("#login_add_salary").val();
+                var user_pwd = $("#pwd_add_salary").val();
+                $("#salary_form_extra_user_name").val(user_name);
+                $("#salary_form_extra_user_pwd").val(user_pwd);
+
+                $.post(url, formSerialize, function (response) {
+                    //your callback here
+                    alert(response);
+                }, 'JSON');
+            });
+
+--------------------------------
+
+$('#frm_edit_salary').on('submit', function (e) {
+
+
+                var valid = $("#frm_edit_salary").validationEngine('validate');
+                if (valid == true) {
+                    var user_name = $("#login_edit_salary").val();
+                    var user_pwd = $("#pwd_edit_salary").val();
+                    //var company_id = $("#company_id_edit").val();//salary_edit_form_company
+                    var company_id = $("#salary_edit_form_company").val();
+                    $("#salary_edit_form_extra_user_name_edit").val(user_name);
+                    $("#salary_edit_form_extra_user_pwd_edit").val(user_pwd);
+                    $("#salary_edit_form_extra_company_salary_edit").val(company_id);
+                    var ids = $("#salary_id_edit").val();
+                    var url = "{{ path('front_salary_edit', {id: ids}) }}";
+                    var formSerialize = $(this).serialize();
+                    //return false;
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: formSerialize,
+                        success: function (data) {
+                            //alert(data);
+
+                            console.log(data);
+                        },
+                        complete: function (cmp) {
+
+                            window.location.reload();
+                            window.location.href = "{{ path('front_homepage') }}"
+                            console.log(cmp);
+                        },
+                        error: function (xhr) {
+                            console.log(xhr)
+                        }
+
+                    });
+
+                } else {
+
+                    $("#frm_edit_salary").validationEngine();
+                }
+
+
+            });
+
+----------------------------
+
+var elelist = document.getElementsByTagName("pwd_add_salary");
+            for (var i = 0; i < elelist.length; i++) {
+                elelist[i].addEventListener("focus", function () {
+                    this.blur();
+                });
+            }
+
+------------------------
+
+$('#frm_add_salary').submit(function (e) {
+
+                //e.preventDefault();
+                var url = "{{ path('front_salary_add') }}";
+                var formSerialize = $(this).serialize();
+
+                var user_name = $("#login_add_salary").val();
+                var user_pwd = $("#pwd_add_salary").val();
+                $("#salary_form_extra_user_name").val(user_name);
+                $("#salary_form_extra_user_pwd").val(user_pwd);
+                $("#frm_add_salary").validationEngine('detach');
+
+
+                $.post(url, formSerialize, function (response) {
+                    //your callback here
+                    //alert('response');
+                }, 'JSON');
+
+                //alert('response finish');
+            });
+----------------------
+
+if (valid == false) {
+                                $("#btn_add_salary").css('display', 'none');
+                                //$("#salary_form_matricule").focus();
+                            } else {
+                                $("#btn_add_salary").css('display', 'block');
+                                $("#btn_add_salary").css('margin-left', '700px');
+                                $("#btn_annuler_add_salary").css('margin-top', '-42px');
+                            }
+
+
+-------------------
+
+ if (valid == false) {
+                                    $("#btn_add_salary").css('display', 'none');
+                                    //$("#salary_form_numSecu").focus();
+                                } else {
+                                    $("#btn_add_salary").css('display', 'block');
+                                    $("#btn_add_salary").css('margin-left', '700px');
+                                    $("#btn_annuler_add_salary").css('margin-top', '-42px');
+                                }
+
+
+--------------------------------------------------------
+
+//email perso
+            $("#salary_form_emailPerso").keyup(function (e) {
+
+                var email = $("#salary_form_emailPerso").val();
+                $('#frm_add_salary').validationEngine('attach');
+                if (email.length < 2) {
+                    $("#btn_add_salary").css('display', 'none');
+                    $('#salary_form_emailPerso').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Vous devez saisir un E-mail valide', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                } else {
+                    $('#salary_form_emailPerso').validationEngine('hide');
+                    var valid = $("#frm_add_salary").validationEngine('validate');
+                    $('#frm_add_salary').validationEngine('detach');
+                    if (valid == false) {
+                        $("#btn_add_salary").css('display', 'none');
+                        //$("#salary_form_emailPerso").focus();
+                    } else {
+                        $("#btn_add_salary").css('display', 'block');
+                        $("#btn_add_salary").css('margin-left', '700px');
+                        $("#btn_annuler_add_salary").css('margin-top', '-42px');
+                    }
+
+                }
+
+
+            });
+
+-----------------------------
+
+ //nom
+            $("#salary_form_nom").keyup(function (e) {
+
+                var nom = $("#salary_form_nom").val();
+                $('#frm_add_salary').validationEngine('attach');
+                if (nom.length < 2) {
+                    $("#btn_add_salary").css('display', 'none');
+                    $('#salary_form_nom').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Minimum 2 caractéres requis', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                }
+
+                if (nom.length >= 2) {
+                    $('#salary_form_nom').validationEngine('hide');
+                    //var valid = $("#frm_add_salary").validationEngine('validate');
+                    $('#frm_add_salary').validationEngine('detach');
+                    $("#btn_add_salary").css('display', 'block');
+                    $("#btn_add_salary").css('margin-left', '700px');
+                    $("#btn_annuler_add_salary").css('margin-top', '-42px');
+                }
+
+
+            });
+            //prenom
+            $("#salary_form_prenom").keyup(function (e) {
+
+                var prenom = $("#salary_form_prenom").val();
+                $('#frm_add_salary').validationEngine('attach');
+                if (prenom.length < 2) {
+                    $("#btn_add_salary").css('display', 'none');
+                    $('#salary_form_prenom').validationEngine('showPrompt', '* Ce champ est requis' + '<br />' + '* Minimum 2 caractéres requis', 'load');
+                    $(".blackPopup .formErrorContent").css('background-color', 'red');
+                    $(".blackPopup .formErrorContent").css('font-size', '13px');
+                }
+                if (prenom.length >= 2) {
+                    $('#salary_form_nom').validationEngine('hide');
+                    //var valid = $("#frm_add_salary").validationEngine('validate');
+                    $('#frm_add_salary').validationEngine('detach');
+                    $("#btn_add_salary").css('display', 'block');
+                    $("#btn_add_salary").css('margin-left', '700px');
+                    $("#btn_annuler_add_salary").css('margin-top', '-42px');
+                }
+
+
+            });

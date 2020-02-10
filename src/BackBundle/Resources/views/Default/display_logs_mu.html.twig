@@ -1,0 +1,64 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.bootstrap.css') }} rel="stylesheet">
+    <link href={{ asset('vendor/plugins/datatables/media/css/dataTables.plugins.css') }} rel="stylesheet">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="dashboard.html">Logs #id : {{ id }}</a>
+            </li>
+            <li class="crumb-icon">
+                <a href="{{ path('back_homepage') }}">
+                    <span class="glyphicon glyphicon-home"></span>
+                </a>
+            </li>
+            <li class="crumb-icon">
+                <a href="{{ path('manage_mu') }}">
+                    La liste des dépôts
+                </a>
+            </li>
+            <li class="crumb-trail">Logs #id : {{ id }}</li>
+        </ol>
+    </div>
+
+
+</header>
+    <br/>
+    <hr class="small-margin"/>
+    <br/>
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+            <i class="fa fa-check pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-sm alert-border-left alert-danger ">
+            <i class="fa fa-info pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% if logs|length %}
+        {% for log in logs  %}
+            {{ log.createdAt|date('d/m/Y H:i:s') }} : {{ log.etape }}: {% if log.statut %}<i class="fa fa-check text-system"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %}<br />
+        {% endfor %}
+        {% else %}
+        Aucun log disponible pour ce dépôt  #{{ id }}
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendor/plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+{% endblock %}

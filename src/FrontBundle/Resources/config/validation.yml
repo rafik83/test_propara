@@ -1,0 +1,7 @@
+FrontBundle\Entity\Salary:
+    properties:
+        telephonePerso:
+            - Length:
+                min: 10
+                max: 10
+                exactMessage: "Le numéro de téléphone devrait être à 10 chiffres"

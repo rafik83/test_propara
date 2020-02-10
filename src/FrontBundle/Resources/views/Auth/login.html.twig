@@ -1,0 +1,126 @@
+{% extends 'FrontBundle:Auth:layout_auth.html.twig' %}
+
+{% block stylesheet %}
+    {{ parent() }}
+    <style>
+        .formError{
+            margin-top: -36px!important;
+        } 
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <!-- Start: Main -->
+    <div id="main" class="animated fadeIn">
+
+        <!-- Start: Content-Wrapper -->
+        <section id="content_wrapper">
+
+            <!-- Begin: Content -->
+            <section id="content">
+
+                <div class="admin-form theme-info mw500" id="login">
+
+                    <!-- Login Logo -->
+                    <div class="row table-layout">
+                        <h1 class="text-center img-responsive">
+                            {% if logo is not null %}
+                                <img src="{{ asset('uploads/'~logo )| apply_filter('my_thumb') }}"  alt="Logo" />
+                            {% else %}
+                                FULLRH
+                            {% endif %}
+                        </h1>
+                    </div>
+
+                    <!-- Login Panel/Form -->
+                    <div class="panel mt30 mb25">
+
+                        <form id="frm_login_fulloffice" class="form-signin console-form-auth" role="form" action="{{ path('front_login_check') }}" method="post">
+                            <div class="panel-body bg-light p25 pb15">
+                                {% for flashMessage in app.session.flashbag.get('info') %}
+                                    <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+                                        <i class="fa fa-check pr10"></i>
+                                        {{ flashMessage }}
+                                    </div>
+                                {% endfor %}
+                                {% for flashMessage in app.session.flashbag.get('erreur') %}
+                                    <div class="alert alert-sm alert-border-left alert-danger ">
+                                        <i class="fa fa-info pr10"></i>
+                                        {{ flashMessage }}
+                                    </div>
+                                {% endfor %}
+
+                                <!-- Username Input -->
+                                <div class="section">
+                                    <label for="username" class="field-label text-muted fs14 mb10">Login</label>
+                                    <label for="username" class="field prepend-icon">
+                                        <!--input type="text" name="_username" class="form-control" placeholder="login" required autofocus-->
+                                        <input type="text" name="_username" id="login_user"  class="form-control" placeholder="Saisir ici les 13 premiers chiffres de votre N°SS" required autofocus>
+                                        <label for="username" class="field-icon">
+                                            <i class="fa fa-user"></i>
+                                        </label>
+                                    </label>
+                                </div>
+
+                                <!-- Password Input -->
+                                <div class="section">
+                                    <label for="username" class="field-label text-muted fs14 mb10">Mot de passe </label>
+                                    <label for="password" class="field prepend-icon">
+                                        <input type="password" name="_password" class="form-control" placeholder="Mot de passe" style="margin:0px;" required>
+                                        <label for="password" class="field-icon">
+                                            <i class="fa fa-lock"></i>
+                                        </label>
+                                    </label>
+                                </div>
+                                <div class="row pull-right">
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <a href="{{ path('forgot_password') }}" class="hvr-icon-buzz-out" style="text-decoration: none;"><i class="fa fa-lock text-primary"></i>
+                                            <small><b>Je ne parviens pas à accéder à mon compte</b></small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-footer clearfix">
+                                <button type="submit" class="button btn-primary mr10 pull-right">Connexion</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <!-- Registration Links -->
+                    <div class="login-links">
+                        <p>Copyright <b> Intersa </b>
+                        </p>
+                    </div>
+
+
+
+                </div>
+
+            </section>
+            <!-- End: Content -->
+
+        </section>
+        <!-- End: Content-Wrapper -->
+
+    </div>
+    <!-- End: Main -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            
+
+
+        });
+
+
+    </script> 
+{% endblock %}

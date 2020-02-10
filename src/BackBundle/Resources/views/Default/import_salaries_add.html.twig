@@ -1,0 +1,200 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("vendor/plugins/dropzone/css/dropzone.css") }}">
+    {% stylesheets '../app/Resources/Public/css/jquery-ui/*' %}
+    <link rel="stylesheet" type="text/css" charset="UTF-8" media="all" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style>
+        .ui-state-highlight {
+            background: {{ mycolor }} !important ;
+            color: #fff !important;
+        }
+        .ui-state-default {
+            background: #fff !important ;
+            color: {{ mycolor|change_color(-0.7) }} !important;
+            border: 1px solid {{ mycolor|change_color(-0.7) }} !important;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <header class="custom_header">
+        <div class="topbar-left">
+            <ol class="breadcrumb">
+                <li class="crumb-active">
+                    <a href="dashboard.html">Import des salariés</a>
+                </li>
+                <li class="crumb-icon">
+                    <a href="{{ path('back_homepage') }}">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </li>
+                <li class="crumb-trail">Import des salariés</li>
+            </ol>
+        </div>
+    </header>
+    <br/>
+
+    <hr class="small-margin"/>
+    <br/>
+    <!-- Page Heading-->
+    <div class="page-heading">
+
+        {% for flashMessage in app.session.flashbag.get('info') %}
+            <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+                <i class="fa fa-check pr10"></i>
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('erreur') %}
+            <div class="alert alert-sm alert-border-left alert-danger ">
+                <i class="fa fa-info pr10"></i>
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+        <div class="row">
+
+
+
+            <div class="col-md-8 col-md-offset-4 admin-form theme-primary mw1000 center-block panel-body bg-light">
+
+                <form action="{{ path('import_salaries_add') }}" method="post" {{ form_enctype(form) }}
+                      class="form-group" >
+                    {{ form_errors(form) }}
+
+
+                    <span class="required-input"> * </span> : Champs obligatoires.
+                    <br/>
+                    <br/>
+                    <br/>
+                    <input type="hidden" name="columns" id="columns"
+                           value="list[]=entreprise&list[]=matricule&list[]=nom&list[]=prenom&list[]=datenaissance&list[]=ss&list[]=cless&list[]=adresse&list[]=cmpadresse&list[]=zipcode&list[]=ville&list[]=dateentree&list[]=datesortie&list[]=naturecontrat&list[]=emploi&list[]=emailperso&list[]=bupapier"/>
+                    <div style="height:480px;display:block" class="row">
+                        <div class="col-md-6">
+                            <h4>Colonnes disponibles :</h4>
+                            <ul id="sortable1" class="connectedSortable">
+                                <li id="list_emailpro" class="ui-state-default"><i class="fa fa-cube"></i> <b>Email professionnel</b>
+                                </li>
+                                <li id="list_telephoneperso" class="ui-state-default"><i class="fa fa-cube"></i> <b>Téléphone personnel </b>
+                                </li>
+                                 <!--li id="list_bupapier" class="ui-state-default"><i class="fa fa-cube"></i> <b>Bulletin au format papier (0 ou 1)  </b>
+                                </li-->
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Colonnes à intégrer dans l'ordre dans le fichier d'import :</h4>
+                            <ul id="sortable2" class="connectedSortable maincol" >
+
+                                <li id="list_entreprise" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Entreprise</b>
+                                </li>
+                                <li id="list_matricule" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Matricule</b>
+                                </li>
+                                <li id="list_nom" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Nom</b>
+                                </li>
+                                <li id="list_prenom" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Prénom</b>
+                                </li>
+                                <li id="list_datenaissance" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Date de naissance (jj/mm/YYYY) </b>
+                                </li>
+                                <li id="list_ss" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Numéro de la sécurité sociale</b>
+                                </li>
+                                <li id="list_cless" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Clé de la sécurité sociale</b>
+                                </li>
+                                <li id="list_adresse" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Adresse</b>
+                                </li>
+                                <li id="list_cmpadresse" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Complément d'adresse</b>
+                                </li>
+                                <li id="list_zipcode" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Code postal</b>
+                                </li>
+                                <li id="list_ville" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Ville</b>
+                                </li>
+                                <li id="list_dateentree" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Date d'entrée (jj/mm/YYYY)</b>
+                                </li>
+                                <li id="list_datesortie" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Date de sortie (jj/mm/YYYY)</b>
+                                </li>
+                                <li id="list_naturecontrat" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Nature du contrat  </b>
+                                </li>
+                                <li id="list_emploi" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Emploi  </b>
+                                </li>
+                                <li id="list_emailperso" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Email personnel</b>
+                                </li>
+                                <li id="list_bupapier" class="ui-state-highlight"><i class="fa fa-cube"></i> <b>Bulletin au format papier (0 ou 1)  </b>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <br />
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <label >{{ form_label(form.separateur, "Séparateur") }} : </label><span class="required-input" > * </span>
+                        {{ form_errors(form.separateur) }}
+                        {{ form_widget(form.separateur, {'attr': {'class': 'task_field form-control' } }) }}
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <label >{{ form_label(form.formatDate, "Format des dates") }} : </label><span class="required-input" > * </span>
+                        {{ form_errors(form.formatDate) }}
+                        {{ form_widget(form.formatDate, {'attr': {'class': 'task_field form-control' } }) }}
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <label >{{ form_label(form.importFile, "Fichier CSV") }} : </label><span class="required-input" > * </span>
+                        {{ form_errors(form.importFile) }}
+                        {{ form_widget(form.importFile, {'attr': {'class': 'task_field form-control' } }) }}
+                    </div>
+                    {{ form_rest(form) }}
+                    <div class="panel-footer text-right">
+                        <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Valider le formulaire</button>
+                        <button type="reset" class="btn btn-dark btn-xs"><i class="fa fa-refresh"></i> Annuler</button>
+                    </div>
+                </form>
+
+
+            </div>
+
+        </div>
+
+
+
+    {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        <!-- BS Dual Listbox Plugin -->
+        <script type="text/javascript" src="{{ asset('vendor/plugins/duallistbox/jquery.bootstrap-duallistbox.min.js') }}"></script>
+        {% javascripts '../app/Resources/Public/js/jquery-ui/jquery-ui.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script>
+            $(document).ready(function () {
+
+                $('html,body').animate({scrollTop: 0}, 'slow');
+
+
+                $(function () {
+                    $("#sortable1, #sortable2").sortable({
+                        connectWith: ".connectedSortable",
+                        update: function () {
+                            var order = $('#sortable2').sortable('serialize');
+                            var res = order.split("&");
+                            for (var i in res) {
+                                var formatid = res[i];
+                                var myid = formatid.substring(7, formatid.length);
+                                $('#list_' + myid).removeClass('ui-state-default');
+                                $('#list_' + myid).addClass('ui-state-highlight');
+                            }
+                            $('#columns').val(order);
+
+                            var orderdisable = $('#sortable1').sortable('serialize');
+                            var res = orderdisable.split("&");
+                            for (var i in res) {
+                                var formatid = res[i];
+                                var myid = formatid.substring(7, formatid.length);
+                                $('#list_' + myid).addClass('ui-state-default');
+                                $('#list_' + myid).removeClass('ui-state-highlight');
+                            }
+                        }
+
+                    }).disableSelection();
+                });
+            });
+
+        </script>
+    {% endblock %}

@@ -1,0 +1,950 @@
+{% extends "FrontBundle::layout.html.twig" %}
+{% block stylesheet %}
+    {{ parent() }}
+    <link href={{ asset('jquery/css/jPages.css') }} rel="stylesheet">
+    <link href={{ asset('assets/css/custom.css') }} rel="stylesheet">
+{% endblock %}
+{% block body %}
+    {% for flashMessage in app.session.flashbag.get('info') %}
+        <div class="alert alert alert-border-bottom alert-system bg-gradient ">
+            <i class="fa fa-check pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-sm alert-border-left alert-danger ">
+            <i class="fa fa-info pr10"></i>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <!-- Begin .page-heading -->
+    <div class="page-heading">
+        <div class="media clearfix">
+            {% if salary.photo is not null %}
+                <div class="media-left pr30">
+                    <a href="#">
+                        <img class="media-object mw150" style="height: 80px;"
+                             src="{{ path("pic_salary", {id:salary.id}) }}" alt="Photo du profile">
+                    </a>
+                </div>
+            {% endif %}
+            <div class="media-body va-m">
+                <h2 class="media-heading">{{ salary.nom }} {{ salary.prenom }}
+                    <small> -                 {% if is_granted('ROLE_RH') %}
+                        <a href="{{ path('front_salary_edit', {id:salary.id} ) }}">Modifier</a> | <a
+                            href="{{ path('front_salary_docs', {id:salary.id} ) }}">Gestion des documents </a>
+                        {% endif %}
+                        </small>
+                    </h2>
+                    <p class="lead">{{ salary.poste }}</p>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <span class="panel-icon">
+                            <i class="fa fa-user fa-2x align-icon"></i>
+                        </span>
+                        <span class="panel-title"> Informations du Salarié</span>
+                    </div>
+                    <div class="panel-body pn">
+                        <table class="table mbn tc-icon-1 tc-med-2 tc-bold-last">
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="fa fa-folder text-primary"></span>
+                                    </td>
+                                    <td>Matricule</td>
+                                    <td>
+                                        {{ salary.matricule }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="fa fa-info text-primary"></span>
+                                    </td>
+                                    <td>Nom</td>
+                                    <td>
+                                        {{ salary.nom }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="fa fa-info text-primary"></span>
+                                    </td>
+                                    <td>Prénom</td>
+                                    <td>
+                                        {{ salary.prenom }}
+                                    </td>
+                                </tr>
+                                {% if salary.numSecu is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-user-md text-primary"></span>
+                                        </td>
+                                        <td>Numéro de sécurité sociale</td>
+                                        <td>
+                                            {{ salary.numSecu }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.birthDay is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-birthday-cake text-primary"></span>
+                                        </td>
+                                        <td>Date de naissance</td>
+                                        <td>
+                                            {{ salary.birthDay|date('d/m/Y')  }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.dateBegin is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-calendar text-primary"></span>
+                                        </td>
+                                        <td>Date d'entrée</td>
+                                        <td>
+                                            {{ salary.dateBegin|date('d/m/Y') }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.dateEnd is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-calendar text-primary"></span>
+                                        </td>
+                                        <td>Date de sortie</td>
+                                        <td>
+                                            {{ salary.dateEnd|date('d/m/Y') }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.telephonePro is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-phone text-primary"></span>
+                                        </td>
+                                        <td>Téléphone professionnel</td>
+                                        <td>
+                                            {{ salary.telephonePro }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.telephonePerso is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-mobile-phone text-primary"></span>
+                                        </td>
+                                        <td>Téléphone personnel</td>
+                                        <td>
+                                            {{ salary.telephonePerso }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.emailPro is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-envelope text-primary"></span>
+                                        </td>
+                                        <td>Email</td>
+                                        <td>
+                                            {{ salary.emailPro }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.emailPerso is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-envelope-o text-primary"></span>
+                                        </td>
+                                        <td>Email personnel</td>
+                                        <td>
+                                            {{ salary.emailPerso }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if salary.poste is not null %}
+                                    <tr>
+                                        <td>
+                                            <span class="fa fa-briefcase
+                                                  text-primary"></span>
+                                        </td>
+                                        <td>Intitulé de poste</td>
+                                        <td>
+                                            {{ salary.poste }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+
+                                {% if salary.activationSended is not null and salary.isPaper is not null  %}
+                                    {% if salary.activationSended == true  and salary.isPaper == false %}
+                                        <tr>
+                                            <td>
+                                                <button type="button" id="btn_desative_salary" onclick="desactiveSalary({{ salary.id }})" class="btn-sm btn-danger" style="display: block">désactiver</button>
+                                            </td>
+                                            <td>{{ 'Désactiver salariée' }}</td>
+                                            <td>
+                                                {{ 'Désactiver fiche Salariée' }}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+
+                                    {% if salary.activationSended == false  and salary.isPaper == false %}
+                                        <tr>
+                                            <td>
+                                                <button type="button" id="btn_active_salary" onclick="activeSalary({{ salary.id }})" class="btn-sm btn-success" style="display: block">activer</button>
+                                            </td>
+                                            <td>{{ 'activer salarié' }}</td>
+                                            <td>
+                                                {{ 'Activer fiche Salarié' }} 
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+
+
+
+
+                                {% if salary.activationSended is  null and salary.isPaper is not null  %}
+                                    {% if salary.isPaper == false %}
+                                        <tr>
+                                            <td>
+                                                <button type="button" id="btn_active_salary" onclick="activeSalary({{ salary.id }})" class="btn-sm btn-success" style="display: block">activé</button>
+                                            </td>
+                                            <td>{{ 'activer salarié' }}</td>
+                                            <td>
+                                                {{ 'Activer fiche Salarié' }} 
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+
+
+
+                                {% if salary.activationSended is not null and salary.isPaper is not null  %}
+                                    {% if salary.activationSended == true  and salary.isPaper == false %}
+                                        <tr>
+                                            <td>
+                                                <span class="text-primary"></span>
+                                                <i class="fa fa-envelope text-system"></i>
+                                            </td>
+                                            <td>Email d'activation déjà envoyé</td>
+                                            <td>
+                                                {#{ 'Fiche salarié activée' }#}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if salary.activationSended == false  and salary.isPaper == false %}
+                                        <tr>
+                                            <td>
+                                                <span class="text-primary"></span>
+                                                <i class="fa fa-exclamation-circle text-danger"></i>
+                                            </td>
+                                            <td>Email d'activation n'est pas encore envoyé</td>
+                                            <td>
+                                                {{ 'Fiche salarié désactivée' }}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+
+
+
+
+                                {% if salary.activationSended is  null and salary.isPaper is not null  %}
+                                    {% if  salary.isPaper == false %}
+                                        <tr>
+                                            <td>
+                                                <span class="text-primary"></span>
+                                                <i class="fa fa-exclamation-circle text-danger"></i>
+                                            </td>
+                                            <td>Email d'activation n'est pas encore envoyé</td>
+                                            <td>
+                                                {{ 'Fiche salarié désactivée' }}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-md-8">
+                {% set count_docs = 0%}
+                {% set count_bu = 0  %}
+                {% for bulletin in bulletins %}
+                    {% set count_bu = count_bu + bulletin|length %}
+                {% endfor %}
+                {% for t in tree %}
+                    {% set count_docs = count_docs + t[1]|length %}
+                {% endfor %}
+                <div class="tab-block">
+                    <ul class="nav nav-tabs responsive " id="myTabs">
+                        <li class="active">
+                            <a href="#bulletins" data-toggle="tab" class="custom-tab"> <span
+                                    class="badge badge_custom">{{ count_bu}}</span> Bulletins de paie</a>
+                        </li>
+                        <li>
+                            <a href="#docs" data-toggle="tab" class="custom-tab"> <span class="badge badge_custom">{{ count_docs }}</span>
+                                Documents </a>
+                        </li>
+                        <li>
+                            <a href="#codocs" data-toggle="tab" class="custom-tab"> <span class="badge badge_custom">{{ codocs|length }}</span>
+                                Documents communs</a>
+                        </li>
+                        <li>
+                            <a href="#sdocs" id="sdocs_link" data-toggle="tab" class="custom-tab"> <span
+                                    class="badge badge_custom">{{ sdocs|length }}</span> Signatures en attente</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content responsive" id="container_bulletin" >
+
+                        <div id="bulletins" class="tab-pane active responsive ">
+                            <div class="col-xs-3" style="padding-right: 0px;">
+                                <ul class="nav nav-tabs tabs-left vertical-text" id="tt" role="tablist" style="width: 100%;">
+                                    {% set stock_nbr_bulltin= 0 %}
+                                    {% set stock_years = 0 %}
+                                    {% set count_nbr_column_li = 0 %}
+                                    {% for key,bulletin in bulletins %}
+
+                                        <li id="column_li_liste_bulltin"   role="presentation" {% if curyear == key %}class="active"{% endif %} style="width: 100%;padding-right: 0px;" ><a href="#page_{{ key }}" aria-controls="{{ key }}" role="tab" data-toggle="tab"> <b id="year_for_column_li">{{ key }}</b> <span class="badge" id="nbr_bulletin">{{ bulletin|length }} bulletin(s)</span><span  id="nbr_bulletin_incolumn" style="display: none">{{ bulletin|length }}</span></a></li>
+                                                {% set count_nbr_column_li = count_nbr_column_li + 1 %}
+                                            {% endfor %}
+                                </ul>
+                                {% if bulletins|length == 0 %}
+                                    <i class="fa fa-warning  text-warning"></i> Aucun document trouvé
+                                {% else %}
+
+                                {% endif %}
+
+
+                                <input type="hidden" id="nbr_colum_li" value="{{count_nbr_column_li}}"/>
+                            </div>
+                            <div class="col-xs-9" style="padding-left: 0px;">
+
+
+
+                                <div class="tab-content"  id="div_tab_content_bulltin_salary">
+
+                                    {% for key,bus in bulletins %}
+                                        <div role="tabpanel"  class="tab-pane {% if curyear == key %}active{% endif %}"  id="page_{{ key }}" >
+
+                                            <ul id="liste_bultin_etat_ul"  style="list-style: none;">
+                                                {% set nbr = 0 %}
+                                                {% for bulletin in bus %}
+                                                    {% set nbr = nbr + 1 %}
+                                                    <!--li class="media mt25" id="liste_bultin_etat_li_{#{bulletin.year}#}"-->
+                                                    <!--li class="media mt25" id="liste_bultin_etat_li"-->
+                                                    <li class="media mt25" id="{{bulletin.id}}">
+                                                        {% if bulletin.docChange is not null %}
+                                                            <input type="hidden" id="doc_changed_bulletin_{{bulletin.id}}" value="{{bulletin.docChange|date('Y-m-d')}}" />
+                                                        {% endif %}
+                                                        <a class="pull-left" href="#"><i class="fa fa-file-pdf-o fa-4x text-system"></i> </a>
+
+                                                        <div class="media-body" id="div_media_body_{{ bulletin.year}}">
+                                                            <h5 class="media-heading mb20"> {{ bulletin.month }}/{{ bulletin.year }}
+                                                                {% if bulletin.ext is not null %}-- {{ bulletin.ext }} {% endif %}
+                                                                <small> - Certifié electroniquement</small>
+                                                                &nbsp&nbsp&nbsp {% if is_granted('ROLE_RH') %}
+                                                                {% if bulletin.obsolete %}
+                                                                    <label class="text-danger-dark" id="label_eta_bulletin_{{bulletin.id}}_{{salary.id}}">(Obsolete)</label>
+                                                                {%else%}
+                                                                    <label class="text-danger-dark" id="label_eta_bulletin_{{bulletin.id}}_{{salary.id}}"></label>
+                                                                {% endif %}
+                                                                {% endif %}
+                                                                    <!--button class="btn btn-primary" onclick="Test()">Run the code</button-->
+                                                                    <br>
+                                                                    {#{dump(is_granted('ROLE_RH'))}#}
+                                                                    {% if is_granted('ROLE_RH') %}
+                                                                        <!--button id="btn_definir_obslt_{#{bulletin.year}}_{{nbr}#}"   onclick="definirBultObselet({#{bulletin.id}},{{salary.id}#} );"    class="btn btn-danger btn-xs"><i class="fa fa-check"></i> déclarer comme obsolete  </button-->
+                                                                        <!--button id="btn_definir_non_obslt_{#{bulletin.year}}_{{nbr}#}" onclick="definirBultNonObselet({#{bulletin.id}},{{salary.id}#} );"  class="btn btn-success btn-xs"><i class="fa fa-certificate"></i> déclarer comme non obselete </button--> 
+
+
+
+                                                                        <button id="btn_definir_obslt_{{bulletin.id}}" style="display: block"   onclick="definirBultObselet({{bulletin.id}},{{salary.id}} );"    class="btn btn-danger btn-xs"><i class="fa fa-check"></i> déclarer comme obsolete  </button>
+                                                                        <button id="btn_definir_non_obslt_{{bulletin.id}}" style="display: block" onclick="definirBultNonObselet({{bulletin.id}},{{salary.id}} );"  class="btn btn-success btn-xs"><i class="fa fa-certificate"></i> déclarer comme non obselete </button> 
+
+
+
+                                                                    {% endif %}
+
+
+                                                                </h5>
+                                                                <div class="media-links">
+
+                                                                    <span class="text-light fs12 mr10">
+                                                                        <span class="fa fa-floppy-o text-primary mr5"></span><a
+                                                                            href="{{ path('front_download_signed_doc', {id:bulletin.id}) }}"> Télécharger </a></span>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </li>
+
+                                                        {% endfor %}
+                                                        </ul> 
+                                                    </div>
+                                                    {% endfor %}
+
+
+                                                        <!--Start POPUP--------->                                                        
+                                                        <div class="modal fade">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                        <h4 class="modal-title">Modal title</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p>One fine body…</p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                                                    </div>
+                                                                </div><!-- /.modal-content -->
+                                                            </div><!-- /.modal-dialog -->
+                                                        </div><!-- /.modal -->
+                                                        <!---------END POPUP--------->  
+
+
+
+                                                    </div> 
+                                                </div>                
+                                            </div>
+                                            <div id="codocs" class="tab-pane responsive ">
+                                                <ul style="list-style: none;">
+                                                    {% if codocs|length > 0 %}
+                                                        {% set doc_exist = true %}
+                                                    {% else %}
+                                                        {% set doc_exist = false %}
+                                                    {% endif %}
+
+                                                    {% for doc in codocs %}
+
+
+                                                        <div class="media mt25">
+                                                            <a class="pull-left" href="#"><i
+                                                                    class="fa fa-file-text fa-4x text-primary"></i> </a>
+
+                                                            <div class="media-body">
+                                                                <h5 class="media-heading mb20"> {{ doc.name }}</h5>
+                                                                {{ doc.createdAt|date('d/m/Y') }}
+                                                                <small> - <span
+                                                                        class="fa fa-floppy-o text-primary mr5"></span><a
+                                                                        href="{{ path('front_codoc_download', {id:doc.id}) }}">
+                                                                        Télécharger </a></small>
+
+
+                                                            </div>
+                                                        </div>
+
+                                                    {% endfor %}
+
+                                                    {% if doc_exist == false %}
+                                                        <i class="fa fa-warning  text-warning"></i> Aucun document trouvé
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                            <div id="docs" class="tab-pane responsive ">
+                                                <ul style="list-style: none;">
+
+
+                                                    {% set doc_exist = false %}
+                                                    {% for t in tree %}
+                                                        {% if  t[1]|length > 0 %}
+                                                            <li id="{{ t[0].id }}" class="folder expanded unselectable"><h4><i
+                                                                        class="fa fa-folder-open text-dark"></i> {{ t[0].libelle }}</h4>
+
+                                                                <ul>
+                                                                    {% for doc in t[1] %}
+                                                                        {% set doc_exist = true %}
+                                                                        <div class="media mt25">
+                                                                            <a class="pull-left" href="#"><i
+                                                                                    class="fa fa-file-text fa-4x text-primary"></i> </a>
+
+                                                                            <div class="media-body">
+                                                                                <h5 class="media-heading mb20"> {{ doc.name }}</h5>
+                                                                                {{ doc.createdAt|date('d/m/Y') }}
+                                                                                <small> -  {% if doc.specialDoc %}<i
+                                                                                        class="fa fa-pencil-square text-primary"></i>{% if doc.specialSigned %}
+                                                                                    <i class="fa fa-certificate text-system"></i>{% else %} <i
+                                                                                        class="fa fa-certificate"></i>{% endif %} {% endif %}
+                                                                                    <span
+                                                                                        class="fa fa-floppy-o text-primary mr5"></span><a
+                                                                                        href="{{ path('front_download_doc', {id:doc.id}) }}">
+                                                                                        Télécharger </a></small>
+
+
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                                <hr/>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if doc_exist == false %}
+                                                        <i class="fa fa-warning  text-warning"></i> Aucun document trouvé
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                            <div id="sdocs" class="tab-pane responsive ">
+                                                <ul style="list-style: none;">
+                                                    {% if sdocs|length > 0 %}
+                                                        {% set doc_exist = true %}
+                                                    {% else %}
+                                                        {% set doc_exist = false %}
+                                                    {% endif %}
+
+                                                    {% for doc in sdocs %}
+
+
+                                                        <div class="media mt25">
+                                                            <a class="pull-left" href="#"><i
+                                                                    class="fa fa-file-pdf-o  fa-4x text-primary"></i> </a>
+
+                                                            <div class="media-body">
+                                                                <h5 class="media-heading mb20"> {{ doc.name }} </h5>
+                                                                {{ doc.createdAt|date('d/m/Y') }}
+                                                                {% if is_granted('ROLE_USER') %}
+                                                                    <small> - <span
+                                                                            class="fa fa-pencil-square text-primary mr5"></span><a
+                                                                            href="{{ path("sign_document", {id:doc.id}) }}">
+                                                                            Signer ce document </a></small>
+                                                                        {% endif %}
+
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+
+                                                    {% if doc_exist == false %}
+                                                        <i class="fa fa-warning  text-warning"></i> Aucun document trouvé
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="desc-tree">
+                                            <i class="fa fa-pencil-square"></i> Le document requiert une signature.<br/>
+                                            <i class="fa fa-certificate "></i> Le document est en attente de signature. <br/>
+                                            <i class="fa fa-certificate text-system"></i> Le document est signé avec succés par le salarié
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <button type="button" id="" onclick="envoyerDemandeActivationSalary({{ salary.id }})" class="btn btn-xs btn-primary custom-btn salary_result_multiselect_action_click" style="display: block"><i class="fa fa-unlock"></i> Envoyer une demande d'activation</button>
+                                </div>
+                            </div>
+
+
+                            {% endblock %}
+                                {% block javascripts %}
+                                    {{ parent() }}
+                                    <script type="text/javascript" src="{{ asset('jquery/js/jPages.min.js') }}"></script>
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                        $('.holder').jPages({
+                                        containerID: "bulletins",
+                                                perPage: 10,
+                                                keyBrowse: true,
+                                                scrollBrowse: true,
+                                                previous: "Précédent",
+                                                next: "Suivant"
+                                        });
+                                        $('#liste_bultin_etat_ul li').each(function(){
+                                        //var id_bulletin = $("#id_buletin").val();
+                                        var tt = $(this).attr("id");
+                                        var label2 = $(this).find('label').html();
+                                        if (label2 == '(Obsolete)'){
+                                        $('#btn_definir_obslt_' + tt).css('display', 'none');
+                                        $('#btn_definir_non_obslt_' + tt).css('display', 'block');
+                                        }
+
+                                        if (label2 == ''){
+                                        $('#btn_definir_obslt_' + tt).css('display', 'block');
+                                        $('#btn_definir_non_obslt_' + tt).css('display', 'none');
+                                        }
+
+                                        });
+                                        $('#liste_bultin_etat_ul li').each(function(){  
+                                        var tt = $(this).attr("id");
+                                        var separator = "_";
+                                        var doc_changed = $("#doc_changed_bulletin" + separator + tt).val();
+                                        var label2 = $(this).find('label').html();
+                                        if (label2 == '(Obsolete)'){
+                                        if (doc_changed != undefined){
+                                        //alert('doc changed unddefined');
+                                        var split = doc_changed.split('-');
+                                        var yers = split[0];
+                                        var month = split[1];
+                                        var day = split[2];
+                                        //var tt = day + 1;
+                                        var x = Number(day) + 1;
+                                        //var new_date = x + "/" + month + "/" + yers;
+                                        var today = new Date();
+                                        var dd = today.getDate();
+                                        var mm = today.getMonth() + 1; //January is 0!
+
+                                        var yyyy = today.getFullYear();
+                                        if (dd < 10){
+                                        dd = '0' + dd;
+                                        }
+                                        if (mm < 10){
+                                        mm = '0' + mm;
+                                        }
+                                        //var today = dd + '/' + mm + '/' + yyyy;
+                                        var datetimeNow = new Date(yyyy + "-" + mm + "-" + dd);
+                                        var oldDate = new Date(yers + "-" + month + "-" + x);
+                                        //$(this).css('display', 'none');
+
+                                        if (datetimeNow >= oldDate){
+                                        $(this).css('display', 'none');
+                                        }
+                                        }// end  
+
+
+                                        }
+
+
+                                        });
+                                        });
+                                        function definirBultObselet(idsigneddoc, idsalary) {
+                                        var idbulltinobselet = idsigneddoc;
+                                        var salaryid = idsalary;
+                                        var url = '{{ path("definir_bult_obselet")}}';
+                                        //var data = {id: idbulltinobselet};
+                                        $.ajax({
+                                        //url: Routing.generate('definir_bult_obselet', {id: idbulltinobselet}),
+                                        url: url,
+                                                type: "GET",
+                                                data: "param=" + idbulltinobselet + "&salaryid=" + salaryid,
+                                                cache: false,
+                                                beforeSend: function () {
+                                                // $("#LoadingImage").show();
+                                                //$("form #form_ligne_typepret").addClass("loadingajax");
+                                                // $body.addClass("loadingajax");
+
+                                                },
+                                                success: function (data) {
+                                                //alert(data.typepret.libeller);
+                                                console.log(data);
+                                                console.log('success !');
+                                                //$("#div_show_btn_add_type_pret").css('display', 'none');
+                                                //$("#div_show_edit_type_pret").css('display', 'block');
+                                                //$("#paie_paiebundle_typepret_libeller").val(data.typepret.libeller); //id_edit_typepret
+                                                //$("#id_edit_typepret").val(data.typepret.id);
+                                                //$("#LoadingImage").hide();
+                                                },
+                                                complete: function (com) {
+                                                //$("#loading-ajax_typepret").css('display', 'none');
+                                                console.log(com);
+                                                console.log('complete !');
+                                                var tt = com.responseText;
+                                                var obselette = "définir comme obsolete";
+                                                if (tt === obselette){
+                                                var separator = "_";
+                                                $("#label_eta_bulletin_" + idbulltinobselet + separator + salaryid).html('(Obsolete)');
+                                                //alert($("#label_eta_bulletin").html());
+                                                //$("#div_definir_bult_obslt").css('display', 'none');
+                                                //$("#div_definir_bult_non_obslt").css('display', 'block');
+                                                }
+
+                                                //console.log($("#container_bulletin").html());
+                                                //window.location.reload();
+                                                },
+                                                error: function (err) {
+                                                console.log('erreur !');
+                                                console.log(err);
+                                                //alert('erreur');
+                                                }
+                                        });
+                                        //begin BootstrapDialog
+                                        BootstrapDialog.show({
+                                        size: BootstrapDialog.SIZE_LARGE,
+                                                message: 'Si vous le souhaitez, vous pouvez envoyer un e-mail d information au salarié !',
+                                                buttons: [{
+                                                label: 'Envoyer',
+                                                        cssClass: 'btn btn-success',
+                                                        action: function(){
+                                                        var url = '{{ path("send_mail_bult_obselet")}}';
+                                                        var param = 'yess send for salary';
+                                                        $.ajax({
+                                                        url: url,
+                                                                type: "GET",
+                                                                data: "param=" + idbulltinobselet + "&salaryid=" + salaryid,
+                                                                cache: false,
+                                                                beforeSend: function () {
+
+                                                                },
+                                                                success: function (data) {
+                                                                console.log(data);
+                                                                console.log('success !');
+                                                                },
+                                                                complete: function (com) {
+
+                                                                console.log(com);
+                                                                console.log('complete !');
+                                                                //window.location.reload();
+                                                                },
+                                                                error: function (err) {
+                                                                console.log('erreur !');
+                                                                console.log(err);
+                                                                //alert('erreur');
+                                                                }
+
+                                                        }); // end ajajx
+                                                        window.location.reload();
+                                                        }
+                                                }, {
+                                                label: 'Ne pas Envoyer',
+                                                        action: function(dialogItself){
+                                                        dialogItself.close();
+                                                        window.location.reload();
+                                                        }
+                                                }]
+                                        });
+                                        ////end BootstrapDialog
+
+
+
+                                        }
+
+                                        function definirBultNonObselet(idsigneddoc, idsalary) {
+                                        //alert(idsigneddoc);
+                                        //alert(idsalary);
+                                        var idbulltinobselet = idsigneddoc;
+                                        var salaryid = idsalary;
+                                        var url = '{{ path("definir_bult_non_obselet")}}';
+                                        //var data = {id: idbulltinobselet};
+                                        $.ajax({
+                                        //url: Routing.generate('definir_bult_obselet', {id: idbulltinobselet}),
+                                        url: url,
+                                                type: "GET",
+                                                data: "param=" + idbulltinobselet + "&salaryid=" + salaryid,
+                                                cache: false,
+                                                beforeSend: function () {
+                                                // $("#LoadingImage").show();
+                                                //$("form #form_ligne_typepret").addClass("loadingajax");
+                                                // $body.addClass("loadingajax");
+
+                                                },
+                                                success: function (data) {
+                                                //alert(data.typepret.libeller);
+                                                console.log(data);
+                                                console.log('success !');
+                                                //$("#div_show_btn_add_type_pret").css('display', 'none');
+                                                //$("#div_show_edit_type_pret").css('display', 'block');
+                                                //$("#paie_paiebundle_typepret_libeller").val(data.typepret.libeller); //id_edit_typepret
+                                                //$("#id_edit_typepret").val(data.typepret.id);
+                                                //$("#LoadingImage").hide();
+                                                },
+                                                complete: function (com) {
+                                                //$("#loading-ajax_typepret").css('display', 'none');
+                                                console.log(com);
+                                                console.log('complete !');
+                                                //window.location.reload();
+                                                var tt = com.responseText;
+                                                var obselette = "définir comme non obsolete";
+                                                if (tt === obselette){
+                                                var separator = "_";
+                                                $("#label_eta_bulletin_" + idbulltinobselet + separator + salaryid).html('');
+                                                //alert($("#label_eta_bulletin").html());
+                                                //$("#div_definir_bult_non_obslt").css('display', 'none');
+                                                //$("#div_definir_bult_obslt").css('display', 'block');
+
+                                                }
+                                                },
+                                                error: function (err) {
+                                                console.log('erreur !');
+                                                console.log(err);
+                                                //alert('erreur');
+                                                }
+                                        });
+                                        //begin BootstrapDialog
+                                        BootstrapDialog.show({
+                                        size: BootstrapDialog.SIZE_LARGE,
+                                                message: 'Si vous le souhaitez, vous pouvez envoyer un e-mail d information au salarié !',
+                                                buttons: [{
+                                                label: 'Envoyer',
+                                                        cssClass: 'btn btn-success',
+                                                        action: function(){
+                                                        var url = '{{ path("send_mail_bult_non_obselet")}}';
+                                                        var param = 'yess send for salary';
+                                                        $.ajax({
+                                                        url: url,
+                                                                type: "GET",
+                                                                data: "param=" + idbulltinobselet + "&salaryid=" + salaryid,
+                                                                cache: false,
+                                                                beforeSend: function () {
+
+                                                                },
+                                                                success: function (data) {
+                                                                console.log(data);
+                                                                console.log('success !');
+                                                                },
+                                                                complete: function (com) {
+
+                                                                console.log(com);
+                                                                console.log('complete !');
+                                                                //window.location.reload();
+                                                                },
+                                                                error: function (err) {
+                                                                console.log('erreur !');
+                                                                console.log(err);
+                                                                //alert('erreur');
+                                                                }
+
+                                                        }); // end ajajx
+                                                        window.location.reload();
+                                                        }
+                                                }, {
+                                                label: 'Ne pas Envoyer',
+                                                        action: function(dialogItself){
+                                                        dialogItself.close();
+                                                        window.location.reload();
+                                                        }
+                                                }]
+                                        });
+                                        }
+
+
+
+
+
+                                        function activeSalary(idSalary){
+                                        var url = '{{ path("front_active_salary")}}';
+                                        $.ajax({
+                                        url: url,
+                                                type: "GET",
+                                                data: "param=" + idSalary,
+                                                cache: false,
+                                                beforeSend: function () {
+
+                                                },
+                                                success: function (data) {
+                                                //alert(data.typepret.libeller);
+                                                console.log(data);
+                                                console.log('success !');
+                                                //$("#div_show_btn_add_type_pret").css('display', 'none');
+                                                //$("#div_show_edit_type_pret").css('display', 'block');
+                                                //$("#paie_paiebundle_typepret_libeller").val(data.typepret.libeller); //id_edit_typepret
+                                                //$("#id_edit_typepret").val(data.typepret.id);
+                                                //$("#LoadingImage").hide();
+                                                },
+                                                complete: function (com) {
+                                                //$("#loading-ajax_typepret").css('display', 'none');
+                                                //alert(com.responseText);
+                                                console.log(com);
+                                                console.log('complete !');
+                                                window.location.reload();
+                                                //var separator = "_";
+                                                //$("#label_eta_bulletin_" + idbulltinobselet + separator + salaryid).html('');
+                                                //alert($("#label_eta_bulletin").html());
+                                                //$("#div_definir_bult_non_obslt").css('display', 'none');
+                                                //$("#div_definir_bult_obslt").css('display', 'block');
+                                                },
+                                                error: function (err) {
+                                                console.log('erreur !');
+                                                console.log(err);
+                                                }
+                                        });
+                                        }
+
+                                        function desactiveSalary(idSalary){
+                                        var url = '{{ path("front_desactive_salary")}}';
+                                        $.ajax({
+                                        url: url,
+                                                type: "GET",
+                                                data: "param=" + idSalary,
+                                                cache: false,
+                                                beforeSend: function () {
+
+                                                },
+                                                success: function (data) {
+                                                //alert(data.typepret.libeller);
+                                                console.log(data);
+                                                console.log('success !');
+                                                //$("#div_show_btn_add_type_pret").css('display', 'none');
+                                                //$("#div_show_edit_type_pret").css('display', 'block');
+                                                //$("#paie_paiebundle_typepret_libeller").val(data.typepret.libeller); //id_edit_typepret
+                                                //$("#id_edit_typepret").val(data.typepret.id);
+                                                //$("#LoadingImage").hide();
+                                                },
+                                                complete: function (com) {
+                                                //$("#loading-ajax_typepret").css('display', 'none');
+                                                //alert(com.responseText);
+                                                console.log(com);
+                                                console.log('complete !');
+                                                //$("#btn_desative_salary").css('display', 'none');
+                                                //$("#btn_active_salary").css('display', 'block');
+                                                window.location.reload();
+                                                //var separator = "_";
+                                                //$("#label_eta_bulletin_" + idbulltinobselet + separator + salaryid).html('');
+                                                //alert($("#label_eta_bulletin").html());
+                                                //$("#div_definir_bult_non_obslt").css('display', 'none');
+                                                //$("#div_definir_bult_obslt").css('display', 'block');
+                                                },
+                                                error: function (err) {
+                                                console.log('erreur !');
+                                                console.log(err);
+                                                }
+                                        });
+                                        }
+                                        
+                                        function envoyerDemandeActivationSalary(idSalary){
+                                        var url = '{{ path("demande_activation_salary")}}';
+                                        $.ajax({
+                                        url: url,
+                                                type: "GET",
+                                                data: "param=" + idSalary,
+                                                cache: false,
+                                                beforeSend: function () {
+
+                                                },
+                                                success: function (data) {
+                                                //alert(data.typepret.libeller);
+                                                console.log(data);
+                                                console.log('success !');
+                                                //$("#div_show_btn_add_type_pret").css('display', 'none');
+                                                //$("#div_show_edit_type_pret").css('display', 'block');
+                                                //$("#paie_paiebundle_typepret_libeller").val(data.typepret.libeller); //id_edit_typepret
+                                                //$("#id_edit_typepret").val(data.typepret.id);
+                                                //$("#LoadingImage").hide();
+                                                },
+                                                complete: function (com) {
+                                                //$("#loading-ajax_typepret").css('display', 'none');
+                                                //alert(com.responseText);
+                                                console.log(com);
+                                                console.log('complete !');
+                                                window.location.reload();
+                                                //var separator = "_";
+                                                //$("#label_eta_bulletin_" + idbulltinobselet + separator + salaryid).html('');
+                                                //alert($("#label_eta_bulletin").html());
+                                                //$("#div_definir_bult_non_obslt").css('display', 'none');
+                                                //$("#div_definir_bult_obslt").css('display', 'block');
+                                                },
+                                                error: function (err) {
+                                                console.log('erreur !');
+                                                console.log(err);
+                                                }
+                                        });
+                                        }
+                                    </script>
+                                {% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'FrontBundle:Cats:add.html.twig' %}
+{% block b %}
+    Modifier le salarié
+{% endblock %}
+
+
+{% block form %}
+<form action="{{ path('front_cats_edit', {id: idc}) }}" method="post" class="form-group" {{ form_enctype(form) }}>
+{% endblock %}

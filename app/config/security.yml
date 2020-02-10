@@ -1,0 +1,76 @@
+# you can read more about security in the related section of the documentation
+# http://symfony.com/doc/current/book/security.html
+security:
+    # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
+    encoders:
+         FrontBundle\Entity\User:
+          id: auth.service
+
+         FrontBundle\Entity\LoginAdmin:
+          id: auth.service
+
+    # http://symfony.com/doc/current/book/security.html#hierarchical-roles
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_RH
+#        ROLE_ADMIN:       ROLE_USER
+        #ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        front:
+                    entity: { class: FrontBundle:User, property: username }
+
+        back:
+                    entity: { class: FrontBundle:LoginAdmin, property: username }
+
+    # the main part of the security, where you can set up firewalls
+    # for specific sections of your app
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        admin_area:
+                    pattern:    ^/back
+                    provider: back
+                    http_basic: ~
+                    anonymous:  ~
+                    form_login:
+                        login_path:  back_login
+                        check_path:  back_login_check
+
+                    logout:
+                        path:   logout_back
+                        target: /back
+                        success_handler: user_security.component.authentication.handler.logout_success_handler
+        front_area:
+                    pattern:    ^/
+                    provider: front
+                    http_basic: ~
+                    anonymous:  ~
+                    form_login:
+                        login_path:  /login
+                        check_path:  /login_check
+                        use_forward:    false
+                        success_handler: user_security.component.authentication.handler.login_success_handler
+                        failure_path:   null
+                    logout:
+                        path:   logout_front
+                        success_handler: user_security.component.authentication.handler.logout_success_handler
+
+
+    # with these settings you can restrict or allow access for different parts
+    # of your application based on roles, ip, host or methods
+    # http://symfony.com/doc/current/cookbook/security/access_control.html
+    access_control:
+
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/back/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/account/recovery, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/activate/salary, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/media, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/back, roles: [ROLE_ADMIN,ROLE_RH_LIMITE] }
+         - { path: ^/, roles: [ROLE_USER,ROLE_RH,ROLE_RH_LIMITE,ROLE_ADMIN] }
+
+
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

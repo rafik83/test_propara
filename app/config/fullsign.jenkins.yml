@@ -1,0 +1,30 @@
+# This file is auto-generated during the composer install
+parameters:
+    zip_location: /
+    client_id: 1
+#Certsign SERVER
+    local_cert: /certfile.pem
+    login: INTERSA_TEST
+    password: b9494623777dc510004343c61fc9faf64d3c17df
+    location: https://spi.certeurope.fr/ws/services/WSFacade
+    profile_s: PFL-S-PDF-CERTEUROPE_TEST-001-20091030
+    profile_arc: PFL-ARC-CERTEUROPE_TEST-001-20091030
+    profile_sto: PFL-STO-CERTEUROPE_TEST-001-20091030
+    profile_doc: PFL-DOC-CERTEUROPE_TEST-001-20091030
+    profile_con: CTR-P-CERTEUROPE_TEST-001-20091030
+    signer: LUNA_TST_1
+    auth_pass: 4RSXFFBX
+    algo: SHA1
+    #emailing
+    url_site : http://localhost:8000
+#serveur sftp
+    sftp_host: sftp.intersa.fr
+    sftp_login: fullsign
+    sftp_pwd: 3+9!HgnE=p
+    sftp_port: 22
+#certisms
+    certeurope_certisms_app_code: f899b37904ddc00c030e952d76eefed6f6fa8753
+    certeurope_certisms_url: http://certisms-qualif.certeurope.fr/CertiSMS.php
+    certeurope_certisms_wsdl: http://certisms-qualif.certeurope.fr/CertiSMS.php?wsdl
+    certeurope_oneclick_app_code: d5b34fc6b563d37f19c8211d29ee836dbea8bb12
+    certeurope_oneclick_url: https://cs1-qualif.certeurope.fr/SignatureCOC.do

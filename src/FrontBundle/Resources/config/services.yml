@@ -1,0 +1,115 @@
+parameters:
+    user_security.component.authentication.handler.login_success_handler.class: FrontBundle\Component\Authentication\Handler\LoginSuccessHandler
+    user_security.component.authentication.handler.logout_success_handler.class: FrontBundle\Component\Authentication\Handler\LogoutSuccessHandler
+
+services:
+#    front.example:
+#        class: FrontBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+    cert_sign.server:
+        class:        BackBundle\WebServices\CertSignServer
+        arguments:    [%local_cert%, %login%, %password%, %location%, %profile_con%, %profile_s%, %profile_arc%, %profile_sto%, %profile_doc%, %signer%, %auth_pass%, %algo%]
+
+    sg_datatables.salary:
+            class: FrontBundle\Datatables\SalaryDatatable
+            tags:
+                - { name: sg.datatable.view }
+    sg_datatables.cat:
+            class: FrontBundle\Datatables\CatDatatable
+            tags:
+                - { name: sg.datatable.view }
+
+    sg_datatables.codoc:
+            class: FrontBundle\Datatables\CoDocDatatable
+            tags:
+                - { name: sg.datatable.view }
+
+    sg_datatables.sdocwaiting:
+            class: FrontBundle\Datatables\SdocWaitingDatatable
+            tags:
+                - { name: sg.datatable.view }
+    sg_datatables.company:
+            class: FrontBundle\Datatables\CompanyDatatable
+            tags:
+                - { name: sg.datatable.view }
+
+    user_security.component.authentication.handler.login_success_handler:
+        class:  %user_security.component.authentication.handler.login_success_handler.class%
+        arguments:  [ @router, @security.context]
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
+    user_security.component.authentication.handler.logout_success_handler:
+        class:  %user_security.component.authentication.handler.logout_success_handler.class%
+        arguments:  [ @router]
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
+
+    login.mailer:
+                class: FrontBundle\Helper\LoginHelper
+                calls:
+                    - [ setContainer,[ @service_container] ]
+    email_servies:
+        class: FrontBundle\Service\EmailService
+        arguments: [ @doctrine.orm.entity_manager ]
+        calls:
+            - [ setContainer,[ @service_container ] ]
+            
+    gedmo.listener.translatable:
+        class: Gedmo\Translatable\TranslatableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]
+            - [ setDefaultLocale, [ %locale% ] ]
+            - [ setTranslationFallback, [ false ] ]
+
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]
+        
+    gedmo.listener.tree:
+        class: Gedmo\Tree\TreeListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]
+        
+        
+    gedmo.listener.blameable:
+        class: Gedmo\Blameable\BlameableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]    
+
+    gedmo.listener.sluggable:
+        class: Gedmo\Sluggable\SluggableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]
+
+    gedmo.listener.sortable:
+        class: Gedmo\Sortable\SortableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]
+
+    gedmo.listener.loggable:
+        class: Gedmo\Loggable\LoggableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ] 
+        
+    gedmo.listener.softdeleteable:
+        class: Gedmo\SoftDeleteable\SoftDeleteableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]
